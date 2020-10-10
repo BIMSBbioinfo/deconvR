@@ -1,0 +1,28 @@
+Package: deconvR
+Type: Package
+Title: Simulation and Deconvolution of Bulk Cell-Free DNA Methylation Signatures
+Version: 0.1.0
+Date: 2020-10-08
+Authors@R: c(person("Veronika", "Ebenal", email="veronikaebenal@gmail.com", role=c("aut", "cre")))
+Description: The package contains the function "deconvolute" which takes in
+    a reference atlas (defaults to ref_atlas included in package), a bulk sample(s) methylation profile,
+    and the desired model to be used (non-negative least squares regression, support vector regression,
+    quadratic programming, or robust linear regression). The desired model will be used in conjunction with
+    the reference atlas in order to predict the cell origin profiles of the bulk methylation samples.
+    The RMSE values of the model are also printed upon completion. Also included is the function
+    makeBigTable, which can be used to simulate a bulk methylation profile of a given size, using a given
+    reference atlas (again defaults to ref_atlas included in package). The outputted table of bulk samples
+    is compatible to be used as the bulk input for deconvolute.
+Imports:
+    dplyr,
+    tidyverse,
+    e1071,
+    quadprog, 
+    nnls,
+    MASS
+License: Artistic-2.0
+Encoding: UTF-8
+LazyData: TRUE
+RoxygenNote: 7.1.1
+Suggests: 
+    testthat
