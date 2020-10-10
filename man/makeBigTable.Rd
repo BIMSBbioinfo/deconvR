@@ -4,17 +4,24 @@
 \alias{makeBigTable}
 \title{A function to generate a dataframe of mixed cell-type origin simulated samples using given reference atlas.}
 \usage{
-makeBigTable(numberOfSamples, reference)
+makeBigTable(
+  numberOfSamples,
+  reference = read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))
+)
 }
 \arguments{
 \item{numberOfSamples}{The number of simulated samples to be generated in the dataframe.}
 
-\item{reference}{A reference dataframe with which to generate the simulations. Should be dataframe with first column "CpGs" for Illumina IDs, and rest of columns = cell types. Should not have duplicate Illumina IDs.}
+\item{reference}{A reference dataframe with which to generate the simulations. Should be dataframe with first column "CpGs" for Illumina IDs, and rest of columns = cell types. Should not have duplicate Illumina IDs. If not given, will default to ref_atlas included in package}
 }
 \value{
 A dataframe "bigExampleTable" which contains mixed cell-type origin simulated samples. First column "CpGs" for Illumina IDs, and rest of columns = cell types.
 }
 \description{
 A function to generate a dataframe of mixed cell-type origin simulated samples using given reference atlas.
+}
+\examples{
+makeBigTable(50)
+makeBigTable(numberOfSamples=100, reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")))
 }
 \keyword{simulation}
