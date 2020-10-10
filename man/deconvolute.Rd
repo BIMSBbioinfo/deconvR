@@ -6,21 +6,29 @@
 Results of model are returned in dataframe "results".
 Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.}
 \usage{
-deconvolute(reference, examples, model = "nnls")
+deconvolute(
+  reference = read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")),
+  bulk,
+  model = "nnls"
+)
 }
 \arguments{
-\item{reference}{A dataframe containing CpG signatures of different cell types used to train the model. Should be dataframe with first column "CpGs" for Illumina IDs, and rest of columns = cell types. Should not have duplicate Illumina IDs.}
+\item{reference}{A dataframe containing CpG signatures of different cell types used to train the model. Should be dataframe with first column "CpGs" for Illumina IDs, and rest of columns = cell types. Should not have duplicate Illumina IDs. If not given, defaults to ref_atlas, a reference atlas which is included in package.}
 
-\item{examples}{A dataframe containing CpG signatures of different bulk methylation profiles used to test to model. Should be dataframe with first column "CpGs" for Illumina IDs (does not need to exactly match list of IDs in reference, but should have significant overlap), and rest of columns = cell types. Should not have duplicate Illumina IDs.}
+\item{bulk}{A dataframe containing CpG signatures of different bulk methylation profiles used to test to model. Should be dataframe with first column "CpGs" for Illumina IDs (does not need to exactly match list of IDs in reference, but should have significant overlap), and rest of columns = cell types. Should not have duplicate Illumina IDs. May use makeBigTable function to create this dataframe.}
 
 \item{model}{A string indicating which model is used to deconvolute the samples. Can be either "nnls" (for non-negative least squares) or "svr" (support vector regression) or "qp" (quadratic programming) or "rlm" (robust linear regression). If not given, defaults to "nnls".}
 }
 \value{
-A dataframe which contains predicted cell-type proportions of bulk methylation profiles in "examples".
+A dataframe which contains predicted cell-type proportions of bulk methylation profiles in "bulk".
 }
 \description{
 A function to deconvolute of cell-free DNA methylation signals to their cell type of origin.
 Results of model are returned in dataframe "results".
 Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.
+}
+\examples{
+ deconvolute(bulk=makeBigTable(50))
+ deconvolute(reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")), bulk=makeBigTable(5), model="rlm" )
 }
 \keyword{deconvolution}
