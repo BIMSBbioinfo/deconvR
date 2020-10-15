@@ -7,7 +7,8 @@
 #' @keywords deconvolution
 #' @examples
 #'  deconvolute(bulk=makeBigTable(50))
-#'  deconvolute(reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")), bulk=makeBigTable(5), model="rlm" )
+#'  deconvolute(reference=read.csv(system.file("reference_atlas_nodup.csv",package="deconvR")),
+#'     bulk=makeBigTable(5),model="rlm")
 #' @return A dataframe which contains predicted cell-type proportions of bulk methylation profiles in "bulk".
 #' @export
 
@@ -30,7 +31,7 @@
 #library(nnls)
 #library(MASS)
 
-deconvolute = function(reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")), bulk, model="nnls") {
+deconvolute = function(reference=utils::read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")), bulk, model="nnls") {
   print(paste("DECONVOLUTION WITH",toupper(model)))
 
   results_RMSEs = data.frame(matrix(nrow=length(colnames(bulk))-1,ncol=1, dimnames=list(colnames(bulk)[-1], c("RMSE"))))
@@ -38,10 +39,10 @@ deconvolute = function(reference=read.csv(system.file("reference_atlas_nodup.csv
 
   if (model == "nnls") {    #non negative least squares
     for (h in 2:ncol(bulk)) { #skip first column because it's CpGs
-      thedata = drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1] #merge each sample to reference table, removing CpGs that aren't present in both (NAs)
+      thedata = tidyr::drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1] #merge each sample to reference table, removing CpGs that aren't present in both (NAs)
       ref_nnls = as.matrix(thedata[,-1])
       mix_nnls = as.matrix(thedata[,1])
-      nnls_model = nnls(data.matrix(ref_nnls), mix_nnls)
+      nnls_model = nnls::nnls(data.matrix(ref_nnls), mix_nnls)
       nnls_coefficients = nnls_model$x
       sumOfCof = sum(nnls_coefficients)
       for (i in 1:length(nnls_coefficients)) {
@@ -57,14 +58,13 @@ deconvolute = function(reference=read.csv(system.file("reference_atlas_nodup.csv
   }
   else if (model == "svr") {  #support vector regression
     for (h in 2:ncol(bulk)) {  #skip first column because it's CpGs
-      thedata = drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1]
+      thedata = tidyr::drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1]
       ref_svr = as.matrix(thedata[,-1])
       mix_svr = as.matrix(thedata[,1])
 
       #svr_model = svm(thedata[,1] ~ ., thedata, kernel="linear", type="nu-regression")
-      tuneResult = tune(svm, mix_svr ~ ref_svr, kernel="linear", scale=FALSE, type="nu-regression", ranges = list(nu = seq(0.25,0.5,0.75))) #find the best nu values for the models
-
-      svr_model = tuneResult$best.model #make predictions with the previously found best model
+      tune_result = e1071::tune("svm", train.x = mix_svr ~ ref_svr, kernel="linear", type="nu-regression", scale=FALSE, ranges = list(nu = seq(0.25,0.5,0.75))) #find the best nu values for the models
+      svr_model =tune_result$best.model
       svr_coefficients = t(svr_model$coefs) %*% svr_model$SV
 
       for (i in 1:length(svr_coefficients)) {
@@ -85,20 +85,21 @@ deconvolute = function(reference=read.csv(system.file("reference_atlas_nodup.csv
     }
   }
   else if (model == "qp") { #quadratic programming
+    beq = c(1)
+    bvec=c(beq, rep(0, ncol(reference[,-1])))
+    Aeq = matrix(rep(1, ncol(reference[,-1])), nrow = 1)
+    Amat = rbind(Aeq, diag(ncol(reference[,-1])))
+    meq = 1
+
     for (h in 2:ncol(bulk)) {  #skip first column because it's CpGs
-      thedata = drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1] #merge each sample to reference table, removing CpGs that aren't present in both (NAs)
+      thedata = tidyr::drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1] #merge each sample to reference table, removing CpGs that aren't present in both (NAs)
       ref_qp = as.matrix(thedata[,-1])
       mix_qp = as.matrix(thedata[,1])
 
       Dmat = t(ref_qp) %*% ref_qp #i got these values using this tutorial https://github.com/dariober/quadratic-programming-deconvolution/blob/master/quadratic_programming_tutorial.pdf
       dvec = t(ref_qp) %*% mix_qp
-      Aeq = matrix(rep(1, ncol(ref_qp)), nrow = 1)
-      beq = c(1)
-      Amat = rbind(Aeq, diag(ncol(ref_qp)))
-      bvec = c(beq, rep(0, ncol(ref_qp)))
-      meq = 1
 
-      qp_coefficients = solve.QP(Dmat = Dmat, dvec = dvec, Amat = t(Amat), bvec = bvec, meq = meq)$solution
+      qp_coefficients = quadprog::solve.QP(Dmat = Dmat, dvec = dvec, Amat = t(Amat), bvec = bvec, meq = meq)$solution
 
       for (i in 1:length(qp_coefficients)) {
         if (qp_coefficients[i] < 0) {
@@ -119,11 +120,11 @@ deconvolute = function(reference=read.csv(system.file("reference_atlas_nodup.csv
   }
   else if (model == "rlm") {  #robust linear regression
     for (h in 2:ncol(bulk)) {  #skip first column because it's CpGs
-      thedata = drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1] #merge each sample to reference table, removing CpGs that aren't present in both (NAs)
+      thedata = tidyr::drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1] #merge each sample to reference table, removing CpGs that aren't present in both (NAs)
       ref_rlm = as.matrix(thedata[,-1])
       mix_rlm = as.matrix(thedata[,1])
 
-      rlm_model = suppressWarnings(rlm(ref_rlm, mix_rlm, maxit = 100))
+      rlm_model = suppressWarnings(MASS::rlm(ref_rlm, mix_rlm, maxit = 100))
       rlm_coefficients = rlm_model$coefficients
       for (i in 1:length(rlm_coefficients)) {
         if (rlm_coefficients[i] < 0) {

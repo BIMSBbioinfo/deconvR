@@ -4,11 +4,12 @@
 #' @keywords simulation
 #' @examples
 #' makeBigTable(50)
-#' makeBigTable(numberOfSamples=100, reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")))
+#' makeBigTable(numberOfSamples=100,
+#'   reference=read.csv(system.file("reference_atlas_nodup.csv",package = "deconvR")))
 #' @return A dataframe "bigExampleTable" which contains mixed cell-type origin simulated samples. First column "CpGs" for Illumina IDs, and rest of columns = cell types.
 #' @export
 
-makeBigTable = function(numberOfSamples, reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))) {
+makeBigTable = function(numberOfSamples, reference=utils::read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))) {
   bigExampleTable = data.frame(matrix(ncol=numberOfSamples+1,nrow=nrow(reference)))
 
   colnames(bigExampleTable) = "_"
@@ -18,7 +19,7 @@ makeBigTable = function(numberOfSamples, reference=read.csv(system.file("referen
 
 for (i in 1:numberOfSamples) {
   n = sample(1:25, 1)  # n is the randomly chosen number of cell origins that will make up this sample
-  amts = runif(n)      # amts is the randomly chosen proportions of the different cell origins
+  amts = stats::runif(n)      # amts is the randomly chosen proportions of the different cell origins
   amts = amts/sum(amts) # normalize so the proportions add to 1
 
   for (samp in amts) {
