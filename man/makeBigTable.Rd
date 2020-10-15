@@ -6,7 +6,8 @@
 \usage{
 makeBigTable(
   numberOfSamples,
-  reference = read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))
+  reference = utils::read.csv(system.file("reference_atlas_nodup.csv", package =
+    "deconvR"))
 )
 }
 \arguments{
@@ -22,6 +23,7 @@ A function to generate a dataframe of mixed cell-type origin simulated samples u
 }
 \examples{
 makeBigTable(50)
-makeBigTable(numberOfSamples=100, reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")))
+makeBigTable(numberOfSamples=100,
+  reference=read.csv(system.file("reference_atlas_nodup.csv",package = "deconvR")))
 }
 \keyword{simulation}

@@ -7,7 +7,8 @@ Results of model are returned in dataframe "results".
 Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.}
 \usage{
 deconvolute(
-  reference = read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")),
+  reference = utils::read.csv(system.file("reference_atlas_nodup.csv", package =
+    "deconvR")),
   bulk,
   model = "nnls"
 )
@@ -29,6 +30,7 @@ Summary of RMSE values of model (min, median, mean, max...) are printed upon com
 }
 \examples{
  deconvolute(bulk=makeBigTable(50))
- deconvolute(reference=read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR")), bulk=makeBigTable(5), model="rlm" )
+ deconvolute(reference=read.csv(system.file("reference_atlas_nodup.csv",package="deconvR")),
+    bulk=makeBigTable(5),model="rlm")
 }
 \keyword{deconvolution}
