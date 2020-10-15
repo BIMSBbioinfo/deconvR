@@ -20,7 +20,8 @@ makeBigTable = function(numberOfSamples, reference=utils::read.csv(system.file("
 for (i in 1:numberOfSamples) {
   n = sample(1:25, 1)  # n is the randomly chosen number of cell origins that will make up this sample
   amts = stats::runif(n)      # amts is the randomly chosen proportions of the different cell origins
-  amts = amts/sum(amts) # normalize so the proportions add to 1
+  sumAmts=sum(amts)
+  amts = amts/sumAmts # normalize so the proportions add to 1
 
   for (samp in amts) {
     pick = sample(1:25, 1) # randomly pick the cell type origin
