@@ -7,6 +7,13 @@ test_that("simulateCellMix", {
   expect_equal(simulateCellMix(1)[[1]][,1], ref_atlas[,1])
   expect_equal(dim(simulateCellMix(numberOfSamples = 50, reference = ref_atlas)[[1]]), c(dim(ref_atlas[,-1])[1], 50+1))
   expect_equal(simulateCellMix(numberOfSamples = 50, reference = ref_atlas)[[1]][,1], ref_atlas[,1])
+  expect_equal(sum(simulateCellMix(5)[[2]][1,]),1)
+  expect_equal(sum(simulateCellMix(5)[[2]][2,]),1)
+  expect_equal(sum(simulateCellMix(5)[[2]][3,]),1)
+  expect_equal(sum(simulateCellMix(5)[[2]][4,]),1)
+  expect_equal(sum(simulateCellMix(5)[[2]][5,]),1)
+  expect_equal(sum(simulateCellMix(10)[[2]]), 10)
+  expect_equal(rownames(simulateCellMix(5)[[2]]), colnames(simulateCellMix(5)[[1]])[-1])
   expect_error(simulateCellMix(0)[[1]])
   expect_error(simulateCellMix(-1)[[1]])
 
