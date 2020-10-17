@@ -46,15 +46,8 @@ simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS
       for (c in 1:n) {
           simulatedMixtureTable[,i+1] = (simulatedMixtureTable[,i+1] + (amts[c] * reference[,picks[c]+1])) # add the influence to the values
           proportionsTable[i, picks[c]] = amts[c]
-      #    if (is.na(rownames(proportionsTable)[i])){
-      #      rownames(proportionsTable)[i] = paste(colnames(reference)[picks[c]+1],amts[c] ,"_", sep="") # naming the row to say the cellular type and proportion
-      #    }
-      #    else {
-            rownames(proportionsTable)[i] = paste(rownames(proportionsTable)[i], colnames(reference)[picks[c]+1],amts[c] ,"_", sep="")
-      #    }
-
       }
-      rownames(proportionsTable)[i] = substr(rownames(proportionsTable)[i],2,nchar(rownames(proportionsTable)[i])-1)
+      rownames(proportionsTable)[i] = paste("Sample ", i)
       colnames(simulatedMixtureTable)[i+1] = paste("Sample ", i)
 
     }
@@ -70,16 +63,9 @@ simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS
             if (mixingVector[t,s] > 0) {
               simulatedMixtureTable[,s+1] = (simulatedMixtureTable[,s+1] + (mixingVector[t,s] * reference[,t+1])) # add the influence to the values
               proportionsTable[s, t] = mixingVector[t,s]
-
- #             if (is.na(rownames(proportionsTable)[s+1])){
- #               rownames(proportionsTable)[s] = paste(colnames(reference)[t+1],mixingVector[t,s],"_", sep="") # naming the column to say the cellular type and proportion
-#              }
-  #            else {
-                rownames(proportionsTable)[s] = paste(rownames(proportionsTable)[s], colnames(reference)[t+1],mixingVector[t,s],"_", sep="")
-   #           }
             }
           }
-          rownames(proportionsTable)[s] = substr(rownames(proportionsTable)[s],1,nchar(rownames(proportionsTable)[s])-1)
+          rownames(proportionsTable)[s] = paste("Sample ", s)
           colnames(simulatedMixtureTable)[s+1] = paste("Sample ", s)
 
         }
@@ -94,16 +80,9 @@ simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS
           if (mixingVector[t] > 0) {
             simulatedMixtureTable[,2] = (simulatedMixtureTable[,2] + (mixingVector[t] * reference[,t+1])) # add the influence to the values
             proportionsTable[1, t] = mixingVector[t]
-
-#            if (is.na(rownames(proportionsTable)[1])){
- #             rownames(proportionsTable)[1] = paste(colnames(reference)[t+1],mixingVector[t],"_", sep="") # naming the column to say the cellular type and proportion
-  #          }
-   #         else {
-              rownames(proportionsTable)[1] = paste(rownames(proportionsTable)[1], colnames(reference)[t+1],mixingVector[t],"_", sep="")
-    #        }
           }
         }
-        rownames(proportionsTable)[1] = substr(rownames(proportionsTable)[1],1,nchar(rownames(proportionsTable)[1])-1)
+        rownames(proportionsTable)[1] = "Sample 1"
         colnames(simulatedMixtureTable)[1] = "Sample 1"
 
       }
