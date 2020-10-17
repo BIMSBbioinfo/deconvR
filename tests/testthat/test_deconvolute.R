@@ -23,6 +23,7 @@ test_that("deconvolute nnls", {
   expect_output(deconvolute(bulk=bulkTable), "SUMMARY OF RMSE VALUES USING  NNLS")
   expect_equal(dim(deconvolute(bulk=bulkTable, model="nnls")), dim(proportionsTable))
   expect_equal(colnames(deconvolute(bulk=bulkTable, model="nnls")), colnames(ref_atlas[,-1]))
+  expect_equal(rownames(deconvolute(bulk=bulkTable, model ="nnls")), rownames(proportionsTable))
 })
 
 test_that("deconvolute svr", {
@@ -44,6 +45,7 @@ test_that("deconvolute svr", {
   expect_output(deconvolute(bulk=bulkTable, model="svr"), "SUMMARY OF RMSE VALUES USING  SVR")
   expect_equal(dim(deconvolute(bulk=bulkTable, model="svr")), dim(proportionsTable))
   expect_equal(colnames(deconvolute(bulk=bulkTable, model="svr")), colnames(ref_atlas[,-1]))
+  expect_equal(rownames(deconvolute(bulk=bulkTable, model ="svr")), rownames(proportionsTable))
 })
 
 test_that("deconvolute qp", {
@@ -66,6 +68,7 @@ test_that("deconvolute qp", {
   expect_output(deconvolute(bulk=bulkTable, model="qp"), "SUMMARY OF RMSE VALUES USING  QP")
   expect_equal(dim(deconvolute(bulk=bulkTable, model="qp")), dim(proportionsTable))
   expect_equal(colnames(deconvolute(bulk=bulkTable, model="qp")), colnames(ref_atlas[,-1]))
+  expect_equal(rownames(deconvolute(bulk=bulkTable, model ="qp")), rownames(proportionsTable))
 })
 
 test_that("deconvolute rlm", {
@@ -88,4 +91,6 @@ test_that("deconvolute rlm", {
   expect_output(deconvolute(bulk=bulkTable, model="rlm"), "SUMMARY OF RMSE VALUES USING  RLM")
   expect_equal(dim(deconvolute(bulk=bulkTable, model="rlm")), dim(proportionsTable))
   expect_equal(colnames(deconvolute(bulk=bulkTable, model="rlm")), colnames(ref_atlas[,-1]))
+  expect_equal(rownames(deconvolute(bulk=bulkTable, model ="rlm")), rownames(proportionsTable))
+
 })
