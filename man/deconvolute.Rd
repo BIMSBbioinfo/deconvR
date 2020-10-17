@@ -7,18 +7,25 @@ Results of model are returned in dataframe "results".
 Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.}
 \usage{
 deconvolute(
-  reference = utils::read.csv(system.file("reference_atlas_nodup.csv", package =
-    "deconvR")),
+  reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
   bulk,
   model = "nnls"
 )
 }
 \arguments{
-\item{reference}{A dataframe containing CpG signatures of different cell types used to train the model. Should be dataframe with first column "CpGs" for Illumina IDs, and rest of columns = cell types. Should not have duplicate Illumina IDs. If not given, defaults to ref_atlas, a reference atlas which is included in package.}
+\item{reference}{A dataframe containing CpG signatures of different cell types used to train the model. The first column
+should contain a unique ID (e.g. target ID) to match rows of the reference to rows of the bulk. All subsequent columns are cell types.
+ are CpGs. Each cell contains the methylation value for the cell type at the CpG location. If not given, defaults to a reference atlas
+ which is included in this package (see deconvR/inst/reference_atlas_nodup.RDS). This atlas contains 25 cell types, 6105 CpGs (and their target IDs),
+ and therefore 152,625 methylation values.}
 
-\item{bulk}{A dataframe containing CpG signatures of different bulk methylation profiles used to test to model. Should be dataframe with first column "CpGs" for Illumina IDs (does not need to exactly match list of IDs in reference, but should have significant overlap), and rest of columns = cell types. Should not have duplicate Illumina IDs. May use makeBigTable function to create this dataframe.}
+\item{bulk}{A dataframe containing CpG signatures of different bulk methylation profiles used to test to model.
+Should be dataframe with first column "CpGs" for Illumina IDs (does not need to exactly match list of IDs in reference,
+but should have significant overlap), and rest of columns = cell types. Should not have duplicate Illumina IDs. May use
+simulateCellMix function to create this dataframe.}
 
-\item{model}{A string indicating which model is used to deconvolute the samples. Can be either "nnls" (for non-negative least squares) or "svr" (support vector regression) or "qp" (quadratic programming) or "rlm" (robust linear regression). If not given, defaults to "nnls".}
+\item{model}{A string indicating which model is used to deconvolute the samples. Can be either "nnls" (for non-negative least squares) or
+"svr" (support vector regression) or "qp" (quadratic programming) or "rlm" (robust linear regression). If not given, defaults to "nnls".}
 }
 \value{
 A dataframe which contains predicted cell-type proportions of bulk methylation profiles in "bulk".
@@ -29,8 +36,8 @@ Results of model are returned in dataframe "results".
 Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.
 }
 \examples{
- deconvolute(bulk=makeBigTable(50))
- deconvolute(reference=read.csv(system.file("reference_atlas_nodup.csv",package="deconvR")),
-    bulk=makeBigTable(5),model="rlm")
+ deconvolute(bulk=simulateCellMix(50)[[1]])
+ deconvolute(reference=readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
+    bulk=simulateCellMix(5)[[1]],model="rlm")
 }
 \keyword{deconvolution}

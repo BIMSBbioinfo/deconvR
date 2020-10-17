@@ -10,7 +10,7 @@ Description: The package contains the function "deconvolute" which takes in
     quadratic programming, or robust linear regression). The desired model will be used in conjunction with
     the reference atlas in order to predict the cell origin profiles of the bulk methylation samples.
     The RMSE values of the model are also printed upon completion. Also included is the function
-    makeBigTable, which can be used to simulate a bulk methylation profile of a given size, using a given
+    simulateCellMix, which can be used to simulate a bulk methylation profile of a given size, using a given
     reference atlas (again defaults to ref_atlas included in package). The outputted table of bulk samples
     is compatible to be used as the bulk input for deconvolute.
 Imports:
@@ -19,6 +19,7 @@ Imports:
     utils,
     tidyr,
     dplyr,
+    foreach,
     e1071,
     quadprog, 
     nnls,
