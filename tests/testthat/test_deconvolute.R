@@ -2,8 +2,10 @@ context("deconvolution")
 library(deconvR)
 
 test_that("deconvolute nnls", {
-  ref_atlas = utils::read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))
-  bulkTable = makeBigTable(5)
+  ref_atlas = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
+  simulation = simulateCellMix(5)
+  bulkTable = simulation[[1]]
+  proportionsTable = simulation[[2]]
   expect_equal(dim(deconvolute(bulk=bulkTable)), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(dim(deconvolute(bulk=bulkTable[-1,])), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(colnames(deconvolute(bulk=bulkTable)), colnames(ref_atlas[,-1]))
@@ -19,11 +21,15 @@ test_that("deconvolute nnls", {
   expect_error(deconvolute(model="nnls"))
   expect_output(deconvolute(bulk=bulkTable), "DECONVOLUTION WITH NNLS")
   expect_output(deconvolute(bulk=bulkTable), "SUMMARY OF RMSE VALUES USING  NNLS")
+  expect_equal(dim(deconvolute(bulk=bulkTable, model="nnls")), dim(proportionsTable))
+  expect_equal(colnames(deconvolute(bulk=bulkTable, model="nnls")), colnames(ref_atlas[,-1]))
 })
 
 test_that("deconvolute svr", {
-  ref_atlas = utils::read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))
-  bulkTable = makeBigTable(5)
+  ref_atlas = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
+  simulation = simulateCellMix(5)
+  bulkTable = simulation[[1]]
+  proportionsTable = simulation[[2]]
   expect_equal(dim(deconvolute(bulk=bulkTable, model="svr")), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(dim(deconvolute(bulk=bulkTable[-1,], model="svr")), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(colnames(deconvolute(bulk=bulkTable, model="svr")), colnames(ref_atlas[,-1]))
@@ -36,11 +42,15 @@ test_that("deconvolute svr", {
   expect_error(deconvolute(model="svr"))
   expect_output(deconvolute(bulk=bulkTable, model="svr"), "DECONVOLUTION WITH SVR")
   expect_output(deconvolute(bulk=bulkTable, model="svr"), "SUMMARY OF RMSE VALUES USING  SVR")
+  expect_equal(dim(deconvolute(bulk=bulkTable, model="svr")), dim(proportionsTable))
+  expect_equal(colnames(deconvolute(bulk=bulkTable, model="svr")), colnames(ref_atlas[,-1]))
 })
 
 test_that("deconvolute qp", {
-  ref_atlas = utils::read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))
-  bulkTable = makeBigTable(5)
+  ref_atlas = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
+  simulation = simulateCellMix(5)
+  bulkTable = simulation[[1]]
+  proportionsTable = simulation[[2]]
   expect_equal(dim(deconvolute(bulk=bulkTable, model="qp")), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(dim(deconvolute(bulk=bulkTable[-1,], model="qp")), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(colnames(deconvolute(bulk=bulkTable, model="qp")), colnames(ref_atlas[,-1]))
@@ -54,11 +64,15 @@ test_that("deconvolute qp", {
   expect_error(deconvolute(model="qp"))
   expect_output(deconvolute(bulk=bulkTable, model="qp"), "DECONVOLUTION WITH QP")
   expect_output(deconvolute(bulk=bulkTable, model="qp"), "SUMMARY OF RMSE VALUES USING  QP")
+  expect_equal(dim(deconvolute(bulk=bulkTable, model="qp")), dim(proportionsTable))
+  expect_equal(colnames(deconvolute(bulk=bulkTable, model="qp")), colnames(ref_atlas[,-1]))
 })
 
 test_that("deconvolute rlm", {
-  ref_atlas = utils::read.csv(system.file("reference_atlas_nodup.csv", package = "deconvR"))
-  bulkTable = makeBigTable(5)
+  ref_atlas = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
+  simulation = simulateCellMix(5)
+  bulkTable = simulation[[1]]
+  proportionsTable = simulation[[2]]
   expect_equal(dim(deconvolute(bulk=bulkTable, model="rlm")), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(dim(deconvolute(bulk=bulkTable[-1,], model="rlm")), c(5,length(colnames(ref_atlas[,-1]))))
   expect_equal(colnames(deconvolute(bulk=bulkTable, model="rlm")), colnames(ref_atlas[,-1]))
@@ -72,4 +86,6 @@ test_that("deconvolute rlm", {
   expect_error(deconvolute(model="rlm"))
   expect_output(deconvolute(bulk=bulkTable, model="rlm"), "DECONVOLUTION WITH RLM")
   expect_output(deconvolute(bulk=bulkTable, model="rlm"), "SUMMARY OF RMSE VALUES USING  RLM")
+  expect_equal(dim(deconvolute(bulk=bulkTable, model="rlm")), dim(proportionsTable))
+  expect_equal(colnames(deconvolute(bulk=bulkTable, model="rlm")), colnames(ref_atlas[,-1]))
 })
