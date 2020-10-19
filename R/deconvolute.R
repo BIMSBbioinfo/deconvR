@@ -95,7 +95,7 @@ deconvolute = function(reference=readRDS(system.file("reference_atlas_nodup.RDS"
       svr_coefficients = t(svr_model$coefs) %*% svr_model$SV
 
 
-      ifelse(svr_coefficients < 0, 0, svr_coefficients)
+      svr_coefficients= ifelse(svr_coefficients < 0, 0, svr_coefficients)
       #for (i in 1:length(svr_coefficients)) {
       #  if (svr_coefficients[i] < 0) {
       #    svr_coefficients[i] = 0 #normalize so all coefficients greater or equal to zero
@@ -137,7 +137,7 @@ deconvolute = function(reference=readRDS(system.file("reference_atlas_nodup.RDS"
 
       qp_coefficients = quadprog::solve.QP(Dmat = Dmat, dvec = dvec, Amat = t(Amat), bvec = bvec, meq = meq)$solution
 
-      ifelse(qp_coefficients < 0, 0, qp_coefficients)
+      qp_coefficients = ifelse(qp_coefficients < 0, 0, qp_coefficients)
       #for (i in 1:length(qp_coefficients)) {
       #  if (qp_coefficients[i] < 0) {
       #    qp_coefficients[i] = 0  #normalize so coefficients add to 1
@@ -171,7 +171,7 @@ deconvolute = function(reference=readRDS(system.file("reference_atlas_nodup.RDS"
       rlm_model = suppressWarnings(MASS::rlm(ref_rlm, mix_rlm, maxit = 100))
       rlm_coefficients = rlm_model$coefficients
 
-      ifelse(rlm_coefficients < 0, 0, rlm_coefficients)
+      rlm_coefficients = ifelse(rlm_coefficients < 0, 0, rlm_coefficients)
       #for (i in 1:length(rlm_coefficients)) {
       #  if (rlm_coefficients[i] < 0) {
       #    rlm_coefficients[i] = 0  #normalize so coefficients add to 1
