@@ -83,7 +83,8 @@ simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS
           }
         }
         rownames(proportionsTable)[1] = "Sample 1"
-        colnames(simulatedMixtureTable)[1] = "Sample 1"
+        colnames(simulatedMixtureTable)[2] = "Sample 1"
+
 
       }
     }
