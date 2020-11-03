@@ -15,15 +15,24 @@ Description: The package contains the function "deconvolute" which takes in
     is compatible to be used as the bulk input for deconvolute.
 Imports:
     tidyverse,
+    methylKit,
+    IRanges,
+    GenomicRanges,
+    BiocGenerics,
     stats,
+    methods,
     utils,
     tidyr,
     dplyr,
     foreach,
+    doParallel,
+    parallel,
     e1071,
     quadprog, 
     nnls,
     MASS
+Depends: R (>= 3.5.0),
+         data.table
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: TRUE
