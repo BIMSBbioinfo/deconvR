@@ -1,6 +1,7 @@
 #' A function to deconvolute of cell-free DNA methylation signals to their cell type of origin.
 #' Results of model are returned in dataframe "results".
 #' Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.
+#' @importFrom foreach %dopar%
 #' @param reference A dataframe containing CpG signatures of different cell types used to train the model. The first column
 #' should contain a unique ID (e.g. target ID) to match rows of the reference to rows of the bulk. All subsequent columns are cell types.
 #'  are CpGs. Each cell contains the methylation value for the cell type at the CpG location. If not given, defaults to a reference atlas
@@ -79,12 +80,13 @@ deconvolute = function(reference=readRDS(system.file("reference_atlas_nodup.RDS"
     for (i in 1:length(oper[[2]])){
     results[i,] = unlist(oper[[2]][[i]])
     }
+
     print(summary(as.numeric(unlist(oper[[1]]))))
 
 
   }
   else if (model == "svr") {  #support vector regression
-    oper <- foreach::foreach (h = 2:ncol(bulk), .inorder = TRUE, .combine = "comb", .multicombine=TRUE, .init=list(c(), list())) %dopar% {  #skip first column because it's CpGs
+    oper <- foreach::foreach(h = 2:ncol(bulk), .inorder = TRUE, .combine = "comb", .multicombine=TRUE, .init=list(c(), list())) %dopar% {  #skip first column because it's CpGs
       thedata = tidyr::drop_na(merge(dplyr::select(bulk, 1, h), reference, by="CpGs"))[,-1]
       ref_svr = as.matrix(thedata[,-1])
       mix_svr = as.matrix(thedata[,1])
@@ -118,6 +120,7 @@ deconvolute = function(reference=readRDS(system.file("reference_atlas_nodup.RDS"
       results[i,] = unlist(oper[[2]][[i]])
     }
     print(paste("SUMMARY OF RMSE VALUES USING ",toupper(model)))
+
     print(summary(as.numeric(unlist(oper[[1]]))))
   }
   else if (model == "qp") { #quadratic programming
@@ -160,6 +163,7 @@ deconvolute = function(reference=readRDS(system.file("reference_atlas_nodup.RDS"
     for (i in 1:length(oper[[2]])){
       results[i,] = unlist(oper[[2]][[i]])
     }
+
     print(summary(as.numeric(unlist(oper[[1]]))))
   }
   else if (model == "rlm") {  #robust linear regression

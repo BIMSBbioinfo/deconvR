@@ -27,9 +27,9 @@
 simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))) {
   simulatedMixtureTable = data.frame(matrix(ncol=numberOfSamples+1,nrow=nrow(reference)))
 #  colnames(simulatedMixtureTable) = "_"
-  colnames(simulatedMixtureTable)[1] = "CpGs"
   simulatedMixtureTable[,] = 0
   simulatedMixtureTable[,1] = reference[,1] #copy CpGs from reference atlas
+  colnames(simulatedMixtureTable)[1] = "CpGs"
 
   proportionsTable = data.frame(matrix(ncol=ncol(reference)-1, nrow=numberOfSamples))
   proportionsTable[,] = 0
@@ -47,8 +47,8 @@ simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS
           simulatedMixtureTable[,i+1] = (simulatedMixtureTable[,i+1] + (amts[c] * reference[,picks[c]+1])) # add the influence to the values
           proportionsTable[i, picks[c]] = amts[c]
       }
-      rownames(proportionsTable)[i] = paste("Sample ", i)
-      colnames(simulatedMixtureTable)[i+1] = paste("Sample ", i)
+      rownames(proportionsTable)[i] = paste("Sample", i)
+      colnames(simulatedMixtureTable)[i+1] = paste("Sample", i)
 
     }
   }
@@ -65,8 +65,8 @@ simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS
               proportionsTable[s, t] = mixingVector[t,s]
             }
           }
-          rownames(proportionsTable)[s] = paste("Sample ", s)
-          colnames(simulatedMixtureTable)[s+1] = paste("Sample ", s)
+          rownames(proportionsTable)[s] = paste("Sample", s)
+          colnames(simulatedMixtureTable)[s+1] = paste("Sample", s)
 
         }
       }
