@@ -30,6 +30,8 @@ test_that("BSmeth2Probe", {
   expect_equal(BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=wgbs), BSmeth2Probe(probe_id_locations=probe_ids_df, WGBS_data=wgbs))
   expect_equal(BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=methylKit::methRead(system.file("extdata", "test1.myCpG.txt", package = "methylKit"), sample.id="test", assembly="hg38", treatment=1, context="CpG", mincov = 0)),
                BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=as(methylKit::methRead(system.file("extdata", "test1.myCpG.txt", package = "methylKit"), sample.id="test", assembly="hg38", treatment=1, context="CpG", mincov = 0), "GRanges")))
+  expect_gte(NROW(BSmeth2Probe(probe_id_locations = probe_ids_df, WGBS_data = methylKit::dataSim(replicates=4,sites=200000,treatment=c(1,1,0,0), percentage=10,effect=25))), 0)
+
 
   expect_error(BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=wgbs, cutoff = -1))
   expect_error(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = probe_ids))
