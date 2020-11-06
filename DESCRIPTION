@@ -12,9 +12,12 @@ Description: The package contains the function "deconvolute" which takes in
     The RMSE values of the model are also printed upon completion. Also included is the function
     simulateCellMix, which can be used to simulate a bulk methylation profile of a given size, using a given
     reference atlas (again defaults to ref_atlas included in package). The outputted table of bulk samples
-    is compatible to be used as the bulk input for deconvolute.
+    is compatible to be used as the bulk input for deconvolute. Also included is BSmeth2Probe, which can be
+    used to map WGBS methylation data to probe IDs. The output dataframe of BSmeth2Probe can be used for
+    the bulk sample methylation profile of deconvolute.
 Imports:
     tidyverse,
+    S4Vectors,
     methylKit,
     IRanges,
     GenomicRanges,

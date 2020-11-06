@@ -36,6 +36,12 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
                                  ID = probe_id_locations[,"ID"])
 
   }
+  if ((class(WGBS_data) == "methylBaseDB") || (class(WGBS_data) == "methylBase")) {
+    percMeths = methylKit::percMethylation(WGBS_data)
+    WGBS_data = methods::as(WGBS_data, "GRanges")
+    GenomicRanges::mcols(WGBS_data) = S4Vectors::DataFrame(coverage = 100, numCs = rowMeans(percMeths), numTs = 100 - rowMeans(percMeths))
+  }
+
   if (class(WGBS_data) != "GRanges") { #turn WGBS_data to GRanges object if it is not already one
     WGBS_data = methods::as(WGBS_data, "GRanges")
   }
