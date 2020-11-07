@@ -21,7 +21,7 @@ should contain a unique ID (e.g. target ID) to match rows of the reference to ro
 
 \item{bulk}{A dataframe containing CpG signatures of different bulk methylation profiles used to test to model.
 Should be dataframe with first column "CpGs" for Illumina IDs (does not need to exactly match list of IDs in reference,
-but should have significant overlap), and rest of columns = cell types. Should not have duplicate Illumina IDs. May use
+but should have significant overlap), and rest of columns = samples. Should not have duplicate Illumina IDs. May use
 simulateCellMix function to create this dataframe.}
 
 \item{model}{A string indicating which model is used to deconvolute the samples. Can be either "nnls" (for non-negative least squares) or
