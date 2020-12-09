@@ -208,5 +208,5 @@ deconvolute = function(reference=readRDS(system.file("reference_atlas_nodup.RDS"
   }
  # print(paste("SUMMARY OF RMSE VALUES USING ",toupper(model)))
   #print(summary(results_RMSEs$RMSE))
-  results
+  return(results)
 }

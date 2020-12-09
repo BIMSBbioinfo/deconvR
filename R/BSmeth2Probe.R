@@ -26,7 +26,7 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
     stop("probe_id_locations must be either dataframe or GRanges object")
   }
 
-  if (class(WGBS_data) != "GRanges" && class(WGBS_data) != "methylRawDB"&& class(WGBS_data) != "methylRaw" && class(WGBS_data) != "methylBaseDB"&& class(WGBS_data) != "methylBase") {
+  if (! (class(WGBS_data) %in% c("GRanges", "methylRawDB", "methylRaw", "methylBaseDB", "methylBase"))) {
     stop("WGBS_data must be either GRanges object or methylKit object (methylRaw, methylBase, methylRawDB, or methylBaseDB")
   }
   if (class(probe_id_locations) == "data.frame") {
@@ -50,10 +50,12 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
     }
   }
   if ((class(WGBS_data) == "methylBaseDB") || (class(WGBS_data) == "methylBase")) {
-    percMeths = methylKit::percMethylation(WGBS_data)
-    percMeths = percMeths / 100
+    pm = methylKit::percMethylation(WGBS_data)
+    pm = pm / 100
     WGBS_data = methods::as(WGBS_data, "GRanges")
-    GenomicRanges::mcols(WGBS_data) = as.data.frame(percMeths)
+    GenomicRanges::mcols(WGBS_data) = as.data.frame(pm)
+    rm(pm)
+    gc()
   }
 
   if (class(WGBS_data) != "GRanges") { #turn WGBS_data to GRanges object if it is not already one
@@ -79,23 +81,27 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
   if (nrow(overlaps_df) == 0) {overlaps_df$distance = numeric()}
   if (nrow(overlaps_df) > 0) {overlaps_df[,"distance"] <- NA} #since there is no gap, say distance is NA
 
-  nearlyOverlaps_df = IRanges::mergeByOverlaps(WGBS_data, probe_id_locations, maxgap = cutoff)     #same mapping as first time, but now with cutoff gap allowed
-  #nearlyOverlaps_df = cbind(nearlyOverlaps_df, methylation = nearlyOverlaps_df[,"numCs"]/nearlyOverlaps_df[,"coverage"]) #methylation is fraction of reads which were Cs
-  nearlyOverlaps_df = subset(nearlyOverlaps_df, !(nearlyOverlaps_df$ID %in% overlaps_df$ID)) #discard probes already mapped in first round
-  if (nrow(nearlyOverlaps_df) == 0) {nearlyOverlaps_df$distance = numeric()}
-  if (nrow(nearlyOverlaps_df) > 0) {
-    nearlyOverlaps_df = cbind(nearlyOverlaps_df, distance=IRanges::distance(nearlyOverlaps_df$WGBS_data, nearlyOverlaps_df$probe_id_locations)) #the distance of the gap between probe location and WGBS data location
-    nearlyOverlaps_df = nearlyOverlaps_df[order(nearlyOverlaps_df$distance),] #order the df by distance so that when we delete duplicates, the duplicate with the largest gap is deleted
+  if (cutoff > 0) { #only need to do "nearlyOverlaps" if cutoff > 0
+    nearlyOverlaps_df = IRanges::mergeByOverlaps(WGBS_data, probe_id_locations, maxgap = cutoff)     #same mapping as first time, but now with cutoff gap allowed
+    #nearlyOverlaps_df = cbind(nearlyOverlaps_df, methylation = nearlyOverlaps_df[,"numCs"]/nearlyOverlaps_df[,"coverage"]) #methylation is fraction of reads which were Cs
+    nearlyOverlaps_df = subset(nearlyOverlaps_df, !(nearlyOverlaps_df$ID %in% overlaps_df$ID)) #discard probes already mapped in first round
+    if (nrow(nearlyOverlaps_df) == 0) {nearlyOverlaps_df$distance = numeric()}
+    if (nrow(nearlyOverlaps_df) > 0) {
+      nearlyOverlaps_df = cbind(nearlyOverlaps_df, distance=IRanges::distance(nearlyOverlaps_df$WGBS_data, nearlyOverlaps_df$probe_id_locations)) #the distance of the gap between probe location and WGBS data location
+      nearlyOverlaps_df = nearlyOverlaps_df[order(nearlyOverlaps_df$distance),] #order the df by distance so that when we delete duplicates, the duplicate with the largest gap is deleted
 
-    if (!multipleMapping) {
-      if (nrow(overlaps_df) > 0) {
-        nearlyOverlaps_df = subset(nearlyOverlaps_df, !(is.element(data.table::transpose(BiocGenerics::as.data.frame(nearlyOverlaps_df$WGBS_data)), data.table::transpose(BiocGenerics::as.data.frame(overlaps_df$WGBS_data))))) #remove where CpG already mapped in first round if multipleMapping has been set to false
+      if (!multipleMapping) {
+        if (nrow(overlaps_df) > 0) {
+          nearlyOverlaps_df = subset(nearlyOverlaps_df, !(is.element(data.table::transpose(BiocGenerics::as.data.frame(nearlyOverlaps_df$WGBS_data)), data.table::transpose(BiocGenerics::as.data.frame(overlaps_df$WGBS_data))))) #remove where CpG already mapped in first round if multipleMapping has been set to false
+        }
+        nearlyOverlaps_df = nearlyOverlaps_df[!duplicated(nearlyOverlaps_df$WGBS_data),]  #remove multiple mappings of CpG if multipleMapping has been set to false
       }
-      nearlyOverlaps_df = nearlyOverlaps_df[!duplicated(nearlyOverlaps_df$WGBS_data),]  #remove multiple mappings of CpG if multipleMapping has been set to false
     }
+    allresults = rbind(overlaps_df, nearlyOverlaps_df) #combine all of the mapping into one dataframe
   }
-
-  allresults = rbind(overlaps_df, nearlyOverlaps_df) #combine all of the mapping into one dataframe
+  if (cutoff == 0) { #if cutoff is 0, then all results are just exact overlaps
+    allresults = overlaps_df
+  }
   allresults = allresults[,-c(1,NCOL(allresults)-2, NCOL(allresults))]
   allresults = allresults[c(ncol(allresults), 1:ncol(allresults)-1)]
   if (nrow(allresults) > 0) {
@@ -110,6 +116,6 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
 
         }
 
-  as.data.frame(allresults) #the return value is a dataframe with column for CpG IDs, then 1 or more columns for methylation values of sample(s)
+  return(as.data.frame(allresults)) #the return value is a dataframe with column for CpG IDs, then 1 or more columns for methylation values of sample(s)
 
 }
