@@ -65,6 +65,7 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
     colnames(GenomicRanges::mcols(WGBS_data)) = sampleName
   }
   if (class(WGBS_data) == "GRanges") {
+    elementMetadata(WGBS_data) = nafill(as.data.frame(elementMetadata(WGBS_data)), fill = 0)
     if (NCOL(S4Vectors::elementMetadata(WGBS_data)) == 0) {
       stop("WGBS_data should have at least one metadata column. No samples?")
     }
