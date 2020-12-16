@@ -53,19 +53,17 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
     pm = methylKit::percMethylation(WGBS_data)
     pm = pm / 100
     WGBS_data = methods::as(WGBS_data, "GRanges")
-    elementMetadata(WGBS_data) = nafill(as.data.frame(elementMetadata(WGBS_data)), fill = 0)
     GenomicRanges::mcols(WGBS_data) = as.data.frame(pm)
   }
 
   if (class(WGBS_data) != "GRanges") { #turn WGBS_data to GRanges object if it is not already one
     sampleName = methylKit::getSampleID(WGBS_data)
     WGBS_data = methods::as(WGBS_data, "GRanges")
-    elementMetadata(WGBS_data) = nafill(as.data.frame(elementMetadata(WGBS_data)), fill = 0)
     GenomicRanges::mcols(WGBS_data) = WGBS_data$numCs / WGBS_data$coverage
     colnames(GenomicRanges::mcols(WGBS_data)) = sampleName
   }
   if (class(WGBS_data) == "GRanges") {
-    elementMetadata(WGBS_data) = nafill(as.data.frame(elementMetadata(WGBS_data)), fill = 0)
+    elementMetadata(WGBS_data) = data.table::nafill(as.data.frame(elementMetadata(WGBS_data)), fill = 0)
     if (NCOL(S4Vectors::elementMetadata(WGBS_data)) == 0) {
       stop("WGBS_data should have at least one metadata column. No samples?")
     }
