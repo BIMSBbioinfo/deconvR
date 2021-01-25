@@ -63,7 +63,9 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
     colnames(GenomicRanges::mcols(WGBS_data)) = sampleName
   }
   if (class(WGBS_data) == "GRanges") {
-    elementMetadata(WGBS_data) = data.table::nafill(as.data.frame(elementMetadata(WGBS_data)), fill = 0)
+    column_names=  colnames(GenomicRanges::mcols(WGBS_data))
+    S4Vectors::elementMetadata(WGBS_data) = data.table::nafill(as.data.frame(S4Vectors::elementMetadata(WGBS_data)), fill = 0)
+    colnames(GenomicRanges::mcols(WGBS_data)) = column_names
     if (NCOL(S4Vectors::elementMetadata(WGBS_data)) == 0) {
       stop("WGBS_data should have at least one metadata column. No samples?")
     }
@@ -101,12 +103,13 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
   if (cutoff == 0) { #if cutoff is 0, then all results are just exact overlaps
     allresults = overlaps_df
   }
+
   allresults = allresults[,-c(1,NCOL(allresults)-2, NCOL(allresults))]
   allresults = allresults[c(ncol(allresults), 1:ncol(allresults)-1)]
   if (nrow(allresults) > 0) {
     allresults = stats::aggregate(x = allresults[,-1], by = list(ID = allresults[,1]), FUN = mean) #if a probe was mapped to multiple CpGs, take the mean methylation value
     for (i in 2:ncol(allresults)) {
-      colnames(allresults)[i] = colnames(GenomicRanges::mcols(WGBS_data)[i-1])
+      colnames(allresults)[i] = colnames(GenomicRanges::mcols(WGBS_data))[i-1]
     }
   }
   colnames(allresults)[1] = "CpGs"
