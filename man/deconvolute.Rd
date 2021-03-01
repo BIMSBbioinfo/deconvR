@@ -15,7 +15,7 @@ deconvolute(
 \arguments{
 \item{reference}{A dataframe containing CpG signatures of different cell types used to train the model. The first column
 should contain a unique ID (e.g. target ID) to match rows of the reference to rows of the bulk. All subsequent columns are cell types.
- are CpGs. Each cell contains the methylation value for the cell type at the CpG location. If not given, defaults to a reference atlas
+ Rows are CpGs. Each cell contains the methylation value for the cell type at the CpG location. If not given, defaults to a reference atlas
  which is included in this package (see deconvR/inst/reference_atlas_nodup.RDS). This atlas contains 25 cell types, 6105 CpGs (and their target IDs),
  and therefore 152,625 methylation values.}
 
