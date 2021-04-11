@@ -2,9 +2,9 @@
 % Please edit documentation in R/deconvolute.R
 \name{deconvolute}
 \alias{deconvolute}
-\title{A function to deconvolute of cell-free DNA methylation signals to their cell type of origin.
+\title{A function to deconvolute of bulk samples to their origin cell type proportions using e.g. methylation signature
 Results of model are returned in dataframe "results".
-Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.}
+Summary of partial R-squared values of model (min, median, mean, max...) are printed upon completion.}
 \usage{
 deconvolute(
   reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
@@ -13,15 +13,15 @@ deconvolute(
 )
 }
 \arguments{
-\item{reference}{A dataframe containing CpG signatures of different cell types used to train the model. The first column
+\item{reference}{A dataframe containing signatures of different cell types (e.g. methylation signature) used to train the model. The first column
 should contain a unique ID (e.g. target ID) to match rows of the reference to rows of the bulk. All subsequent columns are cell types.
- Rows are CpGs. Each cell contains the methylation value for the cell type at the CpG location. If not given, defaults to a reference atlas
- which is included in this package (see deconvR/inst/reference_atlas_nodup.RDS). This atlas contains 25 cell types, 6105 CpGs (and their target IDs),
- and therefore 152,625 methylation values.}
+ One row per unit of the signature (e.g. CpG). Each cell contains the value for the cell type for this unit (e.g. methylation value of the CpG).
+ If not given, defaults to a reference atlas which is included in this package (see deconvR/inst/reference_atlas_nodup.RDS).
+ This reference atlas comes from Moss et al. (2018)}
 
-\item{bulk}{A dataframe containing CpG signatures of different bulk methylation profiles used to test to model.
-Should be dataframe with first column "CpGs" for Illumina IDs (does not need to exactly match list of IDs in reference,
-but should have significant overlap), and rest of columns = samples. Should not have duplicate Illumina IDs. May use
+\item{bulk}{A dataframe containing signatures of bulk samples used to test to model.
+Should be dataframe with first column with unique IDs (does not need to exactly match list of IDs in reference,
+but should have significant overlap), and rest of columns = samples. Should not have duplicate IDs. May use
 simulateCellMix function to create this dataframe.}
 
 \item{model}{A string indicating which model is used to deconvolute the samples. Can be either "nnls" (for non-negative least squares) or
@@ -31,13 +31,16 @@ simulateCellMix function to create this dataframe.}
 A dataframe which contains predicted cell-type proportions of bulk methylation profiles in "bulk".
 }
 \description{
-A function to deconvolute of cell-free DNA methylation signals to their cell type of origin.
+A function to deconvolute of bulk samples to their origin cell type proportions using e.g. methylation signature
 Results of model are returned in dataframe "results".
-Summary of RMSE values of model (min, median, mean, max...) are printed upon completion.
+Summary of partial R-squared values of model (min, median, mean, max...) are printed upon completion.
 }
 \examples{
  deconvolute(bulk=simulateCellMix(50)[[1]])
  deconvolute(reference=readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
     bulk=simulateCellMix(5)[[1]],model="rlm")
+}
+\references{
+Moss, J. et al.  (2018). Comprehensive human cell-type methylation atlas reveals origins of circulating cell-free DNA in health and disease. Nature communications, 9(1), 1-12. \url{https://doi.org/10.1038/s41467-018-07466-6}
 }
 \keyword{deconvolution}

@@ -4,10 +4,11 @@
 #' Otherwise, this is a dataframe with rows for cell types (must be equal to cell types in reference) and columns for samples.
 #' Cells contain the proportion of the sample from the cell type. Use zeros for any unused cell type. If this object is not given,
 #' will use random values for the simulation.
-#' @param reference A dataframe containing CpG signatures of different cell types used to generate the simulation. The first column should contain a unique ID
-#' (e.g. target ID) which can be used in deconvolution to match rows of the reference to rows of the bulk. All subsequent columns are cell types.
-#' Rows are CpGs. Each cell contains the methylation value for the cell type at the CpG location. If not given, defaults to a reference atlas which is included in this
-#' package (see deconvR/inst/reference_atlas_nodup.RDS). This atlas contains 25 cell types, 6105 CpGs (and their target IDs), and therefore 152,625 methylation values.
+#' @param reference A dataframe containing signatures of different cell types used to generate the simulation. The first column should contain a unique ID
+#' (e.g. CpG target ID) which can be used in deconvolution to match rows of the reference to rows of the bulk. All subsequent columns are cell types.
+#' Rows are units of the signature. Each cell contains the value for the cell type and signature unit (e.g. methylation value at this CpG). If not given,
+#' defaults to a reference atlas which is included in this package (see deconvR/inst/reference_atlas_nodup.RDS). This reference atlas comes from Moss et al. (2018)
+#'
 #' @keywords simulation
 #' @examples
 #' simulateCellMix(50)
@@ -19,19 +20,19 @@
 #'   c(0.1,0,0,0,0,0,0.5,0,0,0.2,0,0,0,0,0,0,0.2,0,0,0,0,0,0,0,0)))
 #' @return A list containing two data frames.
 #' First: A dataframe which contains mixed cell-type origin simulated samples. The first column contains a unique ID (used from reference) which can be used in
-#' deconvolution to match rows of the reference to rows of the bulk. All subsequent columns are cell types. Rows are CpGs. Each cell contains the methylation
-#' value for the cell type at the CpG location.
+#' deconvolution to match rows of the reference to rows of the bulk. All subsequent columns are cell types. Rows are units of signature (e.g. CpGs) Each cell
+#' contains the value for the cell type and unit (e.g. methylation value at this CpG)
 #' Second: A dataframe with the cell proportions of the generated samples. Each row is a sample. Columns are cell types.
+#' @references Moss, J. et al.  (2018). Comprehensive human cell-type methylation atlas reveals origins of circulating cell-free DNA in health and disease. Nature communications, 9(1), 1-12. \url{https://doi.org/10.1038/s41467-018-07466-6}
 #' @export
 
 simulateCellMix = function(numberOfSamples, mixingVector=NULL, reference=readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))) {
-  simulatedMixtureTable = data.frame(matrix(ncol=numberOfSamples+1,nrow=nrow(reference)))
-#  colnames(simulatedMixtureTable) = "_"
+  simulatedMixtureTable = data.frame(matrix(ncol=numberOfSamples+1,nrow=nrow(reference))) # setting up simulatedMixtureTable which will hold simulation methylation values
   simulatedMixtureTable[,] = 0
-  simulatedMixtureTable[,1] = reference[,1] #copy CpGs from reference atlas
-  colnames(simulatedMixtureTable)[1] = "CpGs"
+  simulatedMixtureTable[,1] = reference[,1] #copy IDs from reference atlas
+  colnames(simulatedMixtureTable)[1] = "IDs"
 
-  proportionsTable = data.frame(matrix(ncol=ncol(reference)-1, nrow=numberOfSamples))
+  proportionsTable = data.frame(matrix(ncol=ncol(reference)-1, nrow=numberOfSamples)) # setting up proportionsTable which will hold simulation origin cell proportions
   proportionsTable[,] = 0
   colnames(proportionsTable) = colnames(reference[,-1])
 

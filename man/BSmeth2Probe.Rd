@@ -21,7 +21,7 @@ BSmeth2Probe(
 \item{multipleMapping}{When searching for matches for probes not directly covered in WGBS data, should WGBS CpGs which have already been mapped to another probe still be considered? If TRUE, then yes. If FALSE, then no. Default value is FALSE.}
 }
 \value{
-A dataframe with first column "CpGs" for CpG IDs, then 1 or more columns for methylation values of sample(s) (same number of samples as in WGBS_data)
+A dataframe with first column "IDs" for CpG IDs, then 1 or more columns for methylation values of sample(s) (same number of samples as in WGBS_data)
 ID for each probe which was mapped, and then methylation value(s) of the WGBS CpG to which it was matched (where either it overlapped or the gap was < cutoff).
 If it matched to more than one CpG, the mean methylation value is taken.
 }
