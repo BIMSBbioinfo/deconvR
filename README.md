@@ -29,5 +29,5 @@ signatures of cell types.
 You can install deconvR with:
 
 ``` r
-devtools::install_github(BIMSBbioinfo/deconvR)
+devtools::install_github("BIMSBbioinfo/deconvR", auth_token = "add your github personal access token here")
 ```
