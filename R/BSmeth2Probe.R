@@ -11,7 +11,7 @@
 #' BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=wgbs[5:1000], cutoff = 0)
 #' BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=wgbs, cutoff = 500, multipleMapping = TRUE)
 #' BSmeth2Probe(probe_id_locations=probe_ids[100:200], WGBS_data=wgbs[1:10])
-#' @return A dataframe with first column "CpGs" for CpG IDs, then 1 or more columns for methylation values of sample(s) (same number of samples as in WGBS_data)
+#' @return A dataframe with first column "IDs" for CpG IDs, then 1 or more columns for methylation values of sample(s) (same number of samples as in WGBS_data)
 
 #' ID for each probe which was mapped, and then methylation value(s) of the WGBS CpG to which it was matched (where either it overlapped or the gap was < cutoff).
 #' If it matched to more than one CpG, the mean methylation value is taken.
@@ -78,13 +78,11 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
   }
 
   overlaps_df = IRanges::mergeByOverlaps(WGBS_data, probe_id_locations) #mapping CpG locations to probe locations by overlap
-  #overlaps_df = cbind(overlaps_df, methylation=overlaps_df[,"numCs"]/overlaps_df[,"coverage"])  #methylation is fraction of coverage which read Cs
   if (nrow(overlaps_df) == 0) {overlaps_df$distance = numeric()}
   if (nrow(overlaps_df) > 0) {overlaps_df[,"distance"] <- NA} #since there is no gap, say distance is NA
 
   if (cutoff > 0) { #only need to do "nearlyOverlaps" if cutoff > 0
     nearlyOverlaps_df = IRanges::mergeByOverlaps(WGBS_data, probe_id_locations, maxgap = cutoff)     #same mapping as first time, but now with cutoff gap allowed
-    #nearlyOverlaps_df = cbind(nearlyOverlaps_df, methylation = nearlyOverlaps_df[,"numCs"]/nearlyOverlaps_df[,"coverage"]) #methylation is fraction of reads which were Cs
     nearlyOverlaps_df = subset(nearlyOverlaps_df, !(nearlyOverlaps_df$ID %in% overlaps_df$ID)) #discard probes already mapped in first round
     if (nrow(nearlyOverlaps_df) == 0) {nearlyOverlaps_df$distance = numeric()}
     if (nrow(nearlyOverlaps_df) > 0) {
@@ -104,15 +102,15 @@ BSmeth2Probe = function(probe_id_locations, WGBS_data, cutoff = 10, multipleMapp
     allresults = overlaps_df
   }
 
-  allresults = allresults[,-c(1,NCOL(allresults)-2, NCOL(allresults))]
-  allresults = allresults[c(ncol(allresults), 1:ncol(allresults)-1)]
+  allresults = allresults[,-c(1,NCOL(allresults)-2, NCOL(allresults))]    ## these are just cleaning up allresults a bit to make aggregation easier
+  allresults = allresults[c(ncol(allresults), 1:ncol(allresults)-1)]      ##
   if (nrow(allresults) > 0) {
-    allresults = stats::aggregate(x = allresults[,-1], by = list(ID = allresults[,1]), FUN = mean) #if a probe was mapped to multiple CpGs, take the mean methylation value
+    allresults = stats::aggregate(x = allresults[,-1], by = list(ID = allresults[,1]), FUN = mean) # if a probe was mapped to multiple CpGs, take the mean methylation value
     for (i in 2:ncol(allresults)) {
-      colnames(allresults)[i] = colnames(GenomicRanges::mcols(WGBS_data))[i-1]
+      colnames(allresults)[i] = colnames(GenomicRanges::mcols(WGBS_data))[i-1] # set column names to match WGBS data
     }
   }
-  colnames(allresults)[1] = "CpGs"
+  colnames(allresults)[1] = "IDs"
   if (nrow(allresults) == 0) {
     print("Result dataframe is empty. No matches could be found.")
 

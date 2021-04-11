@@ -2,5 +2,8 @@
 
 export(BSmeth2Probe)
 export(deconvolute)
+export(findSignatures)
 export(simulateCellMix)
+import(data.table)
 importFrom(foreach,"%dopar%")
+importFrom(magrittr,"%>%")
