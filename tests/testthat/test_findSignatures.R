@@ -33,6 +33,10 @@ test_that("findSignatures", {
   expect_lte(max(unlist(results[,-1])), 1)
   expect_gte(min(unlist(results[,-1])), 0)
 
+  results_cutoff = findSignatures(samples = exampleSamples, sampleMeta = exampleMeta, variation_cutoff = 0.01)
+  expect_gt(NROW(results), NROW(results_cutoff))
+
+
   # now a more complex example, with 10 cell types, 100 samples, and a reference atlas of 25 cell types
   exampleReference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
   exampleSamples = simulateCellMix(100, reference = exampleReference[c(1:1000, 2000:5000),])[[1]]
