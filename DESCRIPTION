@@ -1,9 +1,9 @@
 Package: deconvR
 Type: Package
 Title: Simulation and Deconvolution of Cellular Signatures
-Version: 0.1.0
+Version: 0.99.0
 Date: 2020-10-08
-Authors@R: c(person("Veronika", "Ebenal", email="veronikaebenal@gmail.com", role=c("aut", "cre")))
+Authors@R: c(person("Veronika", "Ebenal", email="veronikaebenal@gmail.com", role=c("aut", "cre"), comment = c(ORCID = "0000-0001-7976-3964")))
 Description: The package contains the function "deconvolute" which takes in
     a reference atlas (defaults to ref_atlas included in package), a bulk sample(s) signature profile,
     and the desired model to be used (non-negative least squares regression, support vector regression,
@@ -17,35 +17,39 @@ Description: The package contains the function "deconvolute" which takes in
     the bulk sample methylation profile of deconvolute. Also included is findSignatures, which can create
     or extend a reference atlas containing signatures of cell types.
 Imports:
-    tidyverse,
+    assertthat,
     S4Vectors,
     methylKit,
     IRanges,
     GenomicRanges,
     BiocGenerics,
     stats,
-    methods,
+    tidyverse,
     utils,
+    tibble,
+    doParallel,
+    parallel,
+    methods,
     tidyr,
     dplyr,
     foreach,
-    tibble,
     magrittr,
-    doParallel,
-    parallel,
     matrixStats,
     e1071,
     quadprog, 
     nnls,
     rsq,
     MASS
-Depends: R (>= 3.5.0),
+Depends: R (>= 4.1),
          data.table
 License: Artistic-2.0
 Encoding: UTF-8
-LazyData: TRUE
+VignetteBuilder: knitr
+biocViews: DNAMethylation, Regression
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     roxygen2,
+    knitr,
+    rmarkdown,
     devtools

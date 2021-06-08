@@ -2,7 +2,7 @@ context("simulateCellMix")
 library(deconvR)
 
 test_that("simulateCellMix", {
-  ref_atlas = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
+  ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
   expect_equal(dim(simulateCellMix(1)[[1]]), c(dim(ref_atlas[,-1])[1], 1+1))
   expect_equal(simulateCellMix(1)[[1]][,1], ref_atlas[,1])
   expect_equal(dim(simulateCellMix(numberOfSamples = 50, reference = ref_atlas)[[1]]), c(dim(ref_atlas[,-1])[1], 50+1))
