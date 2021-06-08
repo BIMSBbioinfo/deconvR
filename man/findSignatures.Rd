@@ -9,7 +9,7 @@ findSignatures(samples, sampleMeta, atlas = NULL, variation_cutoff = NULL)
 \arguments{
 \item{samples}{dataframe, has first column IDs, rest of columns are samples (must have column name as sample accession ID which should be found in sampleMeta), rows are units of signature (e.g. CpGs)}
 
-\item{sampleMeta}{dataframe, must have Experiment_accession for accession ID of each sample, and Biosample_term_name for cell type of sample, rows are samples}
+\item{sampleMeta}{dataframe, must have first column for accession ID of each sample, and second column for cell type of sample, rows are samples}
 
 \item{atlas}{dataframe, the reference atlas to which new signatures can be added, if not present then a new reference atlas will be created using sample(s). Should be dataframe with column for each cell type, rows units of signature (e.g. CpGs)}
 
@@ -22,11 +22,11 @@ A dataframe extendedAtlas which contains all cell types in atlas (if given), and
 A function to construct a signature matrix
 }
 \examples{
- exampleSamples = simulateCellMix(1)[[1]]
- exampleReference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
- exampleMeta = data.table( "Experiment_accession" = "example_sample",
+ exampleSamples <- simulateCellMix(1)[[1]]
+ exampleReference <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
+ exampleMeta <- data.table("Experiment_accession" = "example_sample",
                            "Biosample_term_name" = "example_cell_type")
- colnames(exampleSamples)[-1] =  c("example_sample")
+ colnames(exampleSamples)[-1] <-  c("example_sample")
  findSignatures(samples = exampleSamples, sampleMeta = exampleMeta)
  findSignatures(samples = exampleSamples, sampleMeta = exampleMeta, atlas = exampleReference)
 

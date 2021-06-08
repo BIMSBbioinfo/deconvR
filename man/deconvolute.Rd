@@ -2,12 +2,13 @@
 % Please edit documentation in R/deconvolute.R
 \name{deconvolute}
 \alias{deconvolute}
-\title{A function to deconvolute of bulk samples to their origin cell type proportions using e.g. methylation signature
+\title{A function to deconvolute of bulk samples to their origin proportions using data from reference atlas (e.g. methylation signatures)
 Results of model are returned in dataframe "results".
 Summary of partial R-squared values of model (min, median, mean, max...) are printed upon completion.}
 \usage{
 deconvolute(
   reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
+  vec = NULL,
   bulk,
   model = "nnls"
 )
@@ -19,6 +20,10 @@ should contain a unique ID (e.g. target ID) to match rows of the reference to ro
  If not given, defaults to a reference atlas which is included in this package (see deconvR/inst/reference_atlas_nodup.RDS).
  This reference atlas comes from Moss et al. (2018)}
 
+\item{vec}{The user may provide a vector with which partial R-squared of the results will be calculated.
+The length must match the number of rows of the reference and bulk tables merged on the ID column (with NAs removed).
+Defaults to row means of reference.}
+
 \item{bulk}{A dataframe containing signatures of bulk samples used to test to model.
 Should be dataframe with first column with unique IDs (does not need to exactly match list of IDs in reference,
 but should have significant overlap), and rest of columns = samples. Should not have duplicate IDs. May use
@@ -28,10 +33,10 @@ simulateCellMix function to create this dataframe.}
 "svr" (support vector regression) or "qp" (quadratic programming) or "rlm" (robust linear regression). If not given, defaults to "nnls".}
 }
 \value{
-A dataframe which contains predicted cell-type proportions of bulk methylation profiles in "bulk".
+A list, first is a dataframe which contains predicted cell-type proportions of bulk methylation profiles in "bulk", second is a list of partial-rsq values of results, one value per sample
 }
 \description{
-A function to deconvolute of bulk samples to their origin cell type proportions using e.g. methylation signature
+A function to deconvolute of bulk samples to their origin proportions using data from reference atlas (e.g. methylation signatures)
 Results of model are returned in dataframe "results".
 Summary of partial R-squared values of model (min, median, mean, max...) are printed upon completion.
 }
