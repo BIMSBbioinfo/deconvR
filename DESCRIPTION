@@ -27,8 +27,6 @@ Imports:
     tidyverse,
     utils,
     tibble,
-    doParallel,
-    parallel,
     methods,
     tidyr,
     dplyr,
@@ -44,12 +42,16 @@ Depends: R (>= 4.1),
          data.table
 License: Artistic-2.0
 Encoding: UTF-8
-VignetteBuilder: knitr
+VignetteBuilder: knitr, rmarkdown
 biocViews: DNAMethylation, Regression
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     roxygen2,
+    doParallel,
+    parallel,
     knitr,
+    reshape2,
+    ggplot2,
     rmarkdown,
     devtools

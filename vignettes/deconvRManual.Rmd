@@ -23,11 +23,10 @@ opts_chunk$set(root.dir=getwd(),fig.align='center',
                fig.show='hold', 
                cache=FALSE)
 library(deconvR)
-library(reshape2)
 library(ggplot2)
-library(doParallel) 
-cl <- makeCluster(detectCores(), type='PSOCK')
-registerDoParallel(cl)
+library(reshape2)
+cl <- parallel::makeCluster(2)
+doParallel::registerDoParallel(cl)
 listboth1000 = simulateCellMix(1000)
 propstable1000 = listboth1000[[2]]
 bulktable1000 = listboth1000[[1]]
@@ -492,14 +491,14 @@ time_data <- data.frame(c(1,10,100,1000), c(nnls_time1, nnls_time10, nnls_time10
                        c(qp_time1, qp_time10, qp_time100, qp_time1000), c(rlm_time1, rlm_time10, rlm_time100, rlm_time1000))
 colnames(time_data) <- c("NumberOfSamples", "NNLS", "SVR", "QP", "RLM")
 
-ggplot(time_data, aes(x=NumberOfSamples)) + 
-  geom_line(aes(y = NNLS, color = "steelblue")) + 
-  geom_line(aes(y = SVR, color="green")) +
-  geom_line(aes(y = QP, color = "pink"), linetype="twodash") +
-  geom_line(aes(y = RLM, color="orange"), linetype="twodash") +
+ggplot2::ggplot(time_data, ggplot2::aes(x=NumberOfSamples)) + 
+  ggplot2::geom_line(ggplot2::aes(y = NNLS, color = "steelblue")) + 
+  ggplot2::geom_line(ggplot2::aes(y = SVR, color="green")) +
+  ggplot2::geom_line(ggplot2::aes(y = QP, color = "pink"), linetype="twodash") +
+  ggplot2::geom_line(ggplot2::aes(y = RLM, color="orange"), linetype="twodash") +
   ylab("Time (seconds)")+  xlab("Number of Samples")+
   scale_color_discrete(name = "Model", labels = c("SVR", "RLM","QP", "NNLS"))+
-  ggtitle("Runtime of Models")
+  ggplot2::ggtitle("Runtime of Models")
 
 
 ```
@@ -521,21 +520,21 @@ for (i in 2:25) {
 }
 scatterdf_nnls[,4] <- samplenumslist
 colnames(scatterdf_nnls)[4] <- "samplenum"
-sp_nnls <- ggplot(scatterdf_nnls, aes(x=actual, y=predicted, color=celltype)) + geom_point() + ggtitle("NNLS Overall")
+sp_nnls <- ggplot2::ggplot(scatterdf_nnls, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point() + ggplot2::ggtitle("NNLS Overall")
 sp_nnls
 ```
 
 ```{r}
 nnls_bestcase <- subset(nnls_rmse, nnls_rmse <= quantile(nnls_rmse, probs = c(0, 0.05, 0.95, 1))[2])
 scatter_nnls_bestcase <- subset(scatterdf_nnls, is.element(scatterdf_nnls[,4], rownames(nnls_bestcase)))
-sp_nnls_bestcase <- ggplot(scatter_nnls_bestcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ ggtitle("NNLS Best Case")
+sp_nnls_bestcase <- ggplot2::ggplot(scatter_nnls_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("NNLS Best Case")
 sp_nnls_bestcase
 ```
 
 ```{r}
 nnls_worstcase <- subset(nnls_rmse, nnls_rmse >= quantile(nnls_rmse, probs = c(0, 0.05, 0.95, 1))[3])
 scatter_nnls_worstcase <- subset(scatterdf_nnls, is.element(scatterdf_nnls[,4], rownames(nnls_worstcase)))
-sp_nnls_worstcase <- ggplot(scatter_nnls_worstcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ ggtitle("NNLS Worst Case")
+sp_nnls_worstcase <- ggplot2::ggplot(scatter_nnls_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("NNLS Worst Case")
 sp_nnls_worstcase
 ```
 
@@ -550,21 +549,21 @@ for (i in 2:25) {
 }
 scatterdf_svr[,4] <- samplenumslist
 colnames(scatterdf_svr)[4] <- "samplenum"
-sp_svr <- ggplot(scatterdf_svr, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ ggtitle("SVR Ovrerll")
+sp_svr <- ggplot2::ggplot(scatterdf_svr, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("SVR Ovrerll")
 sp_svr
 ```
 
 ```{r}
 svr_bestcase <- subset(svr_rmse, svr_rmse <= quantile(svr_rmse, probs = c(0, 0.05, 0.95, 1))[2])
 scatter_svr_bestcase <- subset(scatterdf_svr, is.element(scatterdf_svr[,4], rownames(svr_bestcase)))
-sp_svr_bestcase <- ggplot(scatter_svr_bestcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ ggtitle("SVR Best Case")
+sp_svr_bestcase <- ggplot2::ggplot(scatter_svr_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("SVR Best Case")
 sp_svr_bestcase
 ```
 
 ```{r}
 svr_worstcase <- subset(svr_rmse, svr_rmse >= quantile(svr_rmse, probs = c(0, 0.05, 0.95, 1))[3])
 scatter_svr_worstcase <- subset(scatterdf_svr, is.element(scatterdf_svr[,4], rownames(svr_worstcase)))
-sp_svr_worstcase <- ggplot(scatter_svr_worstcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ ggtitle("SVR Worst Case")
+sp_svr_worstcase <- ggplot2::ggplot(scatter_svr_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("SVR Worst Case")
 sp_svr_worstcase
 ```
 
@@ -579,7 +578,7 @@ for (i in 2:25) {
 }
 scatterdf_qp[,4] <- samplenumslist
 colnames(scatterdf_qp)[4] <- "samplenum"
-sp_qp <- ggplot(scatterdf_qp, aes(x=actual, y=predicted, color=celltype)) + geom_point() +ggtitle("QP Overall")
+sp_qp <- ggplot2::ggplot(scatterdf_qp, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point() +ggplot2::ggtitle("QP Overall")
 sp_qp
 ```
 
@@ -587,14 +586,14 @@ sp_qp
 
 qp_bestcase <- subset(qp_rmse, qp_rmse <= quantile(qp_rmse, probs = c(0, 0.05, 0.95, 1))[2])
 scatter_qp_bestcase <- subset(scatterdf_qp, is.element(scatterdf_qp[,4], rownames(qp_bestcase)))
-sp_qp_bestcase <- ggplot(scatter_qp_bestcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ggtitle("QP Best Case")
+sp_qp_bestcase <- ggplot2::ggplot(scatter_qp_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("QP Best Case")
 sp_qp_bestcase
 ```
 
 ```{r}
 qp_worstcase <- subset(qp_rmse, qp_rmse >= quantile(qp_rmse, probs = c(0, 0.05, 0.95, 1))[3])
 scatter_qp_worstcase <- subset(scatterdf_qp, is.element(scatterdf_qp[,4], rownames(qp_worstcase)))
-sp_qp_worstcase <- ggplot(scatter_qp_worstcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ggtitle("QP Worst Case")
+sp_qp_worstcase <- ggplot2::ggplot(scatter_qp_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("QP Worst Case")
 sp_qp_worstcase
 ```
 
@@ -609,7 +608,7 @@ for (i in 2:25) {
 }
 scatterdf_rlm[,4] <- samplenumslist
 colnames(scatterdf_rlm)[4] <- "samplenum"
-sp_rlm <- ggplot(scatterdf_rlm, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ggtitle("RLM Overall")
+sp_rlm <- ggplot2::ggplot(scatterdf_rlm, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("RLM Overall")
 sp_rlm
 ```
 
@@ -617,14 +616,14 @@ sp_rlm
 
 rlm_bestcase <- subset(rlm_rmse, rlm_rmse <= quantile(rlm_rmse, probs = c(0, 0.05, 0.95, 1))[2])
 scatter_rlm_bestcase <- subset(scatterdf_rlm, is.element(scatterdf_rlm[,4], rownames(rlm_bestcase)))
-sp_rlm_bestcase <- ggplot(scatter_rlm_bestcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ggtitle("RLM Best Case")
+sp_rlm_bestcase <- ggplot2::ggplot(scatter_rlm_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("RLM Best Case")
 sp_rlm_bestcase
 ```
 
 ```{r}
 rlm_worstcase <- subset(rlm_rmse, rlm_rmse >= quantile(rlm_rmse, probs = c(0, 0.05, 0.95, 1))[3])
 scatter_rlm_worstcase <- subset(scatterdf_rlm, is.element(scatterdf_rlm[,4], rownames(rlm_worstcase)))
-sp_rlm_worstcase <- ggplot(scatter_rlm_worstcase, aes(x=actual, y=predicted, color=celltype)) + geom_point()+ggtitle("RLM Worst Case")
+sp_rlm_worstcase <- ggplot2::ggplot(scatter_rlm_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("RLM Worst Case")
 sp_rlm_worstcase
 ```
 
@@ -637,30 +636,30 @@ This is illustrated with a set of boxplots for each method. Each boxplot represe
 
 ```{r}
 nnls_absolute_residuals <- abs(nnls_residuals_1000)
-melt_nnls <- melt(nnls_absolute_residuals)
-plt_nnls <- ggplot(data = melt_nnls , aes(x = variable, y = value))
-plt_nnls + geom_boxplot() + theme_minimal() + labs(x = "Cell Type", y = "Absolute Error") +  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggtitle("NNLS Absolute Error by Cell Type")
+melt_nnls <- reshape2::melt(nnls_absolute_residuals)
+plt_nnls <- ggplot2::ggplot(data = melt_nnls , ggplot2::aes(x = variable, y = value))
+plt_nnls + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("NNLS Absolute Error by Cell Type")
 ```
 
 ```{r}
 svr_absolute_residuals <- abs(svr_residuals_1000)
-melt_svr <- melt(svr_absolute_residuals)
-plt_svr <- ggplot(data = melt_svr , aes(x = variable, y = value))
-plt_svr + geom_boxplot() + theme_minimal() + labs(x = "Cell Type", y = "Absolute Error") +  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggtitle("SVR Absolute Error by Cell Type")
+melt_svr <- reshape2::melt(svr_absolute_residuals)
+plt_svr <- ggplot2::ggplot(data = melt_svr , ggplot2::aes(x = variable, y = value))
+plt_svr + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("SVR Absolute Error by Cell Type")
 ```
 
 ```{r}
 qp_absolute_residuals <- abs(qp_residuals_1000)
-melt_qp <- melt(qp_absolute_residuals)
-plt_qp <- ggplot(data = melt_qp , aes(x = variable, y = value))
-plt_qp + geom_boxplot() + theme_minimal() + labs(x = "Cell Type", y = "Absolute Error") +  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggtitle("QP Absolute Error by Cell Type")
+melt_qp <- reshape2::melt(qp_absolute_residuals)
+plt_qp <- ggplot2::ggplot(data = melt_qp , ggplot2::aes(x = variable, y = value))
+plt_qp + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("QP Absolute Error by Cell Type")
 ```
 
 ```{r}
 rlm_absolute_residuals <- abs(rlm_residuals_1000)
-melt_rlm <- melt(rlm_absolute_residuals)
-plt_rlm <- ggplot(data = melt_rlm , aes(x = variable, y = value))
-plt_rlm + geom_boxplot() + theme_minimal() + labs(x = "Cell Type", y = "Absolute Error") +  theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggtitle("RLM Absolute Error by Cell Type")
+melt_rlm <- reshape2::melt(rlm_absolute_residuals)
+plt_rlm <- ggplot2::ggplot(data = melt_rlm , ggplot2::aes(x = variable, y = value))
+plt_rlm + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("RLM Absolute Error by Cell Type")
 ```
 
 
