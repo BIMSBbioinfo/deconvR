@@ -2,7 +2,7 @@
 title: "deconvR: deconvolution of a bulk signature profile using a reference atlas"
 date: "`r Sys.Date()`"
 output: 
-      html_document:
+      rmarkdown::html_vignette:
         toc: true
         toc_float: true
         number_sections: true
@@ -11,7 +11,7 @@ output:
       
 vignette: >
   %\VignetteIndexEntry{deconvRManual}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -25,6 +25,7 @@ opts_chunk$set(root.dir=getwd(),fig.align='center',
 library(deconvR)
 library(ggplot2)
 library(reshape2)
+library(doParallel)
 cl <- parallel::makeCluster(2)
 doParallel::registerDoParallel(cl)
 listboth1000 = simulateCellMix(1000)

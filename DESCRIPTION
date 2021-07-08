@@ -42,7 +42,7 @@ Depends: R (>= 4.1),
          data.table
 License: Artistic-2.0
 Encoding: UTF-8
-VignetteBuilder: knitr, rmarkdown
+VignetteBuilder: knitr
 biocViews: DNAMethylation, Regression
 RoxygenNote: 7.1.1
 Suggests: 
