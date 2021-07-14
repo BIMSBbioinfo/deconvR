@@ -12,28 +12,49 @@ BSmeth2Probe(
 )
 }
 \arguments{
-\item{probe_id_locations}{Either a dataframe or GRanges object containing probe IDs and their locations. If dataframe: must contain columns named "ID", "CHR", "Start", "End", and "Strand". If GRanges: should have locations ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and end locations should be 1-based coordinates. Note that any row with NA values will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst folder included in package.}
+\item{probe_id_locations}{Either a dataframe or GRanges object containing
+probe IDs and their locations. If dataframe: must contain columns named "ID",
+"CHR", "Start", "End", and "Strand". If GRanges: should have locations
+("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and
+end locations should be 1-based coordinates. Note that any row with NA values
+ will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
+  folder included in package.}
 
-\item{WGBS_data}{Either a GRanges object or methylKit object (methylRaw, methylBase, methylRawDB, or methylBaseDB) of CpG locations and their methylation values. Contains locations ("seqnames", "ranges", "strand") and metadata column(s) of methylation values of sample(s) (i.e. one column per sample). These methylation values must be between 0 and 1.}
+\item{WGBS_data}{Either a GRanges object or methylKit object (methylRaw,
+methylBase, methylRawDB, or methylBaseDB) of CpG locations and their
+methylation values. Contains locations ("seqnames", "ranges", "strand") and
+metadata column(s) of methylation values of sample(s) (i.e. one column per
+sample). These methylation values must be between 0 and 1.}
 
-\item{cutoff}{The maximum number of basepairs distance to consider for probes which have not been directly covered in the WGBS data. Default value is 10.}
+\item{cutoff}{The maximum number of basepairs distance to consider for probes
+which have not been directly covered in the WGBS data. Default value is 10.}
 
-\item{multipleMapping}{When searching for matches for probes not directly covered in WGBS data, should WGBS CpGs which have already been mapped to another probe still be considered? If TRUE, then yes. If FALSE, then no. Default value is FALSE.}
+\item{multipleMapping}{When searching for matches for probes not directly
+covered in WGBS data, should WGBS CpGs which have already been mapped to
+another probe still be considered? If TRUE, then yes. If FALSE, then no.
+Default value is FALSE.}
 }
 \value{
-A dataframe with first column "IDs" for CpG IDs, then 1 or more columns for methylation values of sample(s) (same number of samples as in WGBS_data)
-ID for each probe which was mapped, and then methylation value(s) of the WGBS CpG to which it was matched (where either it overlapped or the gap was < cutoff).
-If it matched to more than one CpG, the mean methylation value is taken.
+A dataframe with first column "IDs" for CpG IDs, then 1 or more
+columns for methylation values of sample(s) (same number of samples as in
+WGBS_data)
+ID for each probe which was mapped, and then methylation value(s) of the
+WGBS CpG to which it was matched (where either it overlapped or the gap was
+< cutoff). If it matched to more than one CpG, the mean methylation value
+is taken.
 }
 \description{
 A function to map WGBS methylation data to Illumina Probe IDs
 }
 \examples{
-wgbs = readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
-probe_ids = readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR"))
-BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=wgbs)
-BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=wgbs[5:1000], cutoff = 0)
-BSmeth2Probe(probe_id_locations=probe_ids, WGBS_data=wgbs, cutoff = 500, multipleMapping = TRUE)
-BSmeth2Probe(probe_id_locations=probe_ids[100:200], WGBS_data=wgbs[1:10])
+wgbs <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
+probe_ids <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
+package = "deconvR"))
+BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs)
+BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs[5:1000],
+ cutoff = 0)
+BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs, cutoff = 500,
+multipleMapping = TRUE)
+BSmeth2Probe(probe_id_locations = probe_ids[100:200], WGBS_data = wgbs[1:10])
 }
 \keyword{mapping}

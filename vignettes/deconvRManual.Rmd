@@ -1,17 +1,18 @@
 ---
-title: "deconvR: deconvolution of a bulk signature profile using a reference atlas"
-date: "`r Sys.Date()`"
-output: 
-      rmarkdown::html_vignette:
+title: "Introduction to deconvR Package"
+author: Veronika Ebenal
+package: deconvR
+output:
+  BiocStyle::html_document:
         toc: true
         toc_float: true
         number_sections: true
         toc_depth: 2
-
-      
-vignette: >
+abstract: |
+  deconvR: deconvolution of a bulk signature profile using a reference atlas
+vignette: |
   %\VignetteIndexEntry{deconvRManual}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown_notangle}
   %\VignetteEncoding{UTF-8}
 ---
 
