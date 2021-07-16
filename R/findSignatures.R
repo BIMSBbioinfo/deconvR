@@ -8,9 +8,9 @@
 #' added, if not present then a new reference atlas will be created using
 #' sample(s). Should be dataframe with column for each cell type, rows units of
 #' signature (e.g. CpGs)
-#' @param variation_cutoff either a number between 0 to 1, or NULL. for multiple
-#'  samples from the same cell type, ignore CpGs with variation >
-#'   variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)
+#' @param variation_cutoff either a number between 0 to 1, or NULL.For multiple
+#' samples from the same cell type, ignore CpGs with variation >
+#' variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)
 #' @importFrom magrittr %>%
 #' @import data.table
 #' @import utils
@@ -20,18 +20,16 @@
 #' exampleSamples <- simulateCellMix(1)[[1]]
 #' exampleReference <- readRDS(system.file("reference_atlas_nodup.RDS",
 #' package = "deconvR"))
-#' exampleMeta <- data.table(
-#'   "Experiment_accession" = "example_sample",
-#'   "Biosample_term_name" = "example_cell_type"
-#' )
+#' exampleMeta <- data.table( "Experiment_accession" = "example_sample",
+#' "Biosample_term_name" = "example_cell_type")
 #' colnames(exampleSamples)[-1] <- c("example_sample")
 #' findSignatures(samples = exampleSamples, sampleMeta = exampleMeta)
 #' findSignatures(samples = exampleSamples, sampleMeta = exampleMeta,
 #' atlas = exampleReference)
 #' @return A dataframe extendedAtlas which contains all cell types in atlas
 #' (if given), and those in samples added by cell type, has first column "IDs",
-#'  rest of columns are cell types, rows are have first cell with the ID
-#'  (e.g. CpG ID) and then values of signature (e.g. methylation values)
+#' rest of columns are cell types, rows are have first cell with the ID
+#' (e.g. CpG ID) and then values of signature (e.g. methylation values)
 #' @export
 
 findSignatures <- function(samples, sampleMeta, atlas = NULL,
@@ -48,9 +46,9 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
                           msg = "First column of samples should be IDs")
   for (sample_id in colnames(samples)[-1]) {
     assertthat::assert_that(sample_id %in% unlist(sampleMeta[, 1]),
-                            msg = "All column names of samples (other than IDs
-                            column) should be present in sampleMeta
-                            Experiment_accession")
+                            msg = "All column names of samples
+                            (other than IDs column) should be present in
+                            sampleMeta Experiment_accession")
   }
 
   if (is.null(atlas)) {

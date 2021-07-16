@@ -39,3 +39,8 @@ vignettes/*.png
 # R Environment Variables
 #.Renviron
 inst/doc
+/doc/
+/Meta/
+.Rproj.user
+.Rdata
+.DS_Store

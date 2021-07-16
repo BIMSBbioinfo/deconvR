@@ -17,8 +17,8 @@ probe IDs and their locations. If dataframe: must contain columns named "ID",
 "CHR", "Start", "End", and "Strand". If GRanges: should have locations
 ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and
 end locations should be 1-based coordinates. Note that any row with NA values
- will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
-  folder included in package.}
+will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
+folder included in package.}
 
 \item{WGBS_data}{Either a GRanges object or methylKit object (methylRaw,
 methylBase, methylRawDB, or methylBaseDB) of CpG locations and their
@@ -51,8 +51,8 @@ wgbs <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
 probe_ids <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
 package = "deconvR"))
 BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs)
-BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs[5:1000],
- cutoff = 0)
+BSmeth2Probe(probe_id_locations = probe_ids,
+WGBS_data = wgbs[5:1000], cutoff = 0)
 BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs, cutoff = 500,
 multipleMapping = TRUE)
 BSmeth2Probe(probe_id_locations = probe_ids[100:200], WGBS_data = wgbs[1:10])

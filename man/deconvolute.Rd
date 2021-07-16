@@ -19,12 +19,12 @@ deconvolute(
 \item{reference}{A dataframe containing signatures of different cell types
 (e.g. methylation signature) used to train the model. The first column
 should contain a unique ID (e.g. target ID) to match rows of the reference
-to rows of the bulk. All subsequent columns are cell types.
- One row per unit of the signature (e.g. CpG). Each cell contains the value
-  for the cell type for this unit (e.g. methylation value of the CpG).
- If not given, defaults to a reference atlas which is included in this
- package (see deconvR/inst/reference_atlas_nodup.RDS).
- This reference atlas comes from Moss et al. (2018)}
+to rows of the bulk. All subsequent columns are cell types. One row per unit
+of the signature (e.g. CpG). Each cell contains the value for the cell type
+of this unit (e.g. methylation value of the CpG). If not given, defaults to
+a reference atlas which is included in this package.
+(see deconvR/inst/reference_atlas_nodup.RDS).
+This reference atlas comes from Moss et al. (2018)}
 
 \item{vec}{The user may provide a vector with which partial R-squared of the
 results will be calculated.
@@ -35,7 +35,7 @@ Defaults to row means of reference.}
 \item{bulk}{A dataframe containing signatures of bulk samples used to test
 to model.
 Should be dataframe with first column with unique IDs (does not need to
-xactly match list of IDs in reference,but should have significant overlap),
+exactly match list of IDs in reference,but should have significant overlap),
 and rest of columns = samples. Should not have duplicate IDs. May use
 simulateCellMix function to create this dataframe.}
 
@@ -47,7 +47,7 @@ linear regression). If not given, defaults to "nnls".}
 \value{
 A list, first is a dataframe which contains predicted cell-type
 proportions of bulk methylation profiles in "bulk", second is a list of
-partial-rsq values of results, one value per sample
+partial-rsq values of results, one value per sample.
 }
 \description{
 A function to deconvolute of bulk samples to their origin proportions using
@@ -61,13 +61,12 @@ deconvolute(bulk = simulateCellMix(50)[[1]])
 deconvolute(
   reference = readRDS(system.file("reference_atlas_nodup.RDS",
   package = "deconvR")),
-  bulk = simulateCellMix(5)[[1]], model = "rlm"
-)
+  bulk = simulateCellMix(5)[[1]], model = "rlm" )
 }
 \references{
 Moss, J. et al.  (2018). Comprehensive human cell-type
- methylation atlas reveals origins of circulating cell-free DNA in health
- and disease. Nature communications, 9(1), 1-12.
- \url{https://doi.org/10.1038/s41467-018-07466-6}
+methylation atlas reveals origins of circulating cell-free DNA in health
+and disease. Nature communications, 9(1), 1-12.
+\url{https://doi.org/10.1038/s41467-018-07466-6}
 }
 \keyword{deconvolution}
