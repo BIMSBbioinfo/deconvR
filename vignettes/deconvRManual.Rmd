@@ -1,5 +1,5 @@
 ---
-title: "Introduction to deconvR Package"
+title: "An Introduction to the deconvR Package"
 author: Veronika Ebenal
 package: deconvR
 output:
@@ -61,35 +61,19 @@ simulateCellMix(
                                    package = "deconvR")))
 ```
 
-The parameter `numberOfSamples` is a non-negative integer stating the number of simulated samples 
-to be generated.
+The parameter `numberOfSamples` is a non-negative integer stating the number of simulated samples to be generated.
 
-The user may provide the `mixingVector` parameter to specify the desired origin proportions of
-the simulated sample(s). If `numberOfSamples` is 1, `mixingVector` is a vector of length equal 
-to the number of cell types of `reference`. Each value in the vector is the proportion of the
-sample which will originate from the corresponding cell type. Otherwise, `mixingVector` is a 
-dataframe with rows for origins (e.g. cell types), which must equal the origins contained in 
-`reference`, and columns for samples, which must equal the number of samples designated in 
-`numberOfSamples`. Cells contain the proportion of the sample which will originate from the 
-corresponding origin. If this parameter is not provided, random values of origin proportions 
-will be used.
+The user may provide the `mixingVector` parameter to specify the desired origin proportions of the simulated sample(s).If `numberOfSamples` is 1, `mixingVector` is a vector of length equal to the number of cell types of `reference`. Each 
+value in the vector is the proportion of the sample which will originate from 
+the corresponding cell type. Otherwise, `mixingVector` is a  dataframe with rows for origins (e.g. cell types), which must equal the origins contained in 
+`reference`, and columns for samples, which must equal the number of samples designated in `numberOfSamples`. Cells contain the proportion of the sample 
+which will originate from the corresponding origin. If this parameter is not provided, random values of origin proportions will be used.
 
-The dataframe `reference` contains the signatures to be used in the simulation. The first column 
-should contain unique IDs (e.g. Illumina Probe IDs) which will also be used in the resulting bulk 
-table. All subsequent columns are origins (e.g. cell types), and cells contain the corresponding 
-value for this origin and ID (e.g. methylation value). If `reference` is not provided by the user, 
-it will default to `reference_atlas_nodup.RDS` in the `inst` folder of the package (more information 
-on this file can be found below).
+The dataframe `reference` contains the signatures to be used in the simulation. The first column should contain unique IDs (e.g. Illumina Probe IDs) which will also be used in the resulting bulk table. All subsequent columns are origins 
+(e.g. cell types), and cells contain the corresponding value for this origin 
+and ID (e.g. methylation value). If `reference` is not provided by the user, it will default to `reference_atlas_nodup.RDS` in the `inst` folder of the package (more information on this file can be found below).
 
-`simulateCellMix` returns a list containing two dataframes. The first dataframe contains the 
-simulated samples. Its first column contains unique IDs (from `reference`) which can be used in
-deconvolution to match rows of the reference to rows of the bulk samples. All subsequent columns 
-are origins (e.g. cell types). Each cell contains the corresponding value for the origin and ID 
-(e.g. methylation value). The second dataframe contains the origin proportions of the generated 
-samples. Columns are origins, rows are samples, and each cell contains the proportion of this sample 
-originating from this origin. The first dataframe may be directly used as the bulk parameter in 
-`deconvolute`. If so, the second dataframe can be used for testing the accuracy of the deconvolution 
-by comparing these actual proportions to the proportions predicted by `deconvolute`.
+`simulateCellMix` returns a list containing two dataframes. The first dataframe contains the simulated samples. Its first column contains unique IDs (from `reference`) which can be used in deconvolution to match rows of the reference to rows of the bulk samples. All subsequent columns are origins (e.g. cell types). Each cell contains the corresponding value for the origin and ID  (e.g. methylation value). The second dataframe contains the origin proportions of the generated samples. Columns are origins, rows are samples, and each cell contains the proportion of this sample originating from this origin. The first dataframe may be directly used as the bulk parameter in `deconvolute`. If so, the second dataframe can be used for testing the accuracy of the deconvolution by comparing these actual proportions to the proportions predicted by `deconvolute`.
 
 
 ## deconvolute
@@ -98,46 +82,22 @@ by comparing these actual proportions to the proportions predicted by `deconvolu
 ``` {r eval=FALSE}
 deconvolute(
   reference = readRDS(system.file("reference_atlas_nodup.RDS",
-                                  package = "deconvR")),
-  vec = NULL,
-  bulk,
+                                  package = "deconvR")),vec = NULL, bulk,
   model= "nnls")
+
 ```
 
-The dataframe `reference` contains the signatures of different origins (e.g. cell types) used to 
-train the model. The first column should contain unique IDs (e.g. Illumina Probe ID) to match rows 
-of the reference to rows of the bulk. All subsequent columns are origins. Cells contain the 
-corresponding value for this origin and ID (e.g. methylation value). If `reference` is not provided by the user, 
-it will default to `reference_atlas_nodup.RDS` in the `inst` folder of the package (more information 
-on this file can be found below).
+The dataframe `reference` contains the signatures of different origins (e.g. cell types) used to train the model. The first column should contain unique IDs (e.g. Illumina Probe ID) to match rows of the reference to rows of the bulk. All subsequent columns are origins. Cells contain the corresponding value for this origin and ID (e.g. methylation value). If `reference` is not provided by the user, it will default to `reference_atlas_nodup.RDS` in the `inst` folder of the package (more information on this file can be found below).
 
-The user may provide a vector `vec` with which partial R-squared of the results will be calculated.
-The length must equal the number of rows of `reference` and `bulk` tables merged on the ID column 
-(with NAs removed). More details on how this vector is used can be seen below. Defaults to row means 
-of `reference`.
+The user may provide a vector `vec` with which partial R-squared of the results will be calculated. The length must equal the number of rows of `reference` and `bulk` tables merged on the ID column (with NAs removed). More details on how this vector is used can be seen below. Defaults to row means of `reference`.
 
-The dataframe `bulk` contains signatures of different bulk profiles to which the model is applied. 
-The first column contains unique IDs (e.g. Illumina Probe ID). These IDs do not need to exactly match the IDs 
-in the reference,  but there should be a significant overlap. The rest of columns are samples, with sample names 
-given as column titles. Cells contain the corresponding value for this origin and ID (e.g. methylation value). 
-The user may use `simulateCellMix` to create this dataframe.
+The dataframe `bulk` contains signatures of different bulk profiles to which the model is applied. The first column contains unique IDs (e.g. Illumina Probe ID). These IDs do not need to exactly match the IDs in the reference,  but there should be a significant overlap. The rest of columns are samples, with sample names given as column titles. Cells contain the corresponding value for this origin and ID (e.g. methylation value). The user may use `simulateCellMix` to create this dataframe.
 
-The parameter `model` specifies which model the user wishes to use to perform the deconvolution. 
-The four choices are "nnls" (non-negative least squares), "svr" (support vector
-regression), "qp" (quadratic programming), or "rlm" (robust linear regression). Details on
-these models are given below. If not provided, this parameter defaults to "nnls".
+The parameter `model` specifies which model the user wishes to use to perform the deconvolution. The four choices are "nnls" (non-negative least squares), "svr" (support vector regression), "qp" (quadratic programming), or "rlm" (robust linear regression). Details on these models are given below. If not provided, this parameter defaults to "nnls".
 
-`deconvolute` returns a list of two items. The first item is a dataframe which contains predicted 
-origin proportions of the samples in `bulk`. The columns are labeled according to the origin labels 
-given in `reference`. The rows are labeled according to the sample names given in `bulk`. Each cell 
-contains a value between 0 and 1, which is the proportion of the sample predicted to be from the origin.
-The second item is a list of partial R-squared values of the results (one value per sample).
-The partial R-squared of each sample is calculated as the proportion of the variance not explained
-by the reduced model $$predicted \sim vec$$ that is explained by the full model $$predicted \sim observed+vec$$,
-where $$predicted$$ values are those resulting from the coefficients predicted by `deconvolute`,
-$$observed$$ values are those present in `bulk`, and $$vec$$ values are provided in the parameter
-`vec` (with default values as the row means of `reference`).
+`deconvolute` returns a list of two items. The first item is a dataframe which contains predicted origin proportions of the samples in `bulk`. The columns are labeled according to the origin labels given in `reference`. The rows are labeled according to the sample names given in `bulk`. Each cell contains a value between 0 and 1, which is the proportion of the sample predicted to be from the origin.
 
+The second item is a list of partial R-squared values of the results (one value per sample). The partial R-squared of each sample is calculated as the proportion of the variance not explained by the reduced model $$predicted \sim vec$$ that is explained by the full model $$predicted \sim observed+vec$$, where $$predicted$$ values are those resulting from the coefficients predicted by `deconvolute`, $$observed$$ values are those present in `bulk`, and $$vec$$ values are provided in the parameter `vec` (with default values as the row means of `reference`).
 
 ## BSmeth2Probe
 
@@ -151,33 +111,19 @@ BSmeth2Probe(
   multipleMapping = FALSE)
 ```
 
-The `probe_id_locations` parameter can be either a dataframe or GRanges object containing 
-probe IDs and their locations. If it's a dataframe, it must contain columns 
-named "ID", "CHR", "Start", "End", and "Strand". If it's a GRanges object, it should have 
-locations ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and end 
-locations should be 1-based coordinates. Note that any row with NA values will not be used. 
-The user may use the example dataframe `illumina_probes_hg38_GRanges.RDS` in the `inst` 
-folder of the package (more information on this file can be found below). 
+The `probe_id_locations` parameter can be either a dataframe or GRanges object containing probe IDs and their locations. If it's a dataframe, it must contain columns named "ID", "CHR", "Start", "End", and "Strand". If it's a GRanges object, it should have locations ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and end locations should be 1-based coordinates. Note that any row with NA values will not be used. 
 
-The `WGBS_data` parameter can be either a GRanges object or methylKit object (methylRaw, 
-methylBase, methylRawDB, or methylBaseDB) of CpG locations and their methylation values. 
-This parameter must contain locations ("seqnames", "ranges", "strand") and metadata 
-column(s) of methylation values of sample(s) (i.e. one column per sample). These 
-methylation values must be between 0 and 1. The user may use the example GRanges object 
-`WGBS_GRanges.RDS` in the `inst` folder of the package (more information on this file 
-can be found below). 
+The user may use the example dataframe `illumina_probes_hg38_GRanges.RDS` in the `inst` folder of the package (more information on this file can be found below).
+The `WGBS_data` parameter can be either a GRanges object or methylKit object (methylRaw, methylBase, methylRawDB, or methylBaseDB) of CpG locations and their methylation values.
+ 
+This parameter must contain locations ("seqnames", "ranges", "strand") and metadata column(s) of methylation values of sample(s) (i.e. one column per sample). These methylation values must be between 0 and 1. The user may use the example GRanges object `WGBS_GRanges.RDS` in the `inst` folder of the package (more information on this file can be found below).
 
-The `cutoff` is the maximum distance (in number of base-pairs) to consider for probes 
-which have not been exactly covered in the WGBS data. The default value is 10.
+The `cutoff` is the maximum distance (in number of base-pairs) to consider for probes which have not been exactly covered in the WGBS data. The default value
+is 10.
 
-The logical `multipleMapping` can be used when searching for matches for probes not 
-directly covered in WGBS data (i.e. when `cutoff` > 0). When `TRUE`, WGBS CpGs which have 
-already been exactly mapped to another probe will still be considered. When `FALSE`, only
-CpGs which have not been exactly matched will be considered. The default value is `FALSE`.
+The logical `multipleMapping` can be used when searching for matches for probes not directly covered in WGBS data (i.e. when `cutoff` > 0). When `TRUE`, WGBS CpGs which have already been exactly mapped to another probe will still be considered. When `FALSE`, only CpGs which have not been exactly matched will be considered. The default value is `FALSE`.
 
-`BSmeth2Probe` returns a dataframe the with first column "IDs" for CpG IDs, and then 1 or 
-more columns for the sample(s) from `WGBS_data`. Each cell contains the methylation value
-which has been mapped to the CpG location of the sample.
+`BSmeth2Probe` returns a dataframe the with first column "IDs" for CpG IDs, and then 1 or more columns for the sample(s) from `WGBS_data`. Each cell contains the methylation value which has been mapped to the CpG location of the sample.
 
 ## findSignatures
 
@@ -191,47 +137,20 @@ findSignatures(samples,
                variation_cutoff = NULL)
 ```
 
-The dataframe `samples` contains the samples will be used for creating or extending the 
-signature matrix. The first column contains the unique IDs of the units of the signature 
-(e.g. CpG probe IDs). The rest of the columns are samples, with column names as sample 
-accession IDs (which should also be found in `sampleMeta`), and each cell containing the
-value for this sample and unit (e.g. methylation value).
+The dataframe `samples` contains the samples will be used for creating or extending the signature matrix. The first column contains the unique IDs of the units of the signature (e.g. CpG probe IDs). The rest of the columns are samples, with column names as sample accession IDs (which should also be found in `sampleMeta`), and each cell containing the value for this sample and unit (e.g. methylation value).
 
-The `sampleMeta` dataframe maps sample accession IDs to the group it should be categorized
-as in the signature matrix (e.g. cell type). The first column contains unique accession IDs, 
-and the second column contains group names. It's not necessary that every accession ID here 
-is also contained in `samples`, but every accession ID in samples should also be found here.
+The `sampleMeta` dataframe maps sample accession IDs to the group it should be categorized as in the signature matrix (e.g. cell type). The first column contains unique accession IDs, and the second column contains group names. It's not necessary that every accession ID here is also contained in `samples`, but every accession ID in samples should also be found here.
 
-If `atlas` is not provided, a new reference atlas (i.e. signature matrix)
-will be constructed. Otherwise, the `atlas` dataframe is the reference atlas to which the 
-new samples will be incorporated. The first column contains unique IDs (e.g. CpG probe IDs) 
-for each unit of the signature. Subsequent columns are groups (e.g. cell types),
-with column names as group names and each cell containing the value for this sample and 
-unit (e.g. methylation value). The user may use the example dataframe 
-`reference_atlas_nodup.RDS` in the `inst` folder of the package (more information on this 
-file can be found below). 
+If `atlas` is not provided, a new reference atlas (i.e. signature matrix) will be constructed. Otherwise, the `atlas` dataframe is the reference atlas to which the new samples will be incorporated. The first column contains unique IDs (e.g. CpG probe IDs) for each unit of the signature. Subsequent columns are groups (e.g. cell types), with column names as group names and each cell containing the value for this sample and unit (e.g. methylation value). The user may use the example dataframe `reference_atlas_nodup.RDS` in the `inst` folder of the package (more information on this file can be found below). 
 
-The `variation_cutoff` can be either a number between 0 to 1, or `NULL`. When multiple samples
-map to the same group in `sampleMeta`, units of the signature with variation across these 
-samples greater than `variation_cutoff` will be ignored. When `NULL` (the default value), 
-there is no cutoff.
-
-If `atlas` has been provided, `findSignatures` returns a dataframe containing all groups of
-`atlas`, as well as groups to which the accession IDs in `samples` are mapped to in 
-`sampleMeta`. In cases where any accession ID(s) in `samples` are contained in a group 
-already contained in `atlas`, the values will be pooled from both dataframes to create a 
-new signature. If `atlas` has not been provided, the returned dataframe contains only the 
-groups to which the accession ids in `samples` have been mapped to in `sampleMeta`. The
-returned dataframe has the first column "IDs" which contains the unique IDs (e.g. CpG probe 
-IDs) for each unit of the signature. Subsequent columns are groups (e.g. cell types),
-with column names as group names. Each cell contains the value for this group and 
-unit (e.g. methylation value), which has been calculated by pooling the value`s of all samples 
-in `samples` mapped to this group (as well as the values in `atlas` for this group, if present).
+The `variation_cutoff` can be either a number between 0 to 1, or `NULL`. When multiple samples map to the same group in `sampleMeta`, units of the signature with variation across these samples greater than `variation_cutoff` will be ignored. When `NULL` (the default value), there is no cutoff.
+ 
+If `atlas` has been provided, `findSignatures` returns a dataframe containing all groups of `atlas`, as well as groups to which the accession IDs in `samples` are mapped to in `sampleMeta`. In cases where any accession ID(s) in `samples` are contained in a group already contained in `atlas`, the values will be pooled from both dataframes to create a new signature. If `atlas` has not been provided, the returned dataframe contains only the groups to which the accession ids in `samples` have been mapped to in `sampleMeta`. The returned dataframe has the first column "IDs" which contains the unique IDs (e.g. CpG probe IDs) for each unit of the signature. Subsequent columns are groups (e.g. cell types), with column names as group names. Each cell contains the value for this group and 
+unit (e.g. methylation value), which has been calculated by pooling the values of all samples in samples` mapped to this group (as well as the values in atlas for this group, if present).
 
 # Example data
 ## Reference Atlas
-The comprehensive human methylome reference atlas created by Moss et al. ^[Moss, J. et al.  (2018). Comprehensive human cell-type methylation atlas reveals origins of circulating cell-free DNA in health and disease. Nature communications, 9(1), 1-12. <https://doi.org/10.1038/s41467-018-07466-6>]
-can be used as the reference atlas parameter for several functions in this package. This atlas was modified to remove duplicate CpG loci before being included in the package as the dataframe `reference_atlas_nodup.RDS`. The dataframe is composed of 25 human cell types and roughly 6000 CpG loci, identified by their Illumina Probe ID. For each cell type and CpG locus, a methylation value between 0 and 1 is provided. This value represents the fraction of methylated bases of the CpG locus. The atlas therefore provides a unique methylation pattern for each cell type and can be directly used as `reference` in `deconvolute` and `simulateCellMix`, and `atlas` in `findSignatures`.
+The comprehensive human methylome reference atlas created by Moss et al. ^[Moss, J. et al.  (2018). Comprehensive human cell-type methylation atlas reveals origins of circulating cell-free DNA in health and disease. Nature communications, 9(1), 1-12. <https://doi.org/10.1038/s41467-018-07466-6>] can be used as the reference atlas parameter for several functions in this package. This atlas was modified to remove duplicate CpG loci before being included in the package as the dataframe `reference_atlas_nodup.RDS`. The dataframe is composed of 25 human cell types and roughly 6000 CpG loci, identified by their Illumina Probe ID. For each cell type and CpG locus, a methylation value between 0 and 1 is provided. This value represents the fraction of methylated bases of the CpG locus. The atlas therefore provides a unique methylation pattern for each cell type and can be directly used as `reference` in `deconvolute` and `simulateCellMix`, and `atlas` in `findSignatures`.
 
 ``` {r, message = FALSE, output.lines=10}
 atlas <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
@@ -255,10 +174,7 @@ probe_id_locations
 
 # Example Workflow
 
-One may wish to extend their signature matrix to incorporate new data. This can be done using the `findSignatures` function.
-First, ensure that `atlas` (the signature matrix to be extended) and `samples` (the new data to be added to the signature matrix) are compliant with the function requirements.
-
-Below is an example dataframe to illustrate the `atlas` format.
+One may wish to extend their signature matrix to incorporate new data. This can be done using the `findSignatures` function. First, ensure that `atlas` (the signature matrix to be extended) and `samples` (the new data to be added to the signature matrix) are compliant with the function requirements.Below is an example dataframe to illustrate the `atlas` format.
 
 ``` {r, message = FALSE, output.lines=10}
 atlas <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
@@ -289,8 +205,7 @@ extended_matrix <- findSignatures(samples = samples,
 head(extended_matrix)
 ```
 
-WGBS methylation data first needs to be mapped to probes using `BSmeth2Probe` before being deconvoluted.
-The methylation data `WGBS_data` in `BSmeth2Probe` may be either a GRanges object or a methylKit object.
+WGBS methylation data first needs to be mapped to probes using `BSmeth2Probe` before being deconvoluted.The methylation data `WGBS_data` in `BSmeth2Probe` may be either a GRanges object or a methylKit object.
 
 Format of `WGBS_data` as GRanges object:
 
@@ -302,13 +217,16 @@ WGBS_data
 or as methylKit object:
 
 ``` {r, message = FALSE, output.lines=10}
-head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt", package = "methylKit"), sample.id="test", assembly="hg38", treatment=1, context="CpG", mincov = 0))
+head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt",
+                                     package = "methylKit"), sample.id="test",
+                       assembly="hg38", treatment=1, context="CpG", mincov = 0))
 ```
 
 `probe_id_locations` contains information needed to map cellular loci to probe IDs
 
 ``` {r, message = FALSE, output.lines=10}
-probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR"))
+probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
+                                          package = "deconvR"))
 probe_id_locations
 ```
 
@@ -336,8 +254,6 @@ deconvolution[[1]]
 ## Partial R-Squared (model-generated vs actual methylation values)
 
 These values were calculated by comparing the model’s predicted CpG methylation values (calculated by multiplying the model’s coefficients to the reference values) to the actual CpG methylation values of the samples.
-All models had a satisfactorily low Partial R-Squared. While NNLS, RLM, and QP had much lower RMSE values than SVR, the RMSE of SVR was still low enough that predictions were close to accurate. 
-
 
 ```{r}
 nnls_result_1000 <- deconvolute(bulk=bulktable1000, model="nnls")[[1]]
@@ -359,6 +275,7 @@ rlm_result_1000 <- deconvolute(bulk=bulktable1000, model="rlm")[[1]]
 ## RMSE (predicted vs actual origin cell-type proportions)
 
 These values were calculated by comparing the model’s predicted origin cell-type proportions (calculated by normalizing the model’s coefficients) to the actual origin cell-type proportions of the samples.
+
 These RMSE values very closely match the previous RMSE values. This is to be expected, since the accuracy of model-predicted methylation values will change with differing accuracies of model coefficients, which were used to infer origin cell-type proportions. All models had a satisfactorily low RMSE. While NNLS, RLM, and QP had much lower RMSE values than SVR, the RMSE of SVR was still low enough that predictions were close to accurate.
 
 ```{r}
@@ -413,8 +330,8 @@ boxplot(rlm_rmse)
 
 ## Limit of Detection
 
-These values were calculated by running the model on a bulk sample with continually decreasing cellular proportions. The limit of detection was inferred to be the point at which the model thereafter failed to detect the origin cell-type.
-Once again, limit of detection closely follows model accuracy (as measured by RMSE). 
+These values were calculated by running the model on a bulk sample with continually decreasing cellular proportions. The limit of detection was inferred to be the point at which the model thereafter failed to detect the origin cell type.Once again, limit of detection closely follows model accuracy (as measured 
+by RMSE).
 
 ```{r, fig.show='hide'}
 c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04,1e-05,1e-06,1e-07,1e-08,1e-09,1e-10,1e-11,1e-12,1e-13,1e-14,1e-15,1e-16,1e-17,1e-18,1e-19,1e-20,0.88888888888888888888889,0,0,0,0))[[1]],model="nnls")[[1]][1,])
@@ -434,8 +351,7 @@ c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04
 
 ## Time Complexity
 
-These values are the elapsed times for running the model on (pre-generated) bulk sample sets of different sizes.
-NNLS and QP had exceedingly low runtimes; less than 10 seconds for 1000 samples. The runtime for RLM was also satisfactory, taking roughly 2 minutes for 1000 samples. SVR is significantly slower than the other models. While parallelization helped significantly to decrease runtime, it still takes roughly 15 minutes for 1000 samples.
+These values are the elapsed times for running the model on (pre-generated) bulk sample sets of different sizes. NNLS and QP had exceedingly low runtimes; less than 10 seconds for 1000 samples. The runtime for RLM was also satisfactory, taking roughly 2 minutes for 1000 samples. SVR is significantly slower than the other models. While parallelization helped significantly to decrease runtime, it still takes roughly 15 minutes for 1000 samples.
 
 ```{r, fig.show='hide'}
 nnls_time1 <- system.time(deconvolute(bulk=bulktable1, model = "nnls"))[3]
@@ -489,15 +405,18 @@ print(paste("Time To Deconvolute 1000 Samples:", rlm_time1000,"seconds (",rlm_ti
 ```
 
 ```{r}
-time_data <- data.frame(c(1,10,100,1000), c(nnls_time1, nnls_time10, nnls_time100, nnls_time1000), c(svr_time1, svr_time10, svr_time100, svr_time1000),
-                       c(qp_time1, qp_time10, qp_time100, qp_time1000), c(rlm_time1, rlm_time10, rlm_time100, rlm_time1000))
+time_data <- data.frame(c(1,10,100,1000), 
+                        c(nnls_time1, nnls_time10, nnls_time100, nnls_time1000),
+                        c(svr_time1, svr_time10, svr_time100, svr_time1000),
+                        c(qp_time1, qp_time10, qp_time100, qp_time1000),
+                        c(rlm_time1, rlm_time10, rlm_time100, rlm_time1000))
 colnames(time_data) <- c("NumberOfSamples", "NNLS", "SVR", "QP", "RLM")
 
 ggplot2::ggplot(time_data, ggplot2::aes(x=NumberOfSamples)) + 
   ggplot2::geom_line(ggplot2::aes(y = NNLS, color = "steelblue")) + 
   ggplot2::geom_line(ggplot2::aes(y = SVR, color="green")) +
-  ggplot2::geom_line(ggplot2::aes(y = QP, color = "pink"), linetype="twodash") +
-  ggplot2::geom_line(ggplot2::aes(y = RLM, color="orange"), linetype="twodash") +
+  ggplot2::geom_line(ggplot2::aes(y = QP, color = "pink"),linetype="twodash") +
+  ggplot2::geom_line(ggplot2::aes(y = RLM, color="orange"),linetype="twodash") +
   ylab("Time (seconds)")+  xlab("Number of Samples")+
   scale_color_discrete(name = "Model", labels = c("SVR", "RLM","QP", "NNLS"))+
   ggplot2::ggtitle("Runtime of Models")
@@ -507,161 +426,258 @@ ggplot2::ggplot(time_data, ggplot2::aes(x=NumberOfSamples)) +
 
 ## Scatter Plots
 
-Here we compare the actual and predicted cell proportions, color coded by cell type.
-There are three scatter plots per model, representing all samples, 5th percentile, and 95th percentile of RMSEs. This illustrates how each method performs in a best-case and worst-case scenario (95th percentile of RMSE values represent worst-case and 5th percentile represents best case).
+Here we compare the actual and predicted cell proportions, colored by the cell type. There are three scatter plots per model, representing all samples, 5th percentile, and 95th percentile of RMSEs. This illustrates how each method performs in a best-case and worst-case scenario (95th percentile of RMSE values represent worst-case and 5th percentile represents best case).
 
 ```{r}
 samplenumslist <- c()
 for (i in 1:1000) {samplenumslist <- append(samplenumslist, paste("Sample",i))}
-scatterdf_nnls <- data.frame(propstable1000[,1],nnls_result_1000[,1], colnames(propstable1000)[1])
+scatterdf_nnls <- data.frame(propstable1000[,1],nnls_result_1000[,1], 
+                             colnames(propstable1000)[1])
 colnames(scatterdf_nnls) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], nnls_result_1000[,i], colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable1000[,i], nnls_result_1000[,i], 
+                             colnames(propstable1000)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_nnls <- rbind(scatterdf_nnls, scatterdf1)
 }
 scatterdf_nnls[,4] <- samplenumslist
 colnames(scatterdf_nnls)[4] <- "samplenum"
-sp_nnls <- ggplot2::ggplot(scatterdf_nnls, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point() + ggplot2::ggtitle("NNLS Overall")
+sp_nnls <- ggplot2::ggplot(scatterdf_nnls, 
+                           ggplot2::aes(x=actual, y=predicted,color=celltype)) +
+  ggplot2::geom_point() + 
+  ggplot2::ggtitle("NNLS Overall")
 sp_nnls
 ```
 
 ```{r}
-nnls_bestcase <- subset(nnls_rmse, nnls_rmse <= quantile(nnls_rmse, probs = c(0, 0.05, 0.95, 1))[2])
-scatter_nnls_bestcase <- subset(scatterdf_nnls, is.element(scatterdf_nnls[,4], rownames(nnls_bestcase)))
-sp_nnls_bestcase <- ggplot2::ggplot(scatter_nnls_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("NNLS Best Case")
+nnls_bestcase <- subset(nnls_rmse, 
+                        nnls_rmse <= quantile(nnls_rmse, 
+                                              probs = c(0, 0.05, 0.95, 1))[2])
+scatter_nnls_bestcase <- subset(scatterdf_nnls, 
+                                is.element(scatterdf_nnls[,4],
+                                           rownames(nnls_bestcase)))
+sp_nnls_bestcase <- ggplot2::ggplot(scatter_nnls_bestcase, 
+                                    ggplot2::aes(x=actual, y=predicted,
+                                                 color=celltype)) + ggplot2::geom_point()+ 
+  ggplot2::ggtitle("NNLS Best Case")
 sp_nnls_bestcase
 ```
 
 ```{r}
-nnls_worstcase <- subset(nnls_rmse, nnls_rmse >= quantile(nnls_rmse, probs = c(0, 0.05, 0.95, 1))[3])
-scatter_nnls_worstcase <- subset(scatterdf_nnls, is.element(scatterdf_nnls[,4], rownames(nnls_worstcase)))
-sp_nnls_worstcase <- ggplot2::ggplot(scatter_nnls_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("NNLS Worst Case")
+nnls_worstcase <- subset(nnls_rmse, 
+                         nnls_rmse >= quantile(nnls_rmse,
+                                               probs = c(0, 0.05, 0.95, 1))[3])
+scatter_nnls_worstcase <- subset(scatterdf_nnls, 
+                                 is.element(scatterdf_nnls[,4],
+                                            rownames(nnls_worstcase)))
+sp_nnls_worstcase <- ggplot2::ggplot(scatter_nnls_worstcase,
+                                     ggplot2::aes(x=actual, y=predicted,
+                                                  color=celltype)) +
+  ggplot2::geom_point()+ 
+  ggplot2::ggtitle("NNLS Worst Case")
 sp_nnls_worstcase
 ```
 
 
 ```{r}
-scatterdf_svr <- data.frame(propstable1000[,1], svr_result_1000[,1], colnames(propstable1000)[1])
+scatterdf_svr <- data.frame(propstable1000[,1], svr_result_1000[,1], 
+                            colnames(propstable1000)[1])
 colnames(scatterdf_svr) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], svr_result_1000[,i], colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable1000[,i], svr_result_1000[,i], 
+                             colnames(propstable1000)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_svr <- rbind(scatterdf_svr, scatterdf1)
 }
 scatterdf_svr[,4] <- samplenumslist
 colnames(scatterdf_svr)[4] <- "samplenum"
-sp_svr <- ggplot2::ggplot(scatterdf_svr, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("SVR Ovrerll")
+sp_svr <- ggplot2::ggplot(scatterdf_svr, 
+                          ggplot2::aes(x=actual, y=predicted, color=celltype))+
+  ggplot2::geom_point() +
+  ggplot2::ggtitle("SVR Ovrerll")
 sp_svr
 ```
 
 ```{r}
-svr_bestcase <- subset(svr_rmse, svr_rmse <= quantile(svr_rmse, probs = c(0, 0.05, 0.95, 1))[2])
-scatter_svr_bestcase <- subset(scatterdf_svr, is.element(scatterdf_svr[,4], rownames(svr_bestcase)))
-sp_svr_bestcase <- ggplot2::ggplot(scatter_svr_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("SVR Best Case")
+svr_bestcase <- subset(svr_rmse, 
+                       svr_rmse <= quantile(svr_rmse, 
+                                            probs = c(0, 0.05, 0.95, 1))[2])
+scatter_svr_bestcase <- subset(scatterdf_svr, is.element(scatterdf_svr[,4],
+                                                         rownames(svr_bestcase)))
+sp_svr_bestcase <- ggplot2::ggplot(scatter_svr_bestcase, 
+                                   ggplot2::aes(x=actual, y=predicted, 
+                                                color=celltype)) +
+  ggplot2::geom_point()+
+  ggplot2::ggtitle("SVR Best Case")
 sp_svr_bestcase
 ```
 
 ```{r}
-svr_worstcase <- subset(svr_rmse, svr_rmse >= quantile(svr_rmse, probs = c(0, 0.05, 0.95, 1))[3])
-scatter_svr_worstcase <- subset(scatterdf_svr, is.element(scatterdf_svr[,4], rownames(svr_worstcase)))
-sp_svr_worstcase <- ggplot2::ggplot(scatter_svr_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ ggplot2::ggtitle("SVR Worst Case")
+svr_worstcase <- subset(svr_rmse, 
+                        svr_rmse >= quantile(svr_rmse, 
+                                             probs = c(0, 0.05, 0.95, 1))[3])
+scatter_svr_worstcase <- subset(scatterdf_svr, 
+                                is.element(scatterdf_svr[,4], 
+                                           rownames(svr_worstcase)))
+sp_svr_worstcase <- ggplot2::ggplot(scatter_svr_worstcase, 
+                                    ggplot2::aes(x=actual, y=predicted,
+                                                 color=celltype)) +
+  ggplot2::geom_point()+ 
+  ggplot2::ggtitle("SVR Worst Case")
 sp_svr_worstcase
 ```
 
 
 ```{r}
-scatterdf_qp <- data.frame(propstable1000[,1], qp_result_1000[,1], colnames(propstable1000)[1])
+scatterdf_qp <- data.frame(propstable1000[,1], qp_result_1000[,1], 
+                           colnames(propstable1000)[1])
 colnames(scatterdf_qp) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], qp_result_1000[,i], colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable1000[,i], qp_result_1000[,i], 
+                             colnames(propstable1000)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_qp <- rbind(scatterdf_qp, scatterdf1)
 }
 scatterdf_qp[,4] <- samplenumslist
 colnames(scatterdf_qp)[4] <- "samplenum"
-sp_qp <- ggplot2::ggplot(scatterdf_qp, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point() +ggplot2::ggtitle("QP Overall")
+sp_qp <- ggplot2::ggplot(scatterdf_qp, 
+                         ggplot2::aes(x=actual, y=predicted, color=celltype)) +
+  ggplot2::geom_point() +
+  ggplot2::ggtitle("QP Overall")
 sp_qp
 ```
 
 ```{r}
 
-qp_bestcase <- subset(qp_rmse, qp_rmse <= quantile(qp_rmse, probs = c(0, 0.05, 0.95, 1))[2])
-scatter_qp_bestcase <- subset(scatterdf_qp, is.element(scatterdf_qp[,4], rownames(qp_bestcase)))
-sp_qp_bestcase <- ggplot2::ggplot(scatter_qp_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("QP Best Case")
+qp_bestcase <- subset(qp_rmse, 
+                      qp_rmse <= quantile(qp_rmse, 
+                                          probs = c(0, 0.05, 0.95, 1))[2])
+scatter_qp_bestcase <- subset(scatterdf_qp, is.element(scatterdf_qp[,4],
+                                                       rownames(qp_bestcase)))
+sp_qp_bestcase <- ggplot2::ggplot(scatter_qp_bestcase, 
+                                  ggplot2::aes(x=actual, y=predicted, 
+                                               color=celltype)) +
+  ggplot2::geom_point()+
+  ggplot2::ggtitle("QP Best Case")
 sp_qp_bestcase
 ```
 
 ```{r}
-qp_worstcase <- subset(qp_rmse, qp_rmse >= quantile(qp_rmse, probs = c(0, 0.05, 0.95, 1))[3])
-scatter_qp_worstcase <- subset(scatterdf_qp, is.element(scatterdf_qp[,4], rownames(qp_worstcase)))
-sp_qp_worstcase <- ggplot2::ggplot(scatter_qp_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("QP Worst Case")
+qp_worstcase <- subset(qp_rmse, 
+                       qp_rmse >= quantile(qp_rmse, 
+                                           probs = c(0, 0.05, 0.95, 1))[3])
+scatter_qp_worstcase <- subset(scatterdf_qp, is.element(scatterdf_qp[,4],
+                                                        rownames(qp_worstcase)))
+sp_qp_worstcase <- ggplot2::ggplot(scatter_qp_worstcase, 
+                                   ggplot2::aes(x=actual, y=predicted,
+                                                color=celltype)) +
+  ggplot2::geom_point()+
+  ggplot2::ggtitle("QP Worst Case")
 sp_qp_worstcase
 ```
 
 
 ```{r}
-scatterdf_rlm <- data.frame(propstable1000[,1], rlm_result_1000[,1], colnames(propstable1000)[1])
+scatterdf_rlm <- data.frame(propstable1000[,1], rlm_result_1000[,1],
+                            colnames(propstable1000)[1])
 colnames(scatterdf_rlm) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], rlm_result_1000[,i], colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable1000[,i], rlm_result_1000[,i],
+                             colnames(propstable1000)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_rlm <- rbind(scatterdf_rlm, scatterdf1)
 }
 scatterdf_rlm[,4] <- samplenumslist
 colnames(scatterdf_rlm)[4] <- "samplenum"
-sp_rlm <- ggplot2::ggplot(scatterdf_rlm, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("RLM Overall")
+sp_rlm <- ggplot2::ggplot(scatterdf_rlm, 
+                          ggplot2::aes(x=actual, y=predicted, color=celltype)) +
+  ggplot2::geom_point() +
+  ggplot2::ggtitle("RLM Overall")
 sp_rlm
 ```
 
 ```{r}
 
-rlm_bestcase <- subset(rlm_rmse, rlm_rmse <= quantile(rlm_rmse, probs = c(0, 0.05, 0.95, 1))[2])
-scatter_rlm_bestcase <- subset(scatterdf_rlm, is.element(scatterdf_rlm[,4], rownames(rlm_bestcase)))
-sp_rlm_bestcase <- ggplot2::ggplot(scatter_rlm_bestcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("RLM Best Case")
+rlm_bestcase <- subset(rlm_rmse, 
+                       rlm_rmse <= quantile(rlm_rmse, 
+                                            probs = c(0, 0.05, 0.95, 1))[2])
+scatter_rlm_bestcase <- subset(scatterdf_rlm, 
+                               is.element(scatterdf_rlm[,4],
+                                          rownames(rlm_bestcase)))
+sp_rlm_bestcase <- ggplot2::ggplot(scatter_rlm_bestcase, 
+                                   ggplot2::aes(x=actual, y=predicted,
+                                                color=celltype)) +
+  ggplot2::geom_point()+ggplot2::ggtitle("RLM Best Case")
 sp_rlm_bestcase
 ```
 
 ```{r}
-rlm_worstcase <- subset(rlm_rmse, rlm_rmse >= quantile(rlm_rmse, probs = c(0, 0.05, 0.95, 1))[3])
-scatter_rlm_worstcase <- subset(scatterdf_rlm, is.element(scatterdf_rlm[,4], rownames(rlm_worstcase)))
-sp_rlm_worstcase <- ggplot2::ggplot(scatter_rlm_worstcase, ggplot2::aes(x=actual, y=predicted, color=celltype)) + ggplot2::geom_point()+ggplot2::ggtitle("RLM Worst Case")
+rlm_worstcase <- subset(rlm_rmse, 
+                        rlm_rmse >= quantile(rlm_rmse, 
+                                             probs = c(0, 0.05, 0.95, 1))[3])
+scatter_rlm_worstcase <- subset(scatterdf_rlm, 
+                                is.element(scatterdf_rlm[,4],
+                                           rownames(rlm_worstcase)))
+sp_rlm_worstcase <- ggplot2::ggplot(scatter_rlm_worstcase, 
+                                    ggplot2::aes(x=actual, y=predicted,
+                                                 color=celltype)) +
+  ggplot2::geom_point()+ggplot2::ggtitle("RLM Worst Case")
 sp_rlm_worstcase
 ```
 
 
 ## Absolute Error by Cell Type
 
-For each method (or in general), are there cell types that we are bad at predicting. This indicates improvements for the reference matrix are needed. 
+For each method (or in general), there may be cell types that are poorly predicted. This indicates improvements for the reference matrix are needed. 
 
-This is illustrated with a set of boxplots for each method. Each boxplot represents a cell type, and each datapoint in the boxplot is the absolute value of the difference between original and predicted proportions for a cell type in each random mixture. This way we can see if we do badly in certain cell types in general compared to other cell types.
+Below,a set of boxplots illustrated for each method. Each boxplot represents a cell type, and each datapoint in the boxplot is the absolute value of the difference between original and predicted proportions for a cell type in each random mixture. The cell types that are poorly predicted when compared to other cell types can be seen, if there are any.
 
 ```{r}
 nnls_absolute_residuals <- abs(nnls_residuals_1000)
 melt_nnls <- reshape2::melt(nnls_absolute_residuals)
-plt_nnls <- ggplot2::ggplot(data = melt_nnls , ggplot2::aes(x = variable, y = value))
-plt_nnls + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("NNLS Absolute Error by Cell Type")
+plt_nnls <- ggplot2::ggplot(data = melt_nnls, 
+                            ggplot2::aes(x = variable, y = value))
+plt_nnls + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + 
+  ggplot2::labs(x = "Cell Type", y = "Absolute Error") +
+  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) +
+  ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) +
+  ggplot2::ggtitle("NNLS Absolute Error by Cell Type")
 ```
 
 ```{r}
 svr_absolute_residuals <- abs(svr_residuals_1000)
 melt_svr <- reshape2::melt(svr_absolute_residuals)
-plt_svr <- ggplot2::ggplot(data = melt_svr , ggplot2::aes(x = variable, y = value))
-plt_svr + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("SVR Absolute Error by Cell Type")
+plt_svr <- ggplot2::ggplot(data = melt_svr, 
+                           ggplot2::aes(x = variable,y = value))
+plt_svr + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + 
+  ggplot2::labs(x = "Cell Type", y = "Absolute Error") +
+  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) +
+  ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) +
+  ggplot2::ggtitle("SVR Absolute Error by Cell Type")
 ```
 
 ```{r}
 qp_absolute_residuals <- abs(qp_residuals_1000)
 melt_qp <- reshape2::melt(qp_absolute_residuals)
-plt_qp <- ggplot2::ggplot(data = melt_qp , ggplot2::aes(x = variable, y = value))
-plt_qp + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("QP Absolute Error by Cell Type")
+plt_qp <- ggplot2::ggplot(data = melt_qp , 
+                          ggplot2::aes(x = variable,y = value))
+plt_qp + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + 
+  ggplot2::labs(x = "Cell Type", y = "Absolute Error") +
+  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) +
+  ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) +
+  ggplot2::ggtitle("QP Absolute Error by Cell Type")
 ```
 
 ```{r}
 rlm_absolute_residuals <- abs(rlm_residuals_1000)
 melt_rlm <- reshape2::melt(rlm_absolute_residuals)
-plt_rlm <- ggplot2::ggplot(data = melt_rlm , ggplot2::aes(x = variable, y = value))
-plt_rlm + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + ggplot2::labs(x = "Cell Type", y = "Absolute Error") +  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) + ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1)))+ggplot2::ggtitle("RLM Absolute Error by Cell Type")
+plt_rlm <- ggplot2::ggplot(data = melt_rlm , 
+                           ggplot2::aes(x = variable, y = value))
+plt_rlm + ggplot2::geom_boxplot() + ggplot2::theme_minimal() + 
+  ggplot2::labs(x = "Cell Type", y = "Absolute Error") +
+  ggplot2::theme(axis.text.x = element_text(angle=90, hjust=1, vjust=0.5)) +
+  ggplot2::scale_y_continuous(expand=expand_scale(mult=c(0,0.1))) + 
+  ggplot2::ggtitle("RLM Absolute Error by Cell Type")
 ```
 
 
