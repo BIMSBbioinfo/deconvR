@@ -4,14 +4,20 @@
 # see the wiki:
 #   https://github.com/craigcitro/r-travis/wiki
 
-language: R
-r: bioc-devel
-sudo: false
-warnings_are_errors: true
+language: r
 
-# BiocCheck
-bioc_packages:
-  - BiocCheck
+# See https://docs.travis-ci.com/user/languages/r/#R-Versions
+r:
+  - bioc-devel
+
+sudo: required
+bioc_required: true
+
+r_packages:
+  - devtools
+
+r_github_packages:
+  - jimhester/covr
 
 after_success:
-  - R CMD BiocCheck --new-package --no-check-vignettes [deconvR]*.tar.gz
+  - Rscript -e 'covr::codecov()'
