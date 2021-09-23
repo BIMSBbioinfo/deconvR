@@ -25,17 +25,27 @@
 #' simulateCellMix(
 #'   numberOfSamples = 100,
 #'   reference = readRDS(system.file("reference_atlas_nodup.RDS",
-#'   package = "deconvR"))
+#'     package = "deconvR"
+#'   ))
 #' )
-#' simulateCellMix(1, mixingVector = c(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-#' 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
-#' simulateCellMix(1, data.frame(c(0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
-#' 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0)))
+#' simulateCellMix(1, mixingVector = c(
+#'   0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#'   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+#' ))
+#' simulateCellMix(1, data.frame(c(
+#'   0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
+#'   0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0
+#' )))
 #' simulateCellMix(2, data.frame(
-#' c(0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0,
-#'    0, 0),
-#' c(0.1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0,
-#'    0, 0, 0) ))
+#'   c(
+#'     0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0,
+#'     0, 0
+#'   ),
+#'   c(
+#'     0.1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0,
+#'     0, 0, 0
+#'   )
+#' ))
 #' @return A list containing two data frames.
 #' First: A dataframe which contains mixed cell-type origin simulated samples.
 #' The first column contains a unique ID (used from reference) which can be
@@ -53,17 +63,22 @@
 simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
                             reference =
                               readRDS(system.file("reference_atlas_nodup.RDS",
-                                                  package = "deconvR"))) {
-  simulatedMixtureTable <- data.frame(matrix(ncol = numberOfSamples + 1,
-                                             nrow = nrow(reference)))
+                                package = "deconvR"
+                              ))) {
+  simulatedMixtureTable <- data.frame(matrix(
+    ncol = numberOfSamples + 1,
+    nrow = nrow(reference)
+  ))
   ## setting up simulatedMixtureTable will hold simulation methylation values
   simulatedMixtureTable[, ] <- 0
   simulatedMixtureTable[, 1] <- reference[, 1]
   # copy IDs from reference atlas
   colnames(simulatedMixtureTable)[1] <- "IDs"
 
-  proportionsTable <- data.frame(matrix(ncol = ncol(reference) - 1,
-                                        nrow = numberOfSamples))
+  proportionsTable <- data.frame(matrix(
+    ncol = ncol(reference) - 1,
+    nrow = numberOfSamples
+  ))
   ## setting up proportionsTable will hold simulation origin cell proportions
   proportionsTable[, ] <- 0
   colnames(proportionsTable) <- colnames(reference[, -1])
@@ -81,15 +96,14 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
 
       for (c in seq_len(n)) {
         simulatedMixtureTable[, i + 1] <- (simulatedMixtureTable[, i + 1] +
-                                          (amts[c] * reference[, picks[c] + 1]))
+          (amts[c] * reference[, picks[c] + 1]))
         # add the influence to the values
         proportionsTable[i, picks[c]] <- amts[c]
       }
       rownames(proportionsTable)[i] <- paste("Sample", i)
       colnames(simulatedMixtureTable)[i + 1] <- paste("Sample", i)
     }
-  }
-  else {
+  } else {
     if (class(mixingVector) == "data.frame") {
       if (ncol(mixingVector) != numberOfSamples) {
         stop("numberOfSamples should equal number of rows in mixingVector")
@@ -100,15 +114,14 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
       }
       if (typeof(unlist(mixingVector)) != "double") {
         stop("mixingVector should only contain numbers")
-      }
-      else {
+      } else {
         for (s in seq_len(ncol(mixingVector))) {
           # each row is a sample
           for (t in seq_len(nrow(mixingVector))) {
             # each column is a cell type
             if (mixingVector[t, s] > 0) {
               simulatedMixtureTable[, s + 1] <- (simulatedMixtureTable[, s + 1]
-              +(mixingVector[t, s] * reference[, t + 1]))
+              + (mixingVector[t, s] * reference[, t + 1]))
               # add the influence to the values
               proportionsTable[s, t] <- mixingVector[t, s]
             }
@@ -117,8 +130,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
           colnames(simulatedMixtureTable)[s + 1] <- paste("Sample", s)
         }
       }
-    }
-    else if (class(mixingVector) == "numeric") {
+    } else if (class(mixingVector) == "numeric") {
       if (1 != numberOfSamples) {
         stop("you may only use a vector for mixingVector if numberOfSamples = 1,
              otherwise use dataframe with columns for samples and rows for cell
@@ -130,13 +142,12 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
       if (length(mixingVector) != (ncol(reference) - 1)) {
         stop("length of mixingVector must equal number of samples in reference
              (use zeros for unused cell types)")
-      }
-      else {
+      } else {
         for (t in seq_along(mixingVector)) {
           # mixing vector has number per cell type
           if (mixingVector[t] > 0) {
             simulatedMixtureTable[, 2] <- (simulatedMixtureTable[, 2] +
-                                        (mixingVector[t] * reference[, t + 1]))
+              (mixingVector[t] * reference[, t + 1]))
             # add the influence to the values
             proportionsTable[1, t] <- mixingVector[t]
           }
@@ -144,8 +155,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
         rownames(proportionsTable)[1] <- "Sample 1"
         colnames(simulatedMixtureTable)[2] <- "Sample 1"
       }
-    }
-    else {
+    } else {
       stop("mixingVector must be either data frame or numeric vector")
     }
   }
