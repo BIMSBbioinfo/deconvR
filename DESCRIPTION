@@ -3,7 +3,6 @@ Type: Package
 Title: Simulation and Deconvolution of Cellular Signatures
 Version: 0.99.0
 Authors@R: c(person("Veronika", "Ebenal", email="veronikaebenal@gmail.com", role=c("aut", "cre"), comment = c(ORCID = "0000-0001-7976-3964")))
-Maintainer: Altuna Akalin <aakalin@gmail.com>
 Description: The package contains the function "deconvolute" which takes in
     a reference atlas (defaults to ref_atlas included in package), a bulk sample(s) signature profile,
     and the desired model to be used (non-negative least squares regression, support vector regression,
@@ -44,7 +43,7 @@ License: Artistic-2.0
 Encoding: UTF-8
 VignetteBuilder: knitr
 biocViews: DNAMethylation, Regression
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     testthat,
     roxygen2,
