@@ -4,8 +4,7 @@
 # see the wiki:
 #   https://github.com/craigcitro/r-travis/wiki
 
-language: R
-sudo: false
+language: r
 warnings_are_errors: false
 cache: packages
 r: release
@@ -16,12 +15,6 @@ bioc_required: true
 bioc_packages:
   - BiocCheck
 
-
-
-after_script:
-  - ls -lah
-  - FILE=$(ls -1t *.tar.gz | head -n 1)
-  - Rscript -e "library(BiocCheck); BiocCheck(\"${FILE}\")"
 
 env:
   global:
@@ -36,3 +29,5 @@ r_packages:
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
+  - find . -name testthat.Rout | xargs cat
+  - R CMD BiocCheck deconvR*.tar.gz
