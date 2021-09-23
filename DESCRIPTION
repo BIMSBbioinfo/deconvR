@@ -68,4 +68,6 @@ Suggests:
     reshape2,
     ggplot2,
     rmarkdown,
-    devtools
+    devtools,
+    RefManageR,
+    sessioninfo
