@@ -16,18 +16,18 @@ sample, and second column for cell type of sample, rows are samples}
 
 \item{atlas}{dataframe, the reference atlas to which new signatures can be
 added, if not present then a new reference atlas will be created using
-sample(s). Should be dataframe with column for each cell type, rows units
-of signature (e.g. CpGs)}
+sample(s). Should be dataframe with column for each cell type, rows units of
+signature (e.g. CpGs)}
 
 \item{variation_cutoff}{either a number between 0 to 1, or NULL.For multiple
 samples from the same cell type, ignore CpGs with variation >
 variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)}
 }
 \value{
-A dataframe extendedAtlas which contains all cell types in atlas (if
-given), and those in samples added by cell type, has first column "IDs",
-rest of columns are cell types, rows are have first cell with the ID (e.g.
-CpG ID) and then values of signature (e.g. methylation values)
+A dataframe extendedAtlas which contains all cell types in atlas
+(if given), and those in samples added by cell type, has first column "IDs",
+rest of columns are cell types, rows are have first cell with the ID
+(e.g. CpG ID) and then values of signature (e.g. methylation values)
 }
 \description{
 A function to construct a signature matrix

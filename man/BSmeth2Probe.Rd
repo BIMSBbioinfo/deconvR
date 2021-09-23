@@ -13,12 +13,12 @@ BSmeth2Probe(
 }
 \arguments{
 \item{probe_id_locations}{Either a dataframe or GRanges object containing
-probe IDs and their locations. If dataframe: must contain columns named
-"ID", "CHR", "Start", "End", and "Strand". If GRanges: should have
-locations ("seqnames", "ranges", "strand"), as well as metadata column
-"ID". Start and end locations should be 1-based coordinates. Note that any
-row with NA values will not be used. Example dataframe
-illumina_probes_hg38_GRanges.RDS in inst folder included in package.}
+probe IDs and their locations. If dataframe: must contain columns named "ID",
+"CHR", "Start", "End", and "Strand". If GRanges: should have locations
+("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and
+end locations should be 1-based coordinates. Note that any row with NA values
+will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
+folder included in package.}
 
 \item{WGBS_data}{Either a GRanges object or methylKit object (methylRaw,
 methylBase, methylRawDB, or methylBaseDB) of CpG locations and their
@@ -37,10 +37,11 @@ Default value is FALSE.}
 \value{
 A dataframe with first column "IDs" for CpG IDs, then 1 or more
 columns for methylation values of sample(s) (same number of samples as in
-WGBS_data) ID for each probe which was mapped, and then methylation
-value(s) of the WGBS CpG to which it was matched (where either it
-overlapped or the gap was < cutoff). If it matched to more than one CpG,
-the mean methylation value is taken.
+WGBS_data)
+ID for each probe which was mapped, and then methylation value(s) of the
+WGBS CpG to which it was matched (where either it overlapped or the gap was
+< cutoff). If it matched to more than one CpG, the mean methylation value
+is taken.
 }
 \description{
 A function to map WGBS methylation data to Illumina Probe IDs

@@ -1,16 +1,16 @@
 #' A function to construct a signature matrix
 #' @param samples dataframe, has first column IDs, rest of columns are samples
-#'   (must have column name as sample accession ID which should be found in
-#'   sampleMeta), rows are units of signature (e.g. CpGs)
+#' (must have column name as sample accession ID which should be found in
+#' sampleMeta), rows are units of signature (e.g. CpGs)
 #' @param sampleMeta dataframe, must have first column for accession ID of each
-#'   sample, and second column for cell type of sample, rows are samples
+#' sample, and second column for cell type of sample, rows are samples
 #' @param atlas dataframe, the reference atlas to which new signatures can be
-#'   added, if not present then a new reference atlas will be created using
-#'   sample(s). Should be dataframe with column for each cell type, rows units
-#'   of signature (e.g. CpGs)
+#' added, if not present then a new reference atlas will be created using
+#' sample(s). Should be dataframe with column for each cell type, rows units of
+#' signature (e.g. CpGs)
 #' @param variation_cutoff either a number between 0 to 1, or NULL.For multiple
-#'   samples from the same cell type, ignore CpGs with variation >
-#'   variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)
+#' samples from the same cell type, ignore CpGs with variation >
+#' variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)
 #' @importFrom magrittr %>%
 #' @import data.table
 #' @import utils
@@ -31,10 +31,10 @@
 #'     samples = exampleSamples, sampleMeta = exampleMeta,
 #'     atlas = exampleReference
 #' )
-#' @return A dataframe extendedAtlas which contains all cell types in atlas (if
-#'   given), and those in samples added by cell type, has first column "IDs",
-#'   rest of columns are cell types, rows are have first cell with the ID (e.g.
-#'   CpG ID) and then values of signature (e.g. methylation values)
+#' @return A dataframe extendedAtlas which contains all cell types in atlas
+#' (if given), and those in samples added by cell type, has first column "IDs",
+#' rest of columns are cell types, rows are have first cell with the ID
+#' (e.g. CpG ID) and then values of signature (e.g. methylation values)
 #' @export
 
 findSignatures <- function(samples, sampleMeta, atlas = NULL,
