@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # deconvR
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/workflows/R-CMD-check/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions)
 <!-- badges: end -->
 
 The package contains the function "deconvolute" which takes in
