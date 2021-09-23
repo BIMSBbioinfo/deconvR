@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # deconvR
-
+[![Build Status](https://app.travis-ci.com/BIMSBbioinfo/deconvR.svg?branch=main)](https://app.travis-ci.com/github/BIMSBbioinfo/deconvR)
 <!-- badges: start -->
 <!-- badges: end -->
 
@@ -29,5 +29,5 @@ signatures of cell types.
 You can install deconvR with:
 
 ``` r
-devtools::install_github("BIMSBbioinfo/deconvR", auth_token = "add your github personal access token here")
+devtools::install_github("BIMSBbioinfo/deconvR")
 ```
