@@ -30,6 +30,8 @@ library(deconvR)
 library(ggplot2)
 library(reshape2)
 library(doParallel)
+library(dplyr)
+
 cl <- parallel::makeCluster(2)
 doParallel::registerDoParallel(cl)
 listboth1000 = simulateCellMix(1000)
@@ -71,7 +73,7 @@ reference atlas provided in `inst`, or create/extend a new reference atlas using
 `simulateCellMix` to generate a simulated table of a desired number of samples,
 with either user-specified or random origin proportions. Alternatively, in the
 case of methylation profiles, `BSMeth2Probe` may be used to map WGBS methylation
-data (as a dataframe or GRanges object) to probe IDs, and the results of this
+data (as a dataframe or **GRanges** object) to probe IDs, and the results of this
 mapping may be used as the bulk samples in the deconvolution. Finally, along
 with a reference atlas and table of bulk samples, `deconvolute` allows the user
 to specify their desired deconvolution model (non-negative least squares
@@ -205,23 +207,23 @@ BSmeth2Probe(
   multipleMapping = FALSE)
 ```
 
-The `probe_id_locations` parameter can be either a dataframe or GRanges object
+The `probe_id_locations` parameter can be either a dataframe or **GRanges** object
 containing probe IDs and their locations. If it's a dataframe, it must contain
-columns named "ID", "CHR", "Start", "End", and "Strand". If it's a GRanges
+columns named "ID", "CHR", "Start", "End", and "Strand". If it's a **GRanges**
 object, it should have locations ("seqnames", "ranges", "strand"), as well as
 metadata column "ID". Start and end locations should be 1-based coordinates.
 Note that any row with NA values will not be used.
 
 The user may use the example dataframe `illumina_probes_hg38_GRanges.RDS` in the
 `inst` folder of the package (more information on this file can be found below).
-The `WGBS_data` parameter can be either a GRanges object or methylKit object
+The `WGBS_data` parameter can be either a **GRanges** object or **methylKit** object
 (methylRaw, methylBase, methylRawDB, or methylBaseDB) of CpG locations and their
 methylation values.
  
 This parameter must contain locations ("seqnames", "ranges", "strand") and
 metadata column(s) of methylation values of sample(s) (i.e. one column per
 sample). These methylation values must be between 0 and 1. The user may use the
-example GRanges object `WGBS_GRanges.RDS` in the `inst` folder of the package
+example **GRanges** object `WGBS_GRanges.RDS` in the `inst` folder of the package
 (more information on this file can be found below).
 
 The `cutoff` is the maximum distance (in number of base-pairs) to consider for
@@ -316,7 +318,7 @@ head(atlas)
 
 ## WGBS Data
 
-An example of WGBS data has been included as the GRanges object
+An example of WGBS data has been included as the **GRanges** object
 `WGBS_GRanges.RDS`. This object contains the methylation values of 11715 genomic
 loci (identified using the "seqnames", "ranges", and "strand" values) for a
 single example sample. It can be used directly as `WGBS_data` in `BSmeth2Probe`.
@@ -328,18 +330,18 @@ WGBS_data
 
 ## Illumina hg38 Probes
 
-The GRanges object `illumina_probes_hg38_GRanges.RDS` contains the Illumina
+The **GRanges** object `illumina_probes_hg38_GRanges.RDS` contains the Illumina
 probe IDs of 500,000 genomic loci (identified using the "seqnames", "ranges",
 and "strand" values). This object is based off of the Infinium MethylationEPIC
 v1.0 B5 Manifest File ^[Illumina Inc. "Infinium MethylationEPIC Product Files."
 Available at
 <https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html>].
 Unnecessary columns were removed and rows were truncated to reduce file size
-before converting the file to a GRanges object. It can be used directly as
+before converting the file to a **GRanges** object. It can be used directly as
 `probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
-probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR"))
+probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR")) %>% as.data.frame()
 probe_id_locations
 ```
 
@@ -382,16 +384,16 @@ head(extended_matrix)
 
 WGBS methylation data first needs to be mapped to probes using `BSmeth2Probe`
 before being deconvoluted.The methylation data `WGBS_data` in `BSmeth2Probe` may
-be either a GRanges object or a methylKit object.
+be either a **GRanges** object or a **methylKit** object.
 
-Format of `WGBS_data` as GRanges object:
+Format of `WGBS_data` as **GRanges** object:
 
 ``` {r, message = FALSE, output.lines=10}
 WGBS_data <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
 WGBS_data
 ```
 
-or as methylKit object:
+or as **methylKit** object:
 
 ``` {r, message = FALSE, output.lines=10}
 head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt",
@@ -425,10 +427,10 @@ deconvolution <- deconvolute(reference = extended_matrix,
 deconvolution[[1]]
 ```
 
+<details> 
+<summary>Model Analysis</summary>
 
-# Model Analysis
-
-## Partial R-Squared (model-generated vs actual methylation values)
+* Partial R-Squared (model-generated vs actual methylation values)
 
 These values were calculated by comparing the model’s predicted CpG methylation
 values (calculated by multiplying the model’s coefficients to the reference
@@ -451,17 +453,17 @@ rlm_result_1000 <- deconvolute(bulk=bulktable1000, model="rlm")[[1]]
 ```
 
 
-## RMSE (predicted vs actual origin cell-type proportions)
+* RMSE (predicted vs actual origin cell-type proportions)
 
 These values were calculated by comparing the model’s predicted origin cell-type
 proportions (calculated by normalizing the model’s coefficients) to the actual
-origin cell-type proportions of the samples.
-These RMSE values very closely match the previous RMSE values. This is to be
-expected, since the accuracy of model-predicted methylation values will change
-with differing accuracies of model coefficients, which were used to infer origin
-cell-type proportions. All models had a satisfactorily low RMSE. While NNLS,
-RLM, and QP had much lower RMSE values than SVR, the RMSE of SVR was still low
-enough that predictions were close to accurate.
+origin cell-type proportions of the samples. These RMSE values very closely
+match the previous RMSE values. This is to be expected, since the accuracy of
+model-predicted methylation values will change with differing accuracies of
+model coefficients, which were used to infer origin cell-type proportions. All
+models had a satisfactorily low RMSE. While NNLS, RLM, and QP had much lower
+RMSE values than SVR, the RMSE of SVR was still low enough that predictions were
+close to accurate.
 
 ```{r}
 nnls_residuals_1000 <- nnls_result_1000 - propstable1000
@@ -512,8 +514,12 @@ summary(rlm_rmse)
 boxplot(rlm_rmse)
 ```
 
+</details>
 
-## Limit of Detection
+<details> 
+<summary>Limit of Detection & Time Complexity</summary>
+
+* Limit of Detection 
 
 These values were calculated by running the model on a bulk sample with
 continually decreasing cellular proportions. The limit of detection was inferred
@@ -537,7 +543,8 @@ c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04
 c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04,1e-05,1e-06,1e-07,1e-08,1e-09,1e-10,1e-11,1e-12,1e-13,1e-14,1e-15,1e-16,1e-17,1e-18,1e-19,1e-20,0.88888888888888888888889,0,0,0,0))[[1]],model="rlm")[[1]][1,])
 ```
 
-## Time Complexity
+
+* Time Complexity
 
 These values are the elapsed times for running the model on (pre-generated) bulk
 sample sets of different sizes. NNLS and QP had exceedingly low runtimes; less
@@ -617,7 +624,12 @@ ggplot2::ggplot(time_data, ggplot2::aes(x=NumberOfSamples)) +
 
 ```
 
-## Scatter Plots
+</details>
+
+<details> 
+<summary>Interpreting the Results</summary>
+
+* Scatter Plots
 
 Here we compare the actual and predicted cell proportions, colored by the cell
 type. There are three scatter plots per model, representing all samples, 5th
@@ -823,7 +835,7 @@ sp_rlm_worstcase
 ```
 
 
-## Absolute Error by Cell Type
+* Absolute Error by Cell Type
 
 For each method (or in general), there may be cell types that are poorly
 predicted. This indicates improvements for the reference matrix are needed.
@@ -881,8 +893,10 @@ plt_rlm + ggplot2::geom_boxplot() + ggplot2::theme_minimal() +
   ggplot2::ggtitle("RLM Absolute Error by Cell Type")
 ```
 
+</details>
 
 # sessionInfo
+
 ```{r }
 sessionInfo()
 ```
