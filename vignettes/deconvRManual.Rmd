@@ -1,5 +1,5 @@
 ---
-title: "deconvRManual"
+title: "deconvR : Simulation and Deconvolution of Cellular Signatures"
 author: 
   - name: Veronika Ebenal
 output: 
@@ -9,7 +9,7 @@ output:
     toc_float: true
     toc_depth: 2
     code_folding: show
-date: "`r doc_date()`"
+date: "`r Sys.Date()`"
 package: "`r pkg_ver('deconvR')`"
 vignette: >
   %\VignetteIndexEntry{deconvRManual}
@@ -66,10 +66,11 @@ calculated using the row means of the reference atlas.
 You can install deconvR  with:
 
 ``` {r eval=FALSE}
-devtools::install_github("BIMSBbioinfo/deconvR", auth_token = "add your github personal access token here")
+devtools::install_github("BIMSBbioinfo/deconvR")
 ```
 
 # Functions
+
 ## simulateCellMix
 
 `simulateCellMix` generates a dataframe of simulated samples convoluted using a given reference atlas.
