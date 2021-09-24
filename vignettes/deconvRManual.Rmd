@@ -13,7 +13,7 @@ date: "`r Sys.Date()`"
 package: "`r pkg_ver('deconvR')`"
 vignette: >
   %\VignetteIndexEntry{deconvRManual}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 ---
 
