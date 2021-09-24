@@ -32,7 +32,7 @@ library(reshape2)
 library(doParallel)
 library(dplyr)
 
-cl <- parallel::makeCluster(2)
+cl <- parallel::makeCluster(6)
 doParallel::registerDoParallel(cl)
 listboth1000 = simulateCellMix(1000)
 propstable1000 = listboth1000[[2]]
@@ -40,27 +40,6 @@ bulktable1000 = listboth1000[[1]]
 bulktable100 = simulateCellMix(100)[[1]]
 bulktable10 = simulateCellMix(10)[[1]]
 bulktable1 = simulateCellMix(1)[[1]]
-```
-
-
-```{r vignetteSetup, echo=FALSE, message=FALSE, warning = FALSE}
-## Track time spent on making the vignette
-startTime <- Sys.time()
-
-## Bib setup
-library("RefManageR")
-
-## Write bibliography information
-bib <- c(
-    R = citation(),
-    BiocStyle = citation("BiocStyle")[1],
-    knitr = citation("knitr")[1],
-    RefManageR = citation("RefManageR")[1],
-    rmarkdown = citation("rmarkdown")[1],
-    sessioninfo = citation("sessioninfo")[1],
-    testthat = citation("testthat")[1],
-    deconvR = citation("deconvR")[1]
-)
 ```
 
 # Introduction
@@ -405,7 +384,7 @@ head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt",
 
 ``` {r, message = FALSE, output.lines=10}
 probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
-                                          package = "deconvR")) 
+                                          package = "deconvR")) %>% as.data.frame()
 probe_id_locations
 ```
 

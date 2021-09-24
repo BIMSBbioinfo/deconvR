@@ -69,5 +69,4 @@ Suggests:
     ggplot2,
     rmarkdown,
     devtools,
-    RefManageR,
     sessioninfo

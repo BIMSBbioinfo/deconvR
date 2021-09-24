@@ -1,7 +1,7 @@
 #' A function to map WGBS methylation data to Illumina Probe IDs
 #' @param probe_id_locations Either a dataframe or GRanges object containing
 #' probe IDs and their locations. If dataframe: must contain columns named "ID",
-#' "CHR", "Start", "End", and "Strand". If GRanges: should have locations
+#' "seqnames", "Start", "End", and "Strand". If GRanges: should have locations
 #' ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and
 #' end locations should be 1-based coordinates. Note that any row with NA values
 #' will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
@@ -67,17 +67,18 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
          methylKit object (methylRaw, methylBase, methylRawDB,
          or methylBaseDB")
     }
-    if (methods::isClass(probe_id_locations, Class = "data.frame") == TRUE) {
+    if ((methods::isClass(probe_id_locations, Class = "GRanges") != TRUE) &&
+        (methods::isClass(probe_id_locations, Class = "data.frame") == TRUE)) {
         if (any(
-            is.null(probe_id_locations$CHR), is.null(probe_id_locations$Start),
+            is.null(probe_id_locations$seqnames), is.null(probe_id_locations$Start),
             is.null(probe_id_locations$End), is.null(probe_id_locations$Strand),
             is.null(probe_id_locations$ID)
         )) {
-            stop("probe_id_locations must contain columns named ID, CHR, Start, End,
+            stop("probe_id_locations must contain columns named ID, seqnames, Start, End,
            and Strand.")
         }
         if (any(is.na(probe_id_locations[, c(
-            "CHR", "Start", "End", "Strand",
+            "seqnames", "Start", "End", "Strand",
             "ID"
         )]))) {
             print(paste("Dropping row containing NA: " +
@@ -85,7 +86,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             probe_id_locations <- tidyr::drop_na(probe_id_locations)
         }
         probe_id_locations <- GenomicRanges::GRanges(
-            seqnames = probe_id_locations[, "CHR"],
+            seqnames = probe_id_locations[, "seqnames"],
             ## if the probe_id_locations is a dataframe,
             ## turn it into GRanges before continuing
             ranges = IRanges::IRanges(
