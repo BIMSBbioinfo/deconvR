@@ -24,5 +24,4 @@ test_that("simulateCellMix", {
     expect_error(simulateCellMix(10, c(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)))
     expect_error(simulateCellMix(2, data.frame(c(0.1, 0.7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.01, 0, 0.09, 0, 0, 0.1, 0, 0, 0, 0, 0, 0))))
     expect_error(simulateCellMix(1, data.frame(c(0, 0, 0, 0, 0.3, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0.1, 0, 0, 0, 0, 0.05, 0.05, 0, 0, 0, 0), c(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))))
-
 })
