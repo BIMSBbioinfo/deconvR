@@ -43,7 +43,9 @@ Imports:
     quadprog (>= 1.5.8),
     nnls (>= 1.4),
     rsq (>= 2.2),
-    MASS
+    MASS,
+    dplyr,
+    tidyr
 Depends: 
     R (>= 4.1),
     data.table (>= 1.14.0)
@@ -67,5 +69,6 @@ Suggests:
     ggplot2 (>= 3.3.5),
     rmarkdown,
     devtools (>= 2.4.2),
-    sessioninfo (>= 1.1.1)
+    sessioninfo (>= 1.1.1),
+    assertthat
 Config/testthat/edition: 3
