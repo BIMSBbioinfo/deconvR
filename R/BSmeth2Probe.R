@@ -96,9 +96,10 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((methods::isClass(WGBS_data, Class = "GRanges") != TRUE) &&
+    if ((methods::isClass(WGBS_data, Class = "GRanges") == FALSE) &&
         (methods::isClass(WGBS_data, Class = "methylBaseDB") == TRUE) ||
-        (methods::isClass(WGBS_data, Class = "methylBase") == TRUE)) {
+        (methods::isClass(WGBS_data, Class = "GRanges") == FALSE) &&
+            (methods::isClass(WGBS_data, Class = "methylBase") == TRUE)) {
         pm <- methylKit::percMethylation(WGBS_data)
         pm <- pm / 100
         WGBS_data <- methods::as(WGBS_data, "GRanges")
