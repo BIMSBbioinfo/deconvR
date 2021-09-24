@@ -1,14 +1,14 @@
 #' A function to map WGBS methylation data to Illumina Probe IDs
 #' @param probe_id_locations Either a dataframe or GRanges object containing
 #' probe IDs and their locations. If dataframe: must contain columns named "ID",
-#' "seqnames", "Start", "End", and "Strand". If GRanges: should have locations
-#' ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and
+#' "CHR", "Start", "End", and "Strand". If GRanges: should have locations
+#' ("CHR", "ranges", "strand"), as well as metadata column "ID". Start and
 #' end locations should be 1-based coordinates. Note that any row with NA values
 #' will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
 #' folder included in package.
 #' @param WGBS_data Either a GRanges object or methylKit object (methylRaw,
 #' methylBase, methylRawDB, or methylBaseDB) of CpG locations and their
-#' methylation values. Contains locations ("seqnames", "ranges", "strand") and
+#' methylation values. Contains locations ("CHR", "ranges", "strand") and
 #' metadata column(s) of methylation values of sample(s) (i.e. one column per
 #' sample). These methylation values must be between 0 and 1.
 #' @param cutoff The maximum number of basepairs distance to consider for probes
@@ -67,12 +67,22 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
          methylKit object (methylRaw, methylBase, methylRawDB,
          or methylBaseDB")
     }
+
     if ((is.data.frame(probe_id_locations) == TRUE)) {
-        names(probe_id_locations) <- toupper(names(probe_id_locations))
-        if (any(is.null(probe_id_locations$SEQNAMES), is.null(probe_id_locations$END),
-                is.null(probe_id_locations$START), is.null(probe_id_locations$STRAND),
+        capital <- function(x) {
+            s <- strsplit(x, " ")[[1]]
+            paste(toupper(substring(s, 1,1)), substring(s, 2),
+                  sep="", collapse=" ")
+        }
+        names(probe_id_locations) <- sapply(names(probe_id_locations), capital)
+
+        if ("Seqnames" %in% names(probe_id_locations)) {
+            probe_id_locations <- dplyr::rename(probe_id_locations, CHR = "Seqnames")
+        }
+        if (any(is.null(probe_id_locations$CHR), is.null(probe_id_locations$End),
+                is.null(probe_id_locations$Start), is.null(probe_id_locations$Strand),
                 is.null(probe_id_locations$ID)) == TRUE) {
-            stop("probe_id_locations must contain columns named ID, Seqnames, Start, End,
+            stop("probe_id_locations must contain columns named ID, CHR, Start, End,
            and Strand.")
         }
         if (anyNA(probe_id_locations) == TRUE) {
@@ -81,14 +91,14 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             probe_id_locations <- tidyr::drop_na(probe_id_locations)
         }
         probe_id_locations <- GenomicRanges::GRanges(
-            seqnames = probe_id_locations[, "SEQNAMES"],
+            CHR = probe_id_locations[, "CHR"],
             ## if the probe_id_locations is a dataframe,
             ## turn it into GRanges before continuing
             ranges = IRanges::IRanges(
-                start = probe_id_locations[, "START"],
-                end = probe_id_locations[, "END"]
+                start = probe_id_locations[, "Start"],
+                end = probe_id_locations[, "End"]
             ),
-            strand = probe_id_locations[, "STRAND"],
+            strand = probe_id_locations[, "Strand"],
             ID = probe_id_locations[, "ID"]
         )
     }
