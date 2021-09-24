@@ -69,36 +69,34 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
     if ((methods::isClass(probe_id_locations, Class = "GRanges") != TRUE) &&
         (methods::isClass(probe_id_locations, Class = "data.frame") == TRUE)) {
-        if (any(c("SEQNAMES", "START", "END", "STRAND", "ID") %in% toupper(names(probe_id_locations)) == FALSE)) {
+        names(probe_id_locations) <- toupper(names(probe_id_locations))
+        if (any(c("SEQNAMES", "START", "END", "STRAND", "ID") %in% names(probe_id_locations) == FALSE)) {
             stop("probe_id_locations must contain columns named ID, Seqnames, Start, End,
            and Strand.")
         }
-        if (any(is.na(probe_id_locations[, c(
-            "Seqnames", "Start", "End", "Strand", "ID"
-        )]))) {
+        if (anyNA(probe_id_locations) == TRUE) {
             print(paste("Dropping row containing NA: " +
                 which(is.na(probe_id_locations))))
             probe_id_locations <- tidyr::drop_na(probe_id_locations)
         }
         probe_id_locations <- GenomicRanges::GRanges(
-            seqnames = probe_id_locations[, "seqnames"],
+            seqnames = probe_id_locations[, "SEQNAMES"],
             ## if the probe_id_locations is a dataframe,
             ## turn it into GRanges before continuing
             ranges = IRanges::IRanges(
-                start = probe_id_locations[, "Start"],
-                end = probe_id_locations[, "End"]
+                start = probe_id_locations[, "START"],
+                end = probe_id_locations[, "END"]
             ),
-            strand = probe_id_locations[, "Strand"],
+            strand = probe_id_locations[, "STRAND"],
             ID = probe_id_locations[, "ID"]
         )
     }
     if (methods::isClass(probe_id_locations, Class = "GRanges") == TRUE) {
-        if (is.null(probe_id_locations$ID)) {
+        if (is.null(probe_id_locations$ID) == TRUE) {
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((methods::isClass(WGBS_data, Class = "GRanges") != TRUE) &&
-        (methods::isClass(WGBS_data, Class = "methylBaseDB") == TRUE) ||
+    if ((methods::isClass(WGBS_data, Class = "methylBaseDB") == TRUE) ||
         (methods::isClass(WGBS_data, Class = "methylBase") == TRUE)) {
         pm <- methylKit::percMethylation(WGBS_data)
         pm <- pm / 100
