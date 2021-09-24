@@ -35,16 +35,16 @@ A function to construct a signature matrix
 \examples{
 exampleSamples <- simulateCellMix(1)[[1]]
 exampleReference <- readRDS(system.file("reference_atlas_nodup.RDS",
-  package = "deconvR"
+    package = "deconvR"
 ))
 exampleMeta <- data.table(
-  "Experiment_accession" = "example_sample",
-  "Biosample_term_name" = "example_cell_type"
+    "Experiment_accession" = "example_sample",
+    "Biosample_term_name" = "example_cell_type"
 )
 colnames(exampleSamples)[-1] <- c("example_sample")
 findSignatures(samples = exampleSamples, sampleMeta = exampleMeta)
 findSignatures(
-  samples = exampleSamples, sampleMeta = exampleMeta,
-  atlas = exampleReference
+    samples = exampleSamples, sampleMeta = exampleMeta,
+    atlas = exampleReference
 )
 }
