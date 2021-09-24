@@ -67,7 +67,7 @@ Suggests:
     BiocStyle (>= 2.20.2),
     reshape2 (>= 1.4.4),
     ggplot2 (>= 3.3.5),
-    rmarkdown (>= 2.11.2),
+    rmarkdown,
     devtools (>= 2.4.2),
     sessioninfo (>= 1.1.1),
     assertthat (>= 0.2.1)
