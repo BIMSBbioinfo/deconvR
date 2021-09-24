@@ -67,10 +67,11 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
          methylKit object (methylRaw, methylBase, methylRawDB,
          or methylBaseDB")
     }
-    if ((methods::isClass(probe_id_locations, Class = "GRanges") != TRUE) &&
-        (methods::isClass(probe_id_locations, Class = "data.frame") == TRUE)) {
+    if ((is.data.frame(probe_id_locations) == TRUE)) {
         names(probe_id_locations) <- toupper(names(probe_id_locations))
-        if (any(c("SEQNAMES", "START", "END", "STRAND", "ID") %in% names(probe_id_locations) == FALSE)) {
+        if (any(is.null(probe_id_locations$SEQNAMES), is.null(probe_id_locations$END),
+                is.null(probe_id_locations$START), is.null(probe_id_locations$STRAND),
+                is.null(probe_id_locations$ID)) == TRUE) {
             stop("probe_id_locations must contain columns named ID, Seqnames, Start, End,
            and Strand.")
         }
