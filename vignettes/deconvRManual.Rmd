@@ -341,7 +341,7 @@ before converting the file to a **GRanges** object. It can be used directly as
 `probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
-probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR")) %>% as.data.frame()
+probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR"))
 probe_id_locations
 ```
 
