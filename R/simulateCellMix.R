@@ -104,7 +104,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
             colnames(simulatedMixtureTable)[i + 1] <- paste("Sample", i)
         }
     } else {
-        if (methods::is.class(mixingVector) == "data.frame") {
+        if (methods::isClass(mixingVector) == "data.frame") {
             if (ncol(mixingVector) != numberOfSamples) {
                 stop("numberOfSamples should equal number of rows in mixingVector")
             }

@@ -54,12 +54,12 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         stop("WGBS_data should not be empty")
     }
 
-    if ((methods::is.class(probe_id_locations) != "data.frame") &&
-        (methods::is.class(probe_id_locations) != "GRanges")) {
+    if ((methods::isClass(probe_id_locations) != "data.frame") &&
+        (methods::isClass(probe_id_locations) != "GRanges")) {
         stop("probe_id_locations must be either dataframe or GRanges object")
     }
 
-    if (!(methods::is.class(WGBS_data) %in% c(
+    if (!(methods::isClass(WGBS_data) %in% c(
         "GRanges", "methylRawDB", "methylRaw",
         "methylBaseDB", "methylBase"
     ))) {
@@ -67,7 +67,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
          methylKit object (methylRaw, methylBase, methylRawDB,
          or methylBaseDB")
     }
-    if (methods::is.class(probe_id_locations) == "data.frame") {
+    if (methods::isClass(probe_id_locations) == "data.frame") {
         if (any(
             is.null(probe_id_locations$CHR), is.null(probe_id_locations$Start),
             is.null(probe_id_locations$End), is.null(probe_id_locations$Strand),
@@ -96,27 +96,27 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             ID = probe_id_locations[, "ID"]
         )
     }
-    if (methods::is.class(probe_id_locations) == "GRanges") {
+    if (methods::isClass(probe_id_locations) == "GRanges") {
         if (is.null(probe_id_locations$ID)) {
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((methods::is.class(WGBS_data) == "methylBaseDB") ||
-        (methods::is.class(WGBS_data) == "methylBase")) {
+    if ((methods::isClass(WGBS_data) == "methylBaseDB") ||
+        (methods::isClass(WGBS_data) == "methylBase")) {
         pm <- methylKit::percMethylation(WGBS_data)
         pm <- pm / 100
         WGBS_data <- methods::as(WGBS_data, "GRanges")
         GenomicRanges::mcols(WGBS_data) <- as.data.frame(pm)
     }
 
-    if (methods::is.class(WGBS_data) != "GRanges") {
+    if (methods::isClass(WGBS_data) != "GRanges") {
         ## turn WGBS_data to GRanges object if it is not already one
         sampleName <- methylKit::getSampleID(WGBS_data)
         WGBS_data <- methods::as(WGBS_data, "GRanges")
         GenomicRanges::mcols(WGBS_data) <- WGBS_data$numCs / WGBS_data$coverage
         colnames(GenomicRanges::mcols(WGBS_data)) <- sampleName
     }
-    if (methods::is.class(WGBS_data) == "GRanges") {
+    if (methods::isClass(WGBS_data) == "GRanges") {
         column_names <- colnames(GenomicRanges::mcols(WGBS_data))
         S4Vectors::elementMetadata(WGBS_data) <-
             data.table::nafill(as.data.frame(S4Vectors::elementMetadata(WGBS_data)),
