@@ -51,7 +51,7 @@ deconvolute <- function(reference =
                                 package = "deconvR"
                             )),
                         vec = NULL, bulk, model = "nnls") {
-    cl <- parallel::makeCluster(6)
+    cl <- parallel::makeCluster(2)
     doParallel::registerDoParallel(cl)
     print(paste("DECONVOLUTION WITH", toupper(model)))
 
