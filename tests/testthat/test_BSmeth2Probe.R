@@ -45,13 +45,13 @@ test_that("BSmeth2Probe", {
         )))
     )
     expect_equal(
-        colnames(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = methRead(list(
+        colnames(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = methylKit::methRead(list(
             system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
             system.file("extdata", "test2.myCpG.txt", package = "methylKit")
         ),
         sample.id = list("test1", "test2"), assembly = "hg18", treatment = c(1, 1), context = "CpG"
         ))),
-        colnames(BSmeth2Probe(cutoff = 100, probe_id_locations = probe_ids, WGBS_data = methRead(list(
+        colnames(BSmeth2Probe(cutoff = 100, probe_id_locations = probe_ids, WGBS_data = methylKit::methRead(list(
             system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
             system.file("extdata", "test2.myCpG.txt", package = "methylKit")
         ),

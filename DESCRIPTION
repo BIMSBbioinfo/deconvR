@@ -44,8 +44,8 @@ Imports:
     nnls (>= 1.4),
     rsq (>= 2.2),
     MASS,
-    dplyr,
-    tidyr
+    dplyr (>= 1.0.7),
+    tidyr (>= 1.1.3)
 Depends: 
     R (>= 4.1),
     data.table (>= 1.14.0)
@@ -67,8 +67,8 @@ Suggests:
     BiocStyle (>= 2.20.2),
     reshape2 (>= 1.4.4),
     ggplot2 (>= 3.3.5),
-    rmarkdown,
+    rmarkdown (>= 2.11.2),
     devtools (>= 2.4.2),
     sessioninfo (>= 1.1.1),
-    assertthat
+    assertthat (>= 0.2.1)
 Config/testthat/edition: 3

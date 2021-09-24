@@ -32,7 +32,7 @@ library(reshape2)
 library(doParallel)
 library(dplyr)
 
-cl <- parallel::makeCluster(6)
+cl <- parallel::makeCluster(2)
 doParallel::registerDoParallel(cl)
 listboth100 = simulateCellMix(100)
 propstable100 = listboth100[[2]]
@@ -848,4 +848,5 @@ plt_rlm + ggplot2::geom_boxplot() + ggplot2::theme_minimal() +
 
 ```{r }
 sessionInfo()
+stopCluster(cl)
 ```

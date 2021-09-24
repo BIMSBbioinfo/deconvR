@@ -47,12 +47,10 @@
 #' @export
 
 deconvolute <- function(reference =
-                            readRDS(system.file("reference_atlas_nodup.RDS",
-                                package = "deconvR"
-                            )),
-                        vec = NULL, bulk, model = "nnls") {
-    cl <- parallel::makeCluster(2)
-    doParallel::registerDoParallel(cl)
+        readRDS(system.file("reference_atlas_nodup.RDS",
+            package = "deconvR"
+        )),
+    vec = NULL, bulk, model = "nnls") {
     print(paste("DECONVOLUTION WITH", toupper(model)))
 
     results <- data.frame(matrix(
