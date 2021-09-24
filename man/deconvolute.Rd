@@ -59,10 +59,10 @@ printed upon completion.
 \examples{
 deconvolute(bulk = simulateCellMix(50)[[1]])
 deconvolute(
-    reference = readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    )),
-    bulk = simulateCellMix(5)[[1]], model = "rlm"
+  reference = readRDS(system.file("reference_atlas_nodup.RDS",
+    package = "deconvR"
+  )),
+  bulk = simulateCellMix(5)[[1]], model = "rlm"
 )
 }
 \references{

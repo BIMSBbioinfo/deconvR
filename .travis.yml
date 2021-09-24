@@ -1,0 +1,36 @@
+## Sample .travis.yml for R projects.
+#
+# See README.md for instructions, or for more configuration options,
+# see the wiki:
+#   https://github.com/craigcitro/r-travis/wiki
+
+language: R
+sudo: false
+warnings_are_errors: false
+cache: packages
+r: release
+
+
+bioc_required: true
+bioc_packages:
+  - BiocCheck
+
+
+after_script:
+  - ls -lah
+  - FILE=$(ls -1t *.tar.gz | head -n 1)
+  - Rscript -e "library(BiocCheck); BiocCheck(\"${FILE}\")"
+
+env:
+  global:
+    - R_BUILD_ARGS="--no-build-vignettes --no-manual --no-resave-data"
+    - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings"
+    - R_CHECK_TIME="TRUE"
+    - R_CHECK_TESTS="TRUE"
+    - _R_CHECK_TIMINGS_="0"
+
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'library(covr); codecov()'

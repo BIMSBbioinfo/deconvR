@@ -49,16 +49,16 @@ A function to map WGBS methylation data to Illumina Probe IDs
 \examples{
 wgbs <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
 probe_ids <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
-    package = "deconvR"
+  package = "deconvR"
 ))
 BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs)
 BSmeth2Probe(
-    probe_id_locations = probe_ids,
-    WGBS_data = wgbs[5:1000], cutoff = 0
+  probe_id_locations = probe_ids,
+  WGBS_data = wgbs[5:1000], cutoff = 0
 )
 BSmeth2Probe(
-    probe_id_locations = probe_ids, WGBS_data = wgbs, cutoff = 500,
-    multipleMapping = TRUE
+  probe_id_locations = probe_ids, WGBS_data = wgbs, cutoff = 500,
+  multipleMapping = TRUE
 )
 BSmeth2Probe(probe_id_locations = probe_ids[100:200], WGBS_data = wgbs[1:10])
 }

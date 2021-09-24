@@ -50,28 +50,28 @@ samples using given reference atlas.
 \examples{
 simulateCellMix(50)
 simulateCellMix(
-    numberOfSamples = 100,
-    reference = readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
+  numberOfSamples = 100,
+  reference = readRDS(system.file("reference_atlas_nodup.RDS",
+    package = "deconvR"
+  ))
 )
 simulateCellMix(1, mixingVector = c(
-    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 ))
 simulateCellMix(1, data.frame(c(
-    0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0
+  0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0
 )))
 simulateCellMix(2, data.frame(
-    c(
-        0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0,
-        0, 0
-    ),
-    c(
-        0.1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0,
-        0, 0, 0
-    )
+  c(
+    0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0,
+    0, 0
+  ),
+  c(
+    0.1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0,
+    0, 0, 0
+  )
 ))
 }
 \references{
