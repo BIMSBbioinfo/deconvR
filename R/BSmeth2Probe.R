@@ -60,12 +60,11 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
 
     if (!(class(WGBS_data) %in% c(
-        "GRanges", "methylRawDB", "methylRaw",
+        "GRanges", "methylRawList",
         "methylBaseDB", "methylBase"
     ))) {
         stop("WGBS_data must be either GRanges object or,
-         methylKit object (methylRaw, methylBase, methylRawDB,
-         or methylBaseDB")
+         methylKit object (methylBase, methylRawList,or methylBaseDB")
     }
 
     if ((is.data.frame(probe_id_locations) == TRUE)) {
@@ -95,21 +94,26 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             ID = probe_id_locations[, "id"]
         )
     }
-    if (methods::isClass(probe_id_locations, Class = "GRanges") == TRUE) {
+    if (class(probe_id_locations) == "GRanges") {
         if (is.null(probe_id_locations$ID) == TRUE) {
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((methods::isClass(WGBS_data, Class = "GRanges") == FALSE) &&
-        (methods::isClass(WGBS_data, Class = "methylBaseDB") == TRUE) ||
-        (methods::isClass(WGBS_data, Class = "GRanges") == FALSE) &&
-            (methods::isClass(WGBS_data, Class = "methylBase") == TRUE)) {
+    if ((class(WGBS_data) == "methylBaseDB") ||
+        (class(WGBS_data) == "methylBase")) {
         pm <- methylKit::percMethylation(WGBS_data)
         pm <- pm / 100
         WGBS_data <- methods::as(WGBS_data, "GRanges")
         GenomicRanges::mcols(WGBS_data) <- as.data.frame(pm)
     }
-
+    if ((class(WGBS_data) == "methylRawList")) {
+        ## Convert methylRawList to methylbase object
+        WGBS_data <- methylKit::unite(WGBS_data, destrand = FALSE)
+        pm <- methylKit::percMethylation(WGBS_data)
+        pm <- pm / 100
+        WGBS_data <- methods::as(WGBS_data, "GRanges")
+        GenomicRanges::mcols(WGBS_data) <- as.data.frame(pm)
+    }
     if (methods::isClass(WGBS_data, Class = "GRanges") != TRUE) {
         ## turn WGBS_data to GRanges object if it is not already one
         sampleName <- methylKit::getSampleID(WGBS_data)

@@ -5,7 +5,6 @@ test_that("BSmeth2Probe", {
     wgbs <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
     probe_ids <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR"))
     probe_ids_df <- GenomicRanges::as.data.frame(probe_ids)
-    colnames(probe_ids_df) <- c("CHR", "Start", "End", "Width", "Strand", "ID")
 
     results <- BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs)
 
@@ -32,17 +31,40 @@ test_that("BSmeth2Probe", {
 
     expect_equal(results, BSmeth2Probe(probe_id_locations = probe_ids_df, WGBS_data = wgbs))
     expect_equal(
-        colnames(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = methylKit::methRead(system.file("extdata", "test1.myCpG.txt", package = "methylKit"), sample.id = "test", assembly = "hg38", treatment = 1, context = "CpG", mincov = 0))),
-        c("IDs", methylKit::getSampleID(methylKit::methRead(system.file("extdata", "test1.myCpG.txt", package = "methylKit"), sample.id = "test", assembly = "hg38", treatment = 1, context = "CpG", mincov = 0)))
+        colnames(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = methylKit::methRead(list(
+            system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
+            system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+        ),
+        sample.id = list("test1", "test2"), assembly = "hg18", treatment = c(1, 1), context = "CpG"
+        ))),
+        c("IDs", methylKit::getSampleID(methylKit::methRead(list(
+            system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
+            system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+        ),
+        sample.id = list("test1", "test2"), assembly = "hg18", treatment = c(1, 1), context = "CpG"
+        )))
     )
     expect_equal(
-        colnames(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = methylKit::methRead(system.file("extdata", "test1.myCpG.txt", package = "methylKit"), sample.id = "test", assembly = "hg38", treatment = 1, context = "CpG", mincov = 0))),
-        colnames(BSmeth2Probe(cutoff = 100, probe_id_locations = probe_ids, WGBS_data = methylKit::methRead(system.file("extdata", "test1.myCpG.txt", package = "methylKit"), sample.id = "test", assembly = "hg38", treatment = 1, context = "CpG", mincov = 0)))
+        colnames(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = methRead(list(
+            system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
+            system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+        ),
+        sample.id = list("test1", "test2"), assembly = "hg18", treatment = c(1, 1), context = "CpG"
+        ))),
+        colnames(BSmeth2Probe(cutoff = 100, probe_id_locations = probe_ids, WGBS_data = methRead(list(
+            system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
+            system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+        ),
+        sample.id = list("test1", "test2"), assembly = "hg18", treatment = c(1, 1), context = "CpG"
+        )))
     )
 
     simulatedData <- methylKit::dataSim(replicates = 4, sites = 200000, treatment = c(1, 1, 0, 0), percentage = 10, effect = 25)
     expect_gte(NROW(BSmeth2Probe(probe_id_locations = probe_ids_df, WGBS_data = simulatedData)), 0)
-    expect_equal(NCOL(BSmeth2Probe(probe_id_locations = probe_ids_df, WGBS_data = simulatedData)), length(methylKit::getSampleID(simulatedData)) + 1)
+    expect_equal(
+        NCOL(BSmeth2Probe(probe_id_locations = probe_ids_df, WGBS_data = simulatedData)),
+        length(methylKit::getSampleID(simulatedData)) + 1
+    )
 
 
     expect_error(BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs, cutoff = -1))
