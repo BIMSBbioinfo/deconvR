@@ -15,7 +15,7 @@ test_that("findSignatures", {
     expect_equal(NCOL(results), 2)
     expect_equal(colnames(results), c("IDs", "example_cell_type"))
     expect_lte(NROW(results), NROW(exampleSamples))
-    expect_equivalent(typeof(unlist(results[, -1])), "double")
+    expect_equal(typeof(unlist(results[, -1])), "double")
     expect_lte(max(unlist(results[, -1])), 1)
     expect_gte(min(unlist(results[, -1])), 0)
 
@@ -33,7 +33,7 @@ test_that("findSignatures", {
     expect_setequal(colnames(results), c("IDs", "this", "that", "else"))
     expect_equal(colnames(results)[1], "IDs")
     expect_lte(NROW(results), NROW(exampleSamples))
-    expect_equivalent(typeof(unlist(results[, -1])), "double")
+    expect_equal(typeof(unlist(results[, -1])), "double")
     expect_lte(max(unlist(results[, -1])), 1)
     expect_gte(min(unlist(results[, -1])), 0)
 
@@ -59,7 +59,7 @@ test_that("findSignatures", {
     expect_setequal(colnames(results), c("IDs", "this", "that", "else", "this_v2", "that_v2", "else_v2", colnames(exampleReference)[2]))
     expect_equal(colnames(results)[1], "IDs")
     expect_lte(NROW(results), NROW(exampleSamples))
-    expect_equivalent(typeof(unlist(results[, -1])), "double")
+    expect_equal(typeof(unlist(results[, -1])), "double")
     expect_lte(max(unlist(results[, -1])), 1)
     expect_gte(min(unlist(results[, -1])), 0)
 })
