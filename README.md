@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # deconvR
-[![Build Status](https://app.travis-ci.com/BIMSBbioinfo/deconvR.svg?branch=main)](https://app.travis-ci.com/github/BIMSBbioinfo/deconvR)
+[![BiocCheck](https://github.com/BIMSBbioinfo/deconvR/workflows/BiocCheck/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) 
 <!-- badges: start -->
 <!-- badges: end -->
 
