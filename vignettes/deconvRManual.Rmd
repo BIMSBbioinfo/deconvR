@@ -1,5 +1,5 @@
 ---
-title: "User Guide for deconvR package"
+title: "deconvRManual"
 author: 
   - name: Veronika Ebenal
 output: 
@@ -12,7 +12,7 @@ output:
 date: "`r doc_date()`"
 package: "`r pkg_ver('deconvR')`"
 vignette: >
-  %\VignetteIndexEntry{User Guide for deconvR package}
+  %\VignetteIndexEntry{deconvRManual}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 ---
