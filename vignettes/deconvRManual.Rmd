@@ -405,7 +405,7 @@ head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt",
 
 ``` {r, message = FALSE, output.lines=10}
 probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
-                                          package = "deconvR"))
+                                          package = "deconvR")) 
 probe_id_locations
 ```
 
