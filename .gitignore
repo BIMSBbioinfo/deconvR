@@ -33,6 +33,7 @@
 
 # R Environment Variables
 #.Renviron
+inst/doc
 /doc/
 /Meta/
 .Rproj.user
