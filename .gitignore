@@ -39,4 +39,4 @@ inst/doc
 .Rproj.user
 .Rdata
 .DS_Store
-vignettes/.build.timestamp
+vignettes/
