@@ -34,10 +34,9 @@ library(dplyr)
 
 cl <- parallel::makeCluster(6)
 doParallel::registerDoParallel(cl)
-listboth1000 = simulateCellMix(1000)
-propstable1000 = listboth1000[[2]]
-bulktable1000 = listboth1000[[1]]
-bulktable100 = simulateCellMix(100)[[1]]
+listboth100 = simulateCellMix(100)
+propstable100 = listboth100[[2]]
+bulktable100 = listboth100[[1]]
 bulktable10 = simulateCellMix(10)[[1]]
 bulktable1 = simulateCellMix(1)[[1]]
 ```
@@ -416,19 +415,19 @@ values (calculated by multiplying the model’s coefficients to the reference
 values) to the actual CpG methylation values of the samples.
 
 ```{r}
-nnls_result_1000 <- deconvolute(bulk=bulktable1000, model="nnls")[[1]]
+nnls_result_100 <- deconvolute(bulk=bulktable100, model="nnls")[[1]]
 ```
 
 ```{r}
-svr_result_1000 <- deconvolute(bulk=bulktable1000, model="svr")[[1]]
+svr_result_100 <- deconvolute(bulk=bulktable100, model="svr")[[1]]
 ```
 
 ```{r}
-qp_result_1000 <- deconvolute(bulk=bulktable1000, model="qp")[[1]]
+qp_result_100 <- deconvolute(bulk=bulktable100, model="qp")[[1]]
 ```
 
 ```{r}
-rlm_result_1000 <- deconvolute(bulk=bulktable1000, model="rlm")[[1]]
+rlm_result_100 <- deconvolute(bulk=bulktable100, model="rlm")[[1]]
 ```
 
 
@@ -445,8 +444,8 @@ RMSE values than SVR, the RMSE of SVR was still low enough that predictions were
 close to accurate.
 
 ```{r}
-nnls_residuals_1000 <- nnls_result_1000 - propstable1000
-nnls_rmse <- sqrt(rowMeans(nnls_residuals_1000^2))
+nnls_residuals_100 <- nnls_result_100 - propstable100
+nnls_rmse <- sqrt(rowMeans(nnls_residuals_100^2))
 nnls_rmse <- data.frame(nnls_rmse)
 summary(nnls_rmse)
 ```
@@ -456,8 +455,8 @@ boxplot(nnls_rmse)
 ```
 
 ```{r}
-svr_residuals_1000 <- svr_result_1000 - propstable1000
-svr_rmse <- sqrt(rowMeans(svr_residuals_1000^2))
+svr_residuals_100 <- svr_result_100 - propstable100
+svr_rmse <- sqrt(rowMeans(svr_residuals_100^2))
 svr_rmse <- data.frame(svr_rmse)
 
 summary(svr_rmse)
@@ -469,8 +468,8 @@ boxplot(svr_rmse)
 
 
 ```{r}
-qp_residuals_1000 <- qp_result_1000 - propstable1000
-qp_rmse <- sqrt(rowMeans(qp_residuals_1000^2))
+qp_residuals_100 <- qp_result_100 - propstable100
+qp_rmse <- sqrt(rowMeans(qp_residuals_100^2))
 qp_rmse <- data.frame(qp_rmse)
 
 summary(qp_rmse)
@@ -482,8 +481,8 @@ boxplot(qp_rmse)
 
 
 ```{r}
-rlm_residuals_1000 <- rlm_result_1000 - propstable1000
-rlm_rmse <- sqrt(rowMeans(rlm_residuals_1000^2))
+rlm_residuals_100 <- rlm_result_100 - propstable100
+rlm_rmse <- sqrt(rowMeans(rlm_residuals_100^2))
 rlm_rmse <- data.frame(rlm_rmse)
 
 summary(rlm_rmse)
@@ -496,52 +495,26 @@ boxplot(rlm_rmse)
 </details>
 
 <details> 
-<summary>Limit of Detection & Time Complexity</summary>
-
-* Limit of Detection 
-
-These values were calculated by running the model on a bulk sample with
-continually decreasing cellular proportions. The limit of detection was inferred
-to be the point at which the model thereafter failed to detect the origin cell
-type.Once again, limit of detection closely follows model accuracy (as measured
-by RMSE).
-
-```{r, fig.show='hide'}
-c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04,1e-05,1e-06,1e-07,1e-08,1e-09,1e-10,1e-11,1e-12,1e-13,1e-14,1e-15,1e-16,1e-17,1e-18,1e-19,1e-20,0.88888888888888888888889,0,0,0,0))[[1]],model="nnls")[[1]][1,])
-```
-
-```{r, fig.show='hide'}
-c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04,1e-05,1e-06,1e-07,1e-08,1e-09,1e-10,1e-11,1e-12,1e-13,1e-14,1e-15,1e-16,1e-17,1e-18,1e-19,1e-20,0.88888888888888888888889,0,0,0,0))[[1]],model="svr")[[1]][1,])
-```
-
-```{r, fig.show='hide'}
-c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04,1e-05,1e-06,1e-07,1e-08,1e-09,1e-10,1e-11,1e-12,1e-13,1e-14,1e-15,1e-16,1e-17,1e-18,1e-19,1e-20,0.88888888888888888888889,0,0,0,0))[[1]],model="qp")[[1]][1,])
-```
-
-```{r, fig.show='hide'}
-c(deconvolute(bulk = simulateCellMix(1, mixingVector = c(1e-01,1e-02,1e-03,1e-04,1e-05,1e-06,1e-07,1e-08,1e-09,1e-10,1e-11,1e-12,1e-13,1e-14,1e-15,1e-16,1e-17,1e-18,1e-19,1e-20,0.88888888888888888888889,0,0,0,0))[[1]],model="rlm")[[1]][1,])
-```
-
+<summary>Time Complexity</summary>
 
 * Time Complexity
 
 These values are the elapsed times for running the model on (pre-generated) bulk
 sample sets of different sizes. NNLS and QP had exceedingly low runtimes; less
-than 10 seconds for 1000 samples. The runtime for RLM was also satisfactory,
-taking roughly 2 minutes for 1000 samples. SVR is significantly slower than the
+than 10 seconds for 100 samples. The runtime for RLM was also satisfactory,
+taking roughly 2 minutes for 100 samples. SVR is significantly slower than the
 other models. While parallelization helped significantly to decrease runtime, it
-still takes roughly 15 minutes for 1000 samples.
+still takes roughly 15 minutes for 100 samples.
 
 ```{r, fig.show='hide'}
 nnls_time1 <- system.time(deconvolute(bulk=bulktable1, model = "nnls"))[3]
 nnls_time10 <- system.time(deconvolute(bulk=bulktable10, model = "nnls"))[3]
 nnls_time100 <- system.time(deconvolute(bulk=bulktable100, model = "nnls"))[3]
-nnls_time1000 <- system.time(deconvolute(bulk=bulktable1000, model = "nnls"))[3]
 
 print(paste("Time To Deconvolute 1 Sample:", nnls_time1,"seconds (",nnls_time1/1,"seconds/sample )"))
 print(paste("Time To Deconvolute 10 Samples:", nnls_time10,"seconds (",nnls_time10/10,"seconds/sample )"))
 print(paste("Time To Deconvolute 100 Samples:", nnls_time100,"seconds (",nnls_time100/100,"seconds/sample )"))
-print(paste("Time To Deconvolute 1000 Samples:", nnls_time1000,"seconds (",nnls_time1000/1000,"seconds/sample )"))
+
 
 ```
 
@@ -549,24 +522,21 @@ print(paste("Time To Deconvolute 1000 Samples:", nnls_time1000,"seconds (",nnls_
 svr_time1 <- system.time(deconvolute(bulk=bulktable1, model = "svr"))[3]
 svr_time10 <- system.time(deconvolute(bulk=bulktable10, model = "svr"))[3]
 svr_time100 <- system.time(deconvolute(bulk=bulktable100, model = "svr"))[3]
-svr_time1000 <- system.time(deconvolute(bulk=bulktable1000, model = "svr"))[3]
 
 print(paste("Time To Deconvolute 1 Sample:", svr_time1,"seconds (",svr_time1/1,"seconds/sample)"))
 print(paste("Time To Deconvolute 10 Samples:", svr_time10,"seconds (",svr_time10/10,"seconds/sample)"))
 print(paste("Time To Deconvolute 100 Samples:", svr_time100,"seconds (",svr_time100/100,"seconds/sample)"))
-print(paste("Time To Deconvolute 1000 Samples:", svr_time1000,"seconds (",svr_time1000/1000,"seconds/sample)"))
 ```
 
 ```{r, fig.show='hide'}
 qp_time1 <- system.time(deconvolute(bulk=bulktable1, model = "qp"))[3]
 qp_time10 <- system.time(deconvolute(bulk=bulktable10, model = "qp"))[3]
 qp_time100 <- system.time(deconvolute(bulk=bulktable100, model = "qp"))[3]
-qp_time1000 <- system.time(deconvolute(bulk=bulktable1000, model = "qp"))[3]
 
 print(paste("Time To Deconvolute 1 Sample:", qp_time1,"seconds (",qp_time1/1,"seconds/sample)"))
 print(paste("Time To Deconvolute 10 Samples:", qp_time10,"seconds (",qp_time10/10,"seconds/sample)"))
 print(paste("Time To Deconvolute 100 Samples:", qp_time100,"seconds (",qp_time100/100,"seconds/sample)"))
-print(paste("Time To Deconvolute 1000 Samples:", qp_time1000,"seconds (",qp_time1000/1000,"seconds/sample)"))
+
 
 ```
 
@@ -574,21 +544,20 @@ print(paste("Time To Deconvolute 1000 Samples:", qp_time1000,"seconds (",qp_time
 rlm_time1 <- system.time(deconvolute(bulk=bulktable1, model = "rlm"))[3]
 rlm_time10 <- system.time(deconvolute(bulk=bulktable10, model = "rlm"))[3]
 rlm_time100 <- system.time(deconvolute(bulk=bulktable100, model = "rlm"))[3]
-rlm_time1000 <- system.time(deconvolute(bulk=bulktable1000, model = "rlm"))[3]
 
 print(paste("Time To Deconvolute 1 Sample:", rlm_time1,"seconds (",rlm_time1/1,"seconds/sample)"))
 print(paste("Time To Deconvolute 10 Samples:", rlm_time10,"seconds (",rlm_time10/10,"seconds/sample)"))
 print(paste("Time To Deconvolute 100 Samples:", rlm_time100,"seconds (",rlm_time100/100,"seconds/sample)"))
-print(paste("Time To Deconvolute 1000 Samples:", rlm_time1000,"seconds (",rlm_time1000/1000,"seconds/sample)"))
+
 
 ```
 
 ```{r}
-time_data <- data.frame(c(1,10,100,1000), 
-                        c(nnls_time1, nnls_time10, nnls_time100, nnls_time1000),
-                        c(svr_time1, svr_time10, svr_time100, svr_time1000),
-                        c(qp_time1, qp_time10, qp_time100, qp_time1000),
-                        c(rlm_time1, rlm_time10, rlm_time100, rlm_time1000))
+time_data <- data.frame(c(1,10,100), 
+                        c(nnls_time1, nnls_time10, nnls_time100),
+                        c(svr_time1, svr_time10, svr_time100),
+                        c(qp_time1, qp_time10, qp_time100),
+                        c(rlm_time1, rlm_time10, rlm_time100))
 colnames(time_data) <- c("NumberOfSamples", "NNLS", "SVR", "QP", "RLM")
 
 ggplot2::ggplot(time_data, ggplot2::aes(x=NumberOfSamples)) + 
@@ -618,13 +587,13 @@ represent worst-case and 5th percentile represents best case).
 
 ```{r}
 samplenumslist <- c()
-for (i in 1:1000) {samplenumslist <- append(samplenumslist, paste("Sample",i))}
-scatterdf_nnls <- data.frame(propstable1000[,1],nnls_result_1000[,1], 
-                             colnames(propstable1000)[1])
+for (i in 1:100) {samplenumslist <- append(samplenumslist, paste("Sample",i))}
+scatterdf_nnls <- data.frame(propstable100[,1],nnls_result_100[,1], 
+                             colnames(propstable100)[1])
 colnames(scatterdf_nnls) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], nnls_result_1000[,i], 
-                             colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable100[,i], nnls_result_100[,i], 
+                             colnames(propstable100)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_nnls <- rbind(scatterdf_nnls, scatterdf1)
 }
@@ -668,12 +637,12 @@ sp_nnls_worstcase
 
 
 ```{r}
-scatterdf_svr <- data.frame(propstable1000[,1], svr_result_1000[,1], 
-                            colnames(propstable1000)[1])
+scatterdf_svr <- data.frame(propstable100[,1], svr_result_100[,1], 
+                            colnames(propstable100)[1])
 colnames(scatterdf_svr) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], svr_result_1000[,i], 
-                             colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable100[,i], svr_result_100[,i], 
+                             colnames(propstable100)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_svr <- rbind(scatterdf_svr, scatterdf1)
 }
@@ -717,12 +686,12 @@ sp_svr_worstcase
 
 
 ```{r}
-scatterdf_qp <- data.frame(propstable1000[,1], qp_result_1000[,1], 
-                           colnames(propstable1000)[1])
+scatterdf_qp <- data.frame(propstable100[,1], qp_result_100[,1], 
+                           colnames(propstable100)[1])
 colnames(scatterdf_qp) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], qp_result_1000[,i], 
-                             colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable100[,i], qp_result_100[,i], 
+                             colnames(propstable100)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_qp <- rbind(scatterdf_qp, scatterdf1)
 }
@@ -766,12 +735,12 @@ sp_qp_worstcase
 
 
 ```{r}
-scatterdf_rlm <- data.frame(propstable1000[,1], rlm_result_1000[,1],
-                            colnames(propstable1000)[1])
+scatterdf_rlm <- data.frame(propstable100[,1], rlm_result_100[,1],
+                            colnames(propstable100)[1])
 colnames(scatterdf_rlm) <- c("actual", "predicted", "celltype")
 for (i in 2:25) {
-    scatterdf1 <- data.frame(propstable1000[,i], rlm_result_1000[,i],
-                             colnames(propstable1000)[i])
+    scatterdf1 <- data.frame(propstable100[,i], rlm_result_100[,i],
+                             colnames(propstable100)[i])
     colnames(scatterdf1) <- c("actual", "predicted", "celltype")
     scatterdf_rlm <- rbind(scatterdf_rlm, scatterdf1)
 }
@@ -825,7 +794,7 @@ random mixture. The cell types that are poorly predicted when compared to other
 cell types can be seen, if there are any.
 
 ```{r}
-nnls_absolute_residuals <- abs(nnls_residuals_1000)
+nnls_absolute_residuals <- abs(nnls_residuals_100)
 melt_nnls <- reshape2::melt(nnls_absolute_residuals)
 plt_nnls <- ggplot2::ggplot(data = melt_nnls, 
                             ggplot2::aes(x = variable, y = value))
@@ -837,7 +806,7 @@ plt_nnls + ggplot2::geom_boxplot() + ggplot2::theme_minimal() +
 ```
 
 ```{r}
-svr_absolute_residuals <- abs(svr_residuals_1000)
+svr_absolute_residuals <- abs(svr_residuals_100)
 melt_svr <- reshape2::melt(svr_absolute_residuals)
 plt_svr <- ggplot2::ggplot(data = melt_svr, 
                            ggplot2::aes(x = variable,y = value))
@@ -849,7 +818,7 @@ plt_svr + ggplot2::geom_boxplot() + ggplot2::theme_minimal() +
 ```
 
 ```{r}
-qp_absolute_residuals <- abs(qp_residuals_1000)
+qp_absolute_residuals <- abs(qp_residuals_100)
 melt_qp <- reshape2::melt(qp_absolute_residuals)
 plt_qp <- ggplot2::ggplot(data = melt_qp , 
                           ggplot2::aes(x = variable,y = value))
@@ -861,7 +830,7 @@ plt_qp + ggplot2::geom_boxplot() + ggplot2::theme_minimal() +
 ```
 
 ```{r}
-rlm_absolute_residuals <- abs(rlm_residuals_1000)
+rlm_absolute_residuals <- abs(rlm_residuals_100)
 melt_rlm <- reshape2::melt(rlm_absolute_residuals)
 plt_rlm <- ggplot2::ggplot(data = melt_rlm , 
                            ggplot2::aes(x = variable, y = value))
