@@ -69,17 +69,12 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
     if ((methods::isClass(probe_id_locations, Class = "GRanges") != TRUE) &&
         (methods::isClass(probe_id_locations, Class = "data.frame") == TRUE)) {
-        if (any(
-            is.null(probe_id_locations$seqnames), is.null(probe_id_locations$Start),
-            is.null(probe_id_locations$End), is.null(probe_id_locations$Strand),
-            is.null(probe_id_locations$ID)
-        )) {
-            stop("probe_id_locations must contain columns named ID, seqnames, Start, End,
+        if (any(c("SEQNAMES", "START", "END", "STRAND", "ID") %in% toupper(names(probe_id_locations)) == FALSE)) {
+            stop("probe_id_locations must contain columns named ID, Seqnames, Start, End,
            and Strand.")
         }
         if (any(is.na(probe_id_locations[, c(
-            "seqnames", "Start", "End", "Strand",
-            "ID"
+            "Seqnames", "Start", "End", "Strand", "ID"
         )]))) {
             print(paste("Dropping row containing NA: " +
                 which(is.na(probe_id_locations))))
@@ -102,7 +97,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((methods::isClass(WGBS_data, Class = "methylBaseDB") == TRUE) ||
+    if ((methods::isClass(WGBS_data, Class = "GRanges") != TRUE) &&
+        (methods::isClass(WGBS_data, Class = "methylBaseDB") == TRUE) ||
         (methods::isClass(WGBS_data, Class = "methylBase") == TRUE)) {
         pm <- methylKit::percMethylation(WGBS_data)
         pm <- pm / 100
