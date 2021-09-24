@@ -40,3 +40,6 @@ inst/doc
 .Rdata
 .DS_Store
 vignettes/
+
+# vignettes/
+*.build.timestamp
