@@ -37,7 +37,7 @@
 .Rproj.user
 .Rdata
 .DS_Store
-
+/inst/deconvRManual.html
 
 # vignettes/
 *.build.timestamp

@@ -24,9 +24,7 @@
 #' simulateCellMix(50)
 #' simulateCellMix(
 #'     numberOfSamples = 100,
-#'     reference = readRDS(system.file("reference_atlas_nodup.RDS",
-#'         package = "deconvR"
-#'     ))
+#'     reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
 #' )
 #' simulateCellMix(1, mixingVector = c(
 #'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -61,10 +59,7 @@
 #' @export
 
 simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
-    reference =
-        readRDS(system.file("reference_atlas_nodup.RDS",
-            package = "deconvR"
-        ))) {
+    reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))) {
     simulatedMixtureTable <- data.frame(matrix(
         ncol = numberOfSamples + 1,
         nrow = nrow(reference)

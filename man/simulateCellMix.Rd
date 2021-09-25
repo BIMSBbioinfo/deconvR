@@ -51,9 +51,7 @@ samples using given reference atlas.
 simulateCellMix(50)
 simulateCellMix(
     numberOfSamples = 100,
-    reference = readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
+    reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
 )
 simulateCellMix(1, mixingVector = c(
     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

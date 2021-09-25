@@ -7,3 +7,5 @@
 ^\.inst\deconvR_logo.png
 ^codecov\.yml$
 ^vignettes$
+^data$
+^\.inst\extdata

@@ -32,9 +32,7 @@
 #' @examples
 #' deconvolute(bulk = simulateCellMix(50)[[1]])
 #' deconvolute(
-#'     reference = readRDS(system.file("reference_atlas_nodup.RDS",
-#'         package = "deconvR"
-#'     )),
+#'     reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
 #'     bulk = simulateCellMix(5)[[1]], model = "rlm"
 #' )
 #' @return A list, first is a dataframe which contains predicted cell-type
@@ -46,10 +44,7 @@
 #' \url{https://doi.org/10.1038/s41467-018-07466-6}
 #' @export
 
-deconvolute <- function(reference =
-        readRDS(system.file("reference_atlas_nodup.RDS",
-            package = "deconvR"
-        )),
+deconvolute <- function(reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
     vec = NULL, bulk, model = "nnls") {
     print(paste("DECONVOLUTION WITH", toupper(model)))
 

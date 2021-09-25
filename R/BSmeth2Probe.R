@@ -19,20 +19,18 @@
 #' Default value is FALSE.
 #' @keywords mapping
 #' @examples
-#' wgbs <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
-#' probe_ids <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
-#'     package = "deconvR"
-#' ))
-#' BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = wgbs)
+#' data("WGBS_GRanges")
+#' data("probe_ids")
+#' BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges)
 #' BSmeth2Probe(
-#'     probe_id_locations = probe_ids,
-#'     WGBS_data = wgbs[5:1000], cutoff = 0
+#'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges[5:1000],
+#'     cutoff = 2
 #' )
 #' BSmeth2Probe(
-#'     probe_id_locations = probe_ids, WGBS_data = wgbs, cutoff = 500,
-#'     multipleMapping = TRUE
+#'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges,
+#'     cutoff = 500, multipleMapping = TRUE
 #' )
-#' BSmeth2Probe(probe_id_locations = probe_ids[100:200], WGBS_data = wgbs[1:10])
+#' BSmeth2Probe(probe_id_locations = probe_ids[100:200], WGBS_data = WGBS_GRanges[1:10])
 #' @return A dataframe with first column "IDs" for CpG IDs, then 1 or more
 #' columns for methylation values of sample(s) (same number of samples as in
 #' WGBS_data)
