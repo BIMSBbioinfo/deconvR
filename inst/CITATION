@@ -1,0 +1,19 @@
+pkgVer <- function(pkg) {
+    if (!exists("meta") || is.null(meta)) meta <- packageDescription(pkg)
+    ver <- meta$Version
+    paste0('https://github.com/Bishop-BIMSBbioinfo/deconvR/', pkg, ' - R package version ', ver)
+}
+
+c(
+    bibentry(bibtype="manual",
+        title = "deconvR: Simulation and Deconvolution of Cellular Signatures",
+        author = personList(
+            as.person("Veronika Ebenal"),
+            as.person("Irem B. Gündüz"),
+        ),
+        year = format(Sys.Date(), "%Y"),
+        url = "http://www.bioconductor.org/packages/deconvR",
+        note = pkgVer('deconvR'),
+        doi = '10.18129/B9.bioc.deconvR'
+    )
+)

@@ -1,11 +1,9 @@
-
 ^README.Rmd
 ^Meta$
 ^\.github$
 ^\.travis\.yml$
 ^\.inst\deconvR_logo.png
 ^codecov\.yml$
-
 ^doc$
 ^.*\.Rproj$
 ^\.Rproj\.user$
