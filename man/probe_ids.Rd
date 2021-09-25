@@ -3,10 +3,10 @@
 \docType{data}
 \name{probe_ids}
 \alias{probe_ids}
-\title{A dataset Illumina probe IDs of 500,000 genomic loci (identified using the
+\title{A dataset Illumina probe IDs of 450000 genomic loci (identified using the
 “seqnames”, “ranges”, and “strand” values).}
 \format{
-GRanges object with 500000 ranges and 1 metadata column:
+GRanges object with 450000 ranges and 1 metadata column:
 \describe{
 \item{metadata}{contains seqnames ranges strand and ID}
 ...
@@ -19,7 +19,7 @@ GRanges object with 500000 ranges and 1 metadata column:
 data(probe_ids)
 }
 \description{
-A dataset Illumina probe IDs of 500,000 genomic loci (identified using the
+A dataset Illumina probe IDs of 450000 genomic loci (identified using the
 “seqnames”, “ranges”, and “strand” values).
 }
 \keyword{datasets}
