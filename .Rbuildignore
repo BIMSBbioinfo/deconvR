@@ -4,5 +4,5 @@
 ^Meta$
 ^\.github$
 ^\.travis\.yml$
-^\inst\deconvR_logo.png
+^\.inst\deconvR_logo.png
 ^codecov\.yml$
