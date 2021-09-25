@@ -37,3 +37,4 @@
 
 # vignettes/
 *.build.timestamp
+/doc/
