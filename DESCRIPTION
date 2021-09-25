@@ -70,5 +70,6 @@ Suggests:
     rmarkdown,
     devtools (>= 2.4.2),
     sessioninfo (>= 1.1.1),
-    assertthat (>= 0.2.1)
+    assertthat (>= 0.2.1),
+    covr
 Config/testthat/edition: 3
