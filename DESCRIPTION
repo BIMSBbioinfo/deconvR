@@ -1,7 +1,7 @@
 Package: deconvR
 Title: Simulation and Deconvolution of Cellular Signatures
 Version: 0.99.0
-Date: 2021-09-23
+Date: 2021-09-26
 Authors@R: 
     c(person(given = "Veronika",
            family = "Ebenal",
@@ -25,6 +25,29 @@ Description: The package contains the function "deconvolute" which takes in
     used to map WGBS methylation data to probe IDs. The output dataframe of BSmeth2Probe can be used for
     the bulk sample methylation profile of deconvolute. Also included is findSignatures, which can create
     or extend a reference atlas containing signatures of cell types.
+License: Artistic-2.0
+URL: https://github.com/BIMSBbioinfo/deconvR
+BugReports: https://support.bioconductor.org/t/deconvR
+biocViews: DNAMethylation, Regression, Epigenetics, CpGIsland
+Encoding: UTF-8
+LazyData: false
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    testthat (>= 3.0.0),
+    roxygen2 (>= 7.1.2),
+    doParallel (>= 1.0.16),
+    parallel,
+    knitr (>= 1.34),
+    BiocStyle (>= 2.20.2),
+    reshape2 (>= 1.4.4),
+    ggplot2 (>= 3.3.5),
+    rmarkdown,
+    devtools (>= 2.4.2),
+    sessioninfo (>= 1.1.1),
+    assertthat (>= 0.2.1),
+    covr
+VignetteBuilder: knitr
 Imports:
     S4Vectors (>= 0.30.0),
     methylKit (>= 1.18.0),
@@ -49,27 +72,3 @@ Imports:
 Depends: 
     R (>= 4.1),
     data.table (>= 1.14.0)
-License: Artistic-2.0
-URL: https://github.com/BIMSBbioinfo/deconvR
-BugReports: https://support.bioconductor.org/t/deconvR
-biocViews: DNAMethylation, Regression, Epigenetics, CpGIsland
-Encoding: UTF-8
-VignetteBuilder: knitr
-LazyData: false
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
-Suggests: 
-    testthat (>= 3.0.0),
-    roxygen2 (>= 7.1.2),
-    doParallel (>= 1.0.16),
-    parallel,
-    knitr (>= 1.34),
-    BiocStyle (>= 2.20.2),
-    reshape2 (>= 1.4.4),
-    ggplot2 (>= 3.3.5),
-    rmarkdown,
-    devtools (>= 2.4.2),
-    sessioninfo (>= 1.1.1),
-    assertthat (>= 0.2.1),
-    covr
-Config/testthat/edition: 3
