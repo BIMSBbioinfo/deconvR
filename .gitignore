@@ -4,6 +4,7 @@
 
 # User-specific files
 .Ruserdata
+.Ruserdata
 
 # Example code in package build process
 *-Ex.R
