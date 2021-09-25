@@ -34,7 +34,6 @@
 # R Environment Variables
 #.Renviron
 inst/doc
-inst/deconvR.png
 /doc/
 /Meta/
 .Rproj.user
