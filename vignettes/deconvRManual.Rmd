@@ -2,6 +2,7 @@
 title: "deconvR : Simulation and Deconvolution of Cellular Signatures"
 author: 
   - name: Veronika Ebenal
+  - name: İrem B. Gündüz
 output: 
   BiocStyle::html_document:
     self_contained: yes
