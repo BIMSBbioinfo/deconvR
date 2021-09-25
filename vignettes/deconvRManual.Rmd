@@ -309,7 +309,7 @@ WGBS_GRanges
 ## Illumina hg38 Probes
 
 The **GRanges** object `illumina_probes_hg38_GRanges.RDS` contains the Illumina
-probe IDs of 500,000 genomic loci (identified using the "seqnames", "ranges",
+probe IDs of 450000 genomic loci (identified using the "seqnames", "ranges",
 and "strand" values). This object is based off of the Infinium MethylationEPIC
 v1.0 B5 Manifest File ^[Illumina Inc. "Infinium MethylationEPIC Product Files."
 Available at
