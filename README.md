@@ -1,5 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<a name="deconvR_logo"/>
+<div align="center">
+<img src="https://github.com/BIMSBbioinfo/deconvR/blob/main/inst/deconvR_logo.png" alt="deconvR_logo" width="600"/ ></img>
+</a>
+</div>
 
 # deconvR : Simulation and Deconvolution of Cellular Signatures
 [![BiocCheck](https://github.com/BIMSBbioinfo/deconvR/workflows/BiocCheck/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![Build Status](https://app.travis-ci.com/BIMSBbioinfo/deconvR.svg?branch=main)](https://app.travis-ci.com/github/BIMSBbioinfo/deconvR) [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/main/graph/badge.svg?token=F86XU6BI9S)](https://codecov.io/gh/BIMSBbioinfo/deconvR)
