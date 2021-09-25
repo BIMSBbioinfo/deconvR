@@ -1,7 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README.Rmd
-vignettes/
 ^doc$
 ^Meta$
 ^\.github$
