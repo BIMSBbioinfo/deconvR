@@ -19,8 +19,8 @@
 #' Default value is FALSE.
 #' @keywords mapping
 #' @examples
-#' data("WGBS_GRanges")
 #' data("probe_ids")
+#' data("WGBS_GRanges")
 #' BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges)
 #' BSmeth2Probe(
 #'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges[5:1000],

@@ -47,8 +47,8 @@ is taken.
 A function to map WGBS methylation data to Illumina Probe IDs
 }
 \examples{
-data("WGBS_GRanges")
 data("probe_ids")
+data("WGBS_GRanges")
 BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges)
 BSmeth2Probe(
     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges[5:1000],

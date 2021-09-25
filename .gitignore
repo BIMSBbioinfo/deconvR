@@ -2,9 +2,6 @@
 .Rhistory
 .Rapp.history
 
-# Session Data files
-.RData
-
 # User-specific files
 .Ruserdata
 
@@ -35,7 +32,6 @@
 #.Renviron
 /Meta/
 .Rproj.user
-.Rdata
 .DS_Store
 /inst/deconvRManual.html
 

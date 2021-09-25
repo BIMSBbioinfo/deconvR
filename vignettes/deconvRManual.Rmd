@@ -63,10 +63,14 @@ the results will be calculated. Otherwise, partial R-squared values will be
 calculated using the row means of the reference atlas.
 
 # Installation
-You can install deconvR  with:
+
+The deconvR package can be installed from Bioconductor with:
 
 ``` {r eval=FALSE}
-devtools::install_github("BIMSBbioinfo/deconvR")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("deconvR")
 ```
 
 # Functions
@@ -303,8 +307,8 @@ loci (identified using the "seqnames", "ranges", and "strand" values) for a
 single example sample. It can be used directly as `WGBS_data` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
-WGBS_data <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
-WGBS_data
+data("WGBS_GRanges")
+WGBS_GRanges
 ```
 
 ## Illumina hg38 Probes
@@ -320,8 +324,8 @@ before converting the file to a **GRanges** object. It can be used directly as
 `probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
-probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS", package = "deconvR"))
-probe_id_locations
+data("probe_ids")
+probe_ids
 ```
 
 # Example Workflow
@@ -368,8 +372,8 @@ be either a **GRanges** object or a **methylKit** object.
 Format of `WGBS_data` as **GRanges** object:
 
 ``` {r, message = FALSE, output.lines=10}
-WGBS_data <- readRDS(system.file("WGBS_GRanges.RDS", package = "deconvR"))
-WGBS_data
+data("WGBS_GRanges")
+WGBS_GRanges
 ```
 
 or as **methylKit** object:
@@ -383,16 +387,15 @@ head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt",
 `probe_id_locations` contains information needed to map cellular loci to probe IDs
 
 ``` {r, message = FALSE, output.lines=10}
-probe_id_locations <- readRDS(system.file("illumina_probes_hg38_GRanges.RDS",
-                                          package = "deconvR"))
-probe_id_locations
+data("probe_ids")
+probe_ids
 ```
 
 Use `BSmeth2Probe` to map WGBS data to probe IDs.
 
 ``` {r, output.lines=10}
-mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_id_locations, 
-                                 WGBS_data = WGBS_data,
+mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids, 
+                                 WGBS_data = WGBS_GRanges,
                                  multipleMapping = TRUE,
                                  cutoff = 100)
 head(mapped_WGBS_data)

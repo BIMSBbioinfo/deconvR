@@ -2,8 +2,8 @@ context("BSmeth2Probe")
 library(deconvR)
 
 test_that("BSmeth2Probe", {
-    load(system.file(("data/WGBS_GRanges.rda"), package = "deconvR"))
-    load(system.file(("data/probe_ids.rda"), package = "deconvR"))
+    data("WGBS_GRanges")
+    data("probe_ids")
     probe_ids_df <- GenomicRanges::as.data.frame(probe_ids)
 
     results <- BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges)
