@@ -7,7 +7,7 @@
 </div>
 
 # deconvR : Simulation and Deconvolution of Cellular Signatures
-[![BiocCheck](https://github.com/BIMSBbioinfo/deconvR/workflows/BiocCheck/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![R build status](https://github.com/BIMSBbioinfo/deconvR/workflows/R-CMD-check/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions)[![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/main/graph/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions)
+[![BiocCheck](https://github.com/BIMSBbioinfo/deconvR/workflows/BiocCheck/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![R build status](https://github.com/BIMSBbioinfo/deconvR/workflows/R-CMD-check/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/main/graph/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions)
 
 <!-- badges: start -->
 <!-- badges: end -->
