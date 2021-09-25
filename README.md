@@ -2,12 +2,13 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <a name="deconvR_logo"/>
 <div align="center">
-<img src="https://github.com/BIMSBbioinfo/deconvR/blob/main/inst/deconvR_logo.png" alt="deconvR_logo" width="800"/ ></img>
+<img src="https://github.com/BIMSBbioinfo/deconvR/blob/main/inst/deconvR_logo.png" alt="deconvR_logo" width="650"/ ></img>
 </a>
 </div>
 
 # deconvR : Simulation and Deconvolution of Cellular Signatures
-[![BiocCheck](https://github.com/BIMSBbioinfo/deconvR/workflows/BiocCheck/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![R build status](https://github.com/BIMSBbioinfo/deconvR/workflows/R-CMD-check/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/main/graph/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions)
+[![BiocCheck](https://github.com/BIMSBbioinfo/deconvR/workflows/BiocCheck/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![R build status](https://github.com/BIMSBbioinfo/deconvR/workflows/R-CMD-check/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/main/graph/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions) [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/deconvR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/deconvR)
+
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -19,8 +20,17 @@ user-selected model. The users can use create/extend their reference atlas using
 
 ## Installation
 
-You can install deconvR with:
+The deconvR package can be installed from Bioconductor with:
+
+``` {r }
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("deconvR")
+```
+You can also install deconvR directly with github:
 
 ``` r
+
 devtools::install_github("BIMSBbioinfo/deconvR")
 ```
