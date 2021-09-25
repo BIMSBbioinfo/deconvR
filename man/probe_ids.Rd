@@ -16,7 +16,7 @@ GRanges object with 500000 ranges and 1 metadata column:
 \url{https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html}
 }
 \usage{
-probe_ids
+data(probe_ids)
 }
 \description{
 A dataset Illumina probe IDs of 500,000 genomic loci (identified using the
