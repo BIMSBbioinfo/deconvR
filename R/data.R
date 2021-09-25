@@ -6,6 +6,7 @@
 #'   \item{metadata}{contains seqnames ranges strand and ID}
 #'   ...
 #' }
+#' @usage data(probe_ids)
 #' @source \url{https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html}
 "probe_ids"
 
@@ -19,5 +20,6 @@
 #'   seqinfo: 25 sequences from an unspecified genome; no seqlengths}
 #'   ...
 #' }
+#' @usage data(WGBS_GRanges)
 #' @source \url{https://www.encodeproject.org/data-standards/wgbs/}
 "WGBS_GRanges"
