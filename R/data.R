@@ -1,7 +1,7 @@
-#' A dataset Illumina probe IDs of 450000 genomic loci (identified using the
+#' A dataset Illumina probe IDs of 400000 genomic loci (identified using the
 #' “seqnames”, “ranges”, and “strand” values).
 #' @usage data(probe_ids)
-#' @format GRanges object with 450000 ranges and 1 metadata column:
+#' @format GRanges object with 400000 ranges and 1 metadata column:
 #' \describe{
 #'   \item{metadata}{contains seqnames ranges strand and ID}
 #'   ...
