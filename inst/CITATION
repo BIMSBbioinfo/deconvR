@@ -11,7 +11,8 @@ c(
         title = "deconvR: Simulation and Deconvolution of Cellular Signatures",
         author = personList(
         as.person("İrem B. Gündüz"),
-        as.person("Veronika Ebenal")
+        as.person("Veronika Ebenal"),
+        as.person("Altuna Akalin")
 
         ),
         year = format(Sys.Date(), "%Y"),
