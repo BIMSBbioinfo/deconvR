@@ -13,7 +13,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The **deconvR** is an [R](http://en.wikipedia.org/wiki/R_%28programming_language%29) package for analyzing deconvolution of the bulk sample(s) using an atlas of reference signature profiles and a user-selected model. Users can upload or expand their own reference atlases using the `findSignatures` function, or they can choose to use the reference atlas provided in the package. A more detailed explanation on to use deconvR can be found in `How to Use deconvR` section.
+The **deconvR** is an [R](http://en.wikipedia.org/wiki/R_%28programming_language%29) package for analyzing deconvolution of the bulk DNA methylation sample(s) using an atlas of reference signature profiles and a user-selected model. Users can upload or expand their own reference atlases using the `findSignatures` function, or they can choose to use the reference atlas provided in the package. A more detailed explanation on to use deconvR can be found in `How to Use deconvR` section.
 
 ## Installation
 
