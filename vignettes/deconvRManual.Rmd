@@ -14,7 +14,7 @@ date: "`r Sys.Date()`"
 package: "`r pkg_ver('deconvR')`"
 vignette: >
   %\VignetteIndexEntry{deconvRManual}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}  
 ---
 
@@ -325,6 +325,8 @@ probe_ids
 ```
 
 # Example Workflow
+
+## Expanding Reference Atlas
 
 One may wish to extend their signature matrix to incorporate new data. This can
 be done using the `findSignatures` function. First, ensure that `atlas` (the

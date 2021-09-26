@@ -32,6 +32,7 @@ BugReports: https://support.bioconductor.org/t/deconvR
 biocViews: DNAMethylation, Regression, Epigenetics, CpGIsland
 Encoding: UTF-8
 LazyData: false
+VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports:
