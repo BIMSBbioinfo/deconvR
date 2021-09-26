@@ -243,7 +243,7 @@ deconvolute <- function(reference = readRDS(system.file("reference_atlas_nodup.R
         # results table will have coefficient predictions of each sample
     }
 
-    message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
+    message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), " :")
     print(summary(unlist(rsq_partial)))
 
     return(list(results, rsq_partial))
