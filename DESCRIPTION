@@ -14,7 +14,8 @@ Authors@R:
            email = "irembgunduz@gmail.com",
            comment = c(ORCID = "0000-0003-2641-0916")),
       person("Altuna", "Akalin", role = c("aut"),
-                    email = "aakalin@gmail.com"))
+                    email = "aakalin@gmail.com",
+                     comment = c(ORCID = "0000-0002-0468-0117")))
 Description: The package contains the function "deconvolute" which takes in
     a reference atlas (defaults to ref_atlas included in package), a bulk sample(s) signature profile,
     and the desired model to be used (non-negative least squares regression, support vector regression,

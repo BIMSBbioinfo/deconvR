@@ -6,7 +6,7 @@
 </a>
 </div>
 
-# deconvR : Simulation and Deconvolution of Cellular Signatures
+# deconvR : Simulation and Deconvolution of Omic Profiles
 [![R-CMD-check-bioc](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml)   [![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml) [![test-coverage](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml)  [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/main/graph/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions)   [![BioC status](http://www.bioconductor.org/shields/build/release/bioc/deconvR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/deconvR)
 
 
