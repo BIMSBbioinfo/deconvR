@@ -1,5 +1,5 @@
 ---
-title: "deconvR : Simulation and Deconvolution of Cellular Signatures"
+title: "deconvR : Simulation and Deconvolution of Omic Profiles"
 author: 
   - name: Veronika Ebenal
   - name: İrem B. Gündüz
