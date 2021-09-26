@@ -1,19 +1,18 @@
-pkgVer <- function(pkg) {
-    if (!exists("meta") || is.null(meta)) meta <- packageDescription(pkg)
-    ver <- meta$Version
-    paste0('https://github.com/Bishop-BIMSBbioinfo/deconvR/', pkg, ' - R package version ', ver)
-}
+citHeader("To cite the deconvR package in publications please use:")
 
-c(
-    bibentry(bibtype="manual",
-        title = "deconvR: Simulation and Deconvolution of Cellular Signatures",
-        author = personList(
-            as.person("Veronika Ebenal"),
-            as.person("Irem B. Gündüz"),
-        ),
-        year = format(Sys.Date(), "%Y"),
-        url = "http://www.bioconductor.org/packages/deconvR",
-        note = pkgVer('deconvR'),
-        doi = '10.18129/B9.bioc.deconvR'
-    )
+# Manual reference
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+authors = "Veronika Ebenal, İrem B. Gündüz"
+citEntry(
+    entry="Manual",
+    title = meta$Title,
+    author = authors,
+    year = year,
+    version=meta$Version,
+    note = "R package available on http://www.bioconductor.org/packages/release/deconvR/html/deconvR.html",
+    textVersion=paste(authors, ". ", meta$Title, " (", year, ")", " R package version ", meta$Version, sep="")
 )
+
+
+citFooter("Thank you very much for using deconvR!,",
+          "we appreciate if you remember to cite it in your paper! :)")

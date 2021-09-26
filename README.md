@@ -32,5 +32,5 @@ You can also install deconvR directly with github:
 
 ``` r
 
-devtools::install_github("BIMSBbioinfo/deconvR")
+remotes::install_github("BIMSBbioinfo/deconvR")
 ```
