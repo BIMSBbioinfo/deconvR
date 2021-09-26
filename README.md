@@ -13,10 +13,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-**deconvR** is a collection of functions surrounding the deconvolution of bulk
-sample(s) with the use of a reference atlas of signature profiles and a
-user-selected model. The users can use create/extend their reference atlas using
-`findSignatures` function or, they may choose to use the reference atlas provided within the package.
+The **deconvR** is an [R](http://en.wikipedia.org/wiki/R_%28programming_language%29) package for analyzing deconvolution of the bulk sample(s) using an atlas of reference signature profiles and a user-selected model. Users can create or expand their own reference atlases using the `findSignatures` function, or they can choose to use the reference atlas provided in the package. A more detailed explanation on to use deconvR can be found in `How to Use deconvR` section.
 
 ## Installation
 
@@ -31,6 +28,9 @@ BiocManager::install("deconvR")
 You can also install deconvR directly with github:
 
 ``` r
-
 remotes::install_github("BIMSBbioinfo/deconvR")
 ```
+
+## How to Use deconvR
+
+
