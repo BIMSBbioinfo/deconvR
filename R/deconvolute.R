@@ -46,7 +46,7 @@
 
 deconvolute <- function(reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
     vec = NULL, bulk, model = "nnls") {
-    print(paste("DECONVOLUTION WITH", toupper(model)))
+    message("DECONVOLUTION WITH ", toupper(model))
 
     results <- data.frame(matrix(
         ncol = length(colnames(reference)) - 1,
@@ -243,7 +243,7 @@ deconvolute <- function(reference = readRDS(system.file("reference_atlas_nodup.R
         # results table will have coefficient predictions of each sample
     }
 
-    print(paste("SUMMARY OF PARTIAL R-SQUARED VALUES FOR", toupper(model), ": "))
+    message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
     print(summary(unlist(rsq_partial)))
 
     return(list(results, rsq_partial))
