@@ -8,7 +8,7 @@ pkgVer <- function(pkg) {
 c(
 
     bibentry(bibtype="manual",
-        title = "",
+        title = "deconvR: Simulation and Deconvolution of Cellular Signatures",
         author = personList(
         as.person("İrem B. Gündüz"),
         as.person("Veronika Ebenal")
