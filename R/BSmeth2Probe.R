@@ -76,8 +76,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
            and Strand.")
         }
         if (anyNA(probe_id_locations) == TRUE) {
-            cat(paste("Dropping row containing NA: " +
-                which(is.na(probe_id_locations))))
+            message("Dropping row containing NA: " +
+                which(is.na(probe_id_locations)))
             probe_id_locations <- tidyr::drop_na(probe_id_locations)
         }
         probe_id_locations <- GenomicRanges::GRanges(
@@ -224,7 +224,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
     colnames(allresults)[1] <- "IDs"
     if (nrow(allresults) == 0) {
-        print("Result dataframe is empty. No matches could be found.")
+        message("Result dataframe is empty. No matches could be found.")
     }
 
     return(as.data.frame(allresults))

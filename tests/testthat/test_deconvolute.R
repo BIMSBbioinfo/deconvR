@@ -13,8 +13,8 @@ test_that("deconvolute nnls", {
 
     vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas, by = "IDs"))[, -1])
 
-    expect_output(deconvolute(bulk = bulkTable), "DECONVOLUTION WITH NNLS")
-    expect_output(deconvolute(bulk = bulkTable), "SUMMARY OF PARTIAL R-SQUARED VALUES FOR NNLS : ")
+    expect_output(deconvolute(bulk = bulkTable), message("DECONVOLUTION WITH NNLS"))
+    expect_output(deconvolute(bulk = bulkTable), message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR NNLS : "))
 
     expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
     expect_equal(dim(deconvolute(bulk = bulkTable[-1, ])[[1]]), c(5, length(colnames(ref_atlas[, -1]))))
@@ -51,8 +51,8 @@ test_that("deconvolute svr", {
 
     vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas, by = "IDs"))[, -1])
 
-    expect_output(deconvolute(bulk = bulkTable, model = "svr"), "DECONVOLUTION WITH SVR")
-    expect_output(deconvolute(bulk = bulkTable, model = "svr"), "SUMMARY OF PARTIAL R-SQUARED VALUES FOR SVR : ")
+    expect_output(deconvolute(bulk = bulkTable, model = "svr"), message("DECONVOLUTION WITH SVR"))
+    expect_output(deconvolute(bulk = bulkTable, model = "svr"), message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR SVR : "))
 
     ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
     simulation <- simulateCellMix(5)
@@ -89,8 +89,8 @@ test_that("deconvolute qp", {
 
     vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas, by = "IDs"))[, -1])
 
-    expect_output(deconvolute(bulk = bulkTable, model = "qp"), "DECONVOLUTION WITH QP")
-    expect_output(deconvolute(bulk = bulkTable, model = "qp"), "SUMMARY OF PARTIAL R-SQUARED VALUES FOR QP : ")
+    expect_output(deconvolute(bulk = bulkTable, model = "qp"), message("DECONVOLUTION WITH QP"))
+    expect_output(deconvolute(bulk = bulkTable, model = "qp"), message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR QP : "))
 
     expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
     expect_equal(dim(deconvolute(bulk = bulkTable[-1, ], model = "qp")[[1]]), c(5, length(colnames(ref_atlas[, -1]))))
@@ -124,8 +124,8 @@ test_that("deconvolute rlm", {
 
     vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas, by = "IDs"))[, -1])
 
-    expect_output(deconvolute(bulk = bulkTable, model = "rlm"), "DECONVOLUTION WITH RLM")
-    expect_output(deconvolute(bulk = bulkTable, model = "rlm"), "SUMMARY OF PARTIAL R-SQUARED VALUES FOR RLM : ")
+    expect_output(deconvolute(bulk = bulkTable, model = "rlm"), message("DECONVOLUTION WITH RLM"))
+    expect_output(deconvolute(bulk = bulkTable, model = "rlm"), message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR RLM : "))
 
     expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
     expect_equal(dim(deconvolute(bulk = bulkTable[-1, ], model = "rlm")[[1]]), c(5, length(colnames(ref_atlas[, -1]))))
