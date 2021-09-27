@@ -31,11 +31,11 @@
 #' @keywords deconvolution
 #' @examples
 #' results_nnls <- deconvolute(bulk = simulateCellMix(10)[[1]])
-#' results_rlm <- deconvolute(
+#' results_qp <- deconvolute(
 #'     reference = readRDS(system.file("reference_atlas_nodup.RDS",
 #'         package = "deconvR"
 #'     )),
-#'     bulk = simulateCellMix(5)[[1]], model = "rlm"
+#'     bulk = simulateCellMix(5)[[1]], model = "qp"
 #' )
 #' @return A list, first is a dataframe which contains predicted cell-type
 #' proportions of bulk methylation profiles in "bulk", second is a list of
@@ -54,10 +54,7 @@ deconvolute <- function(reference =
     message("DECONVOLUTION WITH ", toupper(model))
 
     comb <- function(x, ...) {
-        lapply(
-            seq_along(x),
-            function(i) c(x[[i]], lapply(list(...), function(y) y[[i]]))
-        )
+        lapply(seq_along(x), function(i) c(x[[i]], lapply(list(...), function(y) y[[i]])))
     }
 
     h <- NULL # assign a number so you can reuse it
@@ -97,7 +94,6 @@ deconvolute <- function(reference =
                 ranges = list(nu = seq(0.25, 0.5, 0.75))
             )
             coefficients <- t(model$coefs) %*% model$SV
-            coefficients <- ifelse(coefficients < 0, 0, coefficients)
         } else if (model == "qp") { # quadratic programming
             beq <- c(1)
             bvec <- c(beq, rep(0, ncol(reference[, -1])))
@@ -112,13 +108,9 @@ deconvolute <- function(reference =
                 Amat = t(Amat), bvec = bvec,
                 meq = meq
             )$solution
-
-            coefficients <- ifelse(coefficients < 0, 0, coefficients)
         } else if (model == "rlm") { # robust linear regression
             model <- suppressWarnings(MASS::rlm(ref, mix, maxit = 100))
-            # rlm via re-weighted least squares with maximum 100 iterations
             coefficients <- model$coefficients
-            coefficients <- ifelse(coefficients < 0, 0, coefficients)
         }
     }
     # non negative least squares
@@ -127,22 +119,19 @@ deconvolute <- function(reference =
         .combine = "comb", .multicombine = TRUE,
         .init = list(c(), list())
     ) %dopar% {
-        # it's implemented this way to work with doParallel
         thedata <- tidyr::drop_na(merge(dplyr::select(bulk, 1, h),
             reference,
             by = "IDs"
         ))[, -1]
-        # merge each sample to reference table,
+        # merge each sample to reference table
         mix <- as.matrix(thedata[, 1])
-        # first column is the bulk mixed sample
         ref <- as.matrix(thedata[, -1])
-        # the rest of columns come from reference
         coefficients <- train_model(model, ref, mix)
+        coefficients <- ifelse(coefficients < 0, 0, coefficients)
+        sumOfCof <- sum(coefficients)
         if (model == "svr") {
-            sumOfCof <- sum(coefficients)
             coefficients <- as.numeric(coefficients / sumOfCof)
         } else {
-            sumOfCof <- sum(coefficients)
             coefficients <- coefficients / sumOfCof
         }
         return(list(
@@ -152,19 +141,18 @@ deconvolute <- function(reference =
     }
 
     rsq_partial <- oper[[1]]
-    # results table will have coefficient predictions of each sample
-    get_res <- function(i) {
-        res <- unlist(oper[[2]][[i]])
-        return(res)
-    }
-    expect <- NCOL(reference) -1
+    expect <- NCOL(reference) - 1
     results <- data.frame(t(
-        vapply(seq_along(oper[[2]]), get_res, FUN.VALUE = numeric(expect))
+        vapply(seq_along(oper[[2]]), function(i) {
+            res <- unlist(oper[[2]][[i]])
+            return(res)
+        }, FUN.VALUE = numeric(expect))
     ))
     rownames(results) <- colnames(bulk)[-1]
     colnames(results) <- colnames(reference)[-1]
     message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
     print(summary(unlist(rsq_partial)))
 
+    # results table will have coefficient predictions of each sample
     return(list(results, rsq_partial))
 }

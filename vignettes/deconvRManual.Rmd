@@ -48,10 +48,10 @@ reference atlas provided in `inst`, or create/extend a new reference atlas using
 `simulateCellMix` to generate a simulated table of a desired number of samples,
 with either user-specified or random origin proportions. Alternatively, in the
 case of methylation profiles, `BSMeth2Probe` may be used to map WGBS methylation
-data (as a dataframe or **GRanges** object) to probe IDs, and the results of this
-mapping may be used as the bulk samples in the deconvolution. Finally, along
-with a reference atlas and table of bulk samples, `deconvolute` allows the user
-to specify their desired deconvolution model (non-negative least squares
+data (as a dataframe or **GRanges** object) to probe IDs, and the results of
+this mapping may be used as the bulk samples in the deconvolution. Finally,
+along with a reference atlas and table of bulk samples, `deconvolute` allows the
+user to specify their desired deconvolution model (non-negative least squares
 regression, support vector regression, quadratic programming, or robust linear
 regression), and returns a dataframe which contains predicted cell-type
 proportions of bulk methylation profiles, as well as  partial R-squared values
@@ -74,7 +74,8 @@ BiocManager::install("deconvR")
 
 ## simulateCellMix
 
-`simulateCellMix` generates a dataframe of simulated samples convoluted using a given reference atlas.
+`simulateCellMix` generates a dataframe of simulated samples convoluted using a
+given reference atlas.
 
 ``` {r eval=FALSE}
 simulateCellMix(

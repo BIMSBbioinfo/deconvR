@@ -58,11 +58,11 @@ printed upon completion.
 }
 \examples{
 results_nnls <- deconvolute(bulk = simulateCellMix(10)[[1]])
-results_rlm <- deconvolute(
+results_qp <- deconvolute(
     reference = readRDS(system.file("reference_atlas_nodup.RDS",
         package = "deconvR"
     )),
-    bulk = simulateCellMix(5)[[1]], model = "rlm"
+    bulk = simulateCellMix(5)[[1]], model = "qp"
 )
 }
 \references{
