@@ -18,7 +18,7 @@
 #' defaults to a reference atlas which is included in this package (see
 #' deconvR/inst/reference_atlas_nodup.RDS). This reference atlas comes from
 #' Moss et al. (2018)
-#'
+#' @importFrom methods is
 #' @keywords simulation
 #' @examples
 #' bulk_mix50 <- simulateCellMix(50)
@@ -91,7 +91,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
             colnames(simulatedMixtureTable)[i + 1] <- paste("Sample", i)
         }
     } else {
-        if (class(mixingVector) == "data.frame") {
+        if (is(mixingVector, "data.frame") == TRUE) {
             if (ncol(mixingVector) != numberOfSamples) {
                 stop("numberOfSamples must have the same number of rows with the
                 mixingVector")
@@ -119,7 +119,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
                     colnames(simulatedMixtureTable)[s + 1] <- paste("Sample", s)
                 }
             }
-        } else if (class(mixingVector) == "numeric") {
+        } else if (is(mixingVector, "numeric") == TRUE) {
             if (1 != numberOfSamples) {
                 stop("Only use a vector for mixingVector if numberOfSamples = 1,
             otherwise use dataframe with columns for samples and rows for cell

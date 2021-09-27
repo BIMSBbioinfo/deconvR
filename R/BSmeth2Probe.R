@@ -17,6 +17,7 @@
 #' covered in WGBS data, should WGBS CpGs which have already been mapped to
 #' another probe still be considered? If TRUE, then yes. If FALSE, then no.
 #' Default value is FALSE.
+#' @importFrom methods is
 #' @keywords mapping
 #' @examples
 #' data("probe_ids")
@@ -94,19 +95,19 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             ID = probe_id_locations[, "id"]
         )
     }
-    if (class(probe_id_locations) == "GRanges") {
+    if (is(probe_id_locations, "GRanges") == TRUE) {
         if (is.null(probe_id_locations$ID) == TRUE) {
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((class(WGBS_data) == "methylBaseDB") ||
-        (class(WGBS_data) == "methylBase")) {
+    if ((is(WGBS_data, "methylBaseDB") == TRUE) ||
+        (is(WGBS_data, "methylBase") == TRUE)) {
         pm <- methylKit::percMethylation(WGBS_data)
         pm <- pm / 100
         WGBS_data <- methods::as(WGBS_data, "GRanges")
         GenomicRanges::mcols(WGBS_data) <- as.data.frame(pm)
     }
-    if ((class(WGBS_data) == "methylRawList")) {
+    if (is(WGBS_data, "methylRawList") == TRUE) {
         ## Convert methylRawList to methylbase object
         WGBS_data <- methylKit::unite(WGBS_data, destrand = FALSE)
         pm <- methylKit::percMethylation(WGBS_data)

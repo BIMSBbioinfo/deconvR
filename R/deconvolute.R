@@ -53,8 +53,6 @@ deconvolute <- function(reference =
     vec = NULL, bulk, model = "nnls") {
     message("DECONVOLUTION WITH ", toupper(model))
 
-    h <- 2
-
     comb <- function(x, ...) {
         lapply(
             seq_along(x),
@@ -62,7 +60,7 @@ deconvolute <- function(reference =
         )
     }
 
-
+    h <- NULL # assign a number so you can reuse it
     bulk <- tidyr::drop_na(bulk)
     ## get rid of rows in both tables with na values
     reference <- tidyr::drop_na(reference)
@@ -70,7 +68,6 @@ deconvolute <- function(reference =
         if (is.null(vec)) {
             vec <- rowMeans(ref)
             ## vector defaults to row means of reference
-            # (after removing IDs which weren't in bulk sample)
         } else {
             assertthat::assert_that(length(vec) == length(predicted),
                 msg = paste(
@@ -89,94 +86,24 @@ deconvolute <- function(reference =
         return(rsq_partial)
     }
 
-    if (model == "nnls") {
-        # non negative least squares
-        oper <- foreach::foreach(
-            h = seq(2, ncol(bulk)), .inorder = TRUE,
-            .combine = "comb", .multicombine = TRUE,
-            .init = list(c(), list())
-        ) %dopar% {
-            # it's implemented this way to work with doParallel
-            thedata <- tidyr::drop_na(merge(dplyr::select(bulk, 1, h),
-                reference,
-                by = "IDs"
-            ))[, -1]
-            # merge each sample to reference table,
-            # removing IDs that aren't present in both
-            mix <- as.matrix(thedata[, 1])
-            # first column is the bulk mixed sample
-            ref <- as.matrix(thedata[, -1])
-            # the rest of columns come from reference
+    train_model <- function(model, ref, mix) {
+        if (model == "nnls") {
             model <- nnls::nnls(data.matrix(ref), mix)
             coefficients <- model$x
-            sumOfCof <- sum(coefficients)
-            coefficients <- coefficients / sumOfCof
-            # normalize so coefficients add to 1
-
-            return(list(
-                find_partial_rsq(mix, ref %*% coefficients, ref, vec),
-                coefficients
-            ))
-        }
-    } else if (model == "svr") { # support vector regression
-        oper <- foreach::foreach(
-            h = seq(2, ncol(bulk)), .inorder = TRUE,
-            .combine = "comb", .multicombine = TRUE,
-            .init = list(c(), list())
-        ) %dopar% {
-            thedata <- tidyr::drop_na(merge(dplyr::select(bulk, 1, h),
-                reference,
-                by = "IDs"
-            ))[, -1]
-            # merge each sample to reference table,
-            # removing IDs that aren't present in both
-            mix <- as.matrix(thedata[, 1])
-            # first column is the bulk mixed sample
-            ref <- as.matrix(thedata[, -1])
-            # the rest of columns come from reference
+        } else if (model == "svr") { # support vector regression
             model <- e1071::best.tune("svm",
                 train.x = mix ~ ref, kernel = "linear",
                 type = "nu-regression", scale = FALSE,
                 ranges = list(nu = seq(0.25, 0.5, 0.75))
             )
-            # find the best nu values for the models
             coefficients <- t(model$coefs) %*% model$SV
             coefficients <- ifelse(coefficients < 0, 0, coefficients)
-            # normalize so coefficients > 0
-            sumOfCof <- sum(coefficients)
-            coefficients <- as.numeric(coefficients / sumOfCof)
-            # normalize so coefficients add to 1
-
-            return(list(
-                find_partial_rsq(mix, ref %*% coefficients, ref, vec),
-                coefficients
-            ))
-        }
-    }
-    # quadratic programming
-    else if (model == "qp") {
-        beq <- c(1)
-        bvec <- c(beq, rep(0, ncol(reference[, -1])))
-        Aeq <- matrix(rep(1, ncol(reference[, -1])), nrow = 1)
-        Amat <- rbind(Aeq, diag(ncol(reference[, -1])))
-        meq <- 1
-
-        oper <- foreach::foreach(
-            h = seq(2, ncol(bulk)), .inorder = TRUE,
-            .combine = "comb", .multicombine = TRUE,
-            .init = list(c(), list())
-        ) %dopar% {
-            thedata <- tidyr::drop_na(merge(dplyr::select(bulk, 1, h),
-                reference,
-                by = "IDs"
-            ))[, -1]
-            # merge each sample to reference table,
-            # removing IDs that aren't present in both
-            mix <- as.matrix(thedata[, 1])
-            # first column is the bulk mixed sample
-            ref <- as.matrix(thedata[, -1])
-            # the rest of columns come from reference
-
+        } else if (model == "qp") { # quadratic programming
+            beq <- c(1)
+            bvec <- c(beq, rep(0, ncol(reference[, -1])))
+            Aeq <- matrix(rep(1, ncol(reference[, -1])), nrow = 1)
+            Amat <- rbind(Aeq, diag(ncol(reference[, -1])))
+            meq <- 1
             Dmat <- t(ref) %*% ref
             dvec <- t(ref) %*% mix
 
@@ -187,68 +114,50 @@ deconvolute <- function(reference =
             )$solution
 
             coefficients <- ifelse(coefficients < 0, 0, coefficients)
-            # make sure all coefficients are > 0
-
-            sumOfCof <- sum(coefficients)
-            coefficients <- coefficients / sumOfCof
-            # make sure coefficients add to 1
-
-            return(list(
-                find_partial_rsq(mix, ref %*% coefficients, ref, vec),
-                coefficients
-            ))
-        }
-    } else if (model == "rlm") { # robust linear regression
-        oper <- foreach::foreach(
-            h = seq(2, ncol(bulk)), .inorder = TRUE,
-            .combine = "comb", .multicombine = TRUE,
-            .init = list(c(), list())
-        ) %dopar% {
-            thedata <- tidyr::drop_na(merge(dplyr::select(bulk, 1, h),
-                reference,
-                by = "IDs"
-            ))[, -1]
-            # merge each sample to reference table,
-            # removing IDs that aren't present in both
-            mix <- as.matrix(thedata[, 1])
-            # first column is the bulk mixed sample
-            ref <- as.matrix(thedata[, -1])
-            # the rest of columns come from reference
-
+        } else if (model == "rlm") { # robust linear regression
             model <- suppressWarnings(MASS::rlm(ref, mix, maxit = 100))
             # rlm via re-weighted least squares with maximum 100 iterations
             coefficients <- model$coefficients
-            # i found 100 iterations the best balence of time vs accurracy,
-            # but can be changed
-
             coefficients <- ifelse(coefficients < 0, 0, coefficients)
-            # normalize coefficients so all > 0
-
-            sumOfCof <- sum(coefficients)
-
-            coefficients <- coefficients / sumOfCof
-            # normalize so coefficients add to 1
-
-            return(list(
-                find_partial_rsq(mix, ref %*% coefficients, ref, vec),
-                coefficients
-            ))
         }
-    } else {
-        stop("Model must be either \"nnls\" or  \"svr\" or  \"qp\" or \"rlm\"")
     }
-    # results <- c()
-    # for (i in seq_along(oper[[2]])) {
-    #   results[i, ] <- unlist(oper[[2]][[i]])
-    # results table will have coefficient predictions of each sample
-    # }
+    # non negative least squares
+    oper <- foreach::foreach(
+        h = seq(2, ncol(bulk)), .inorder = TRUE,
+        .combine = "comb", .multicombine = TRUE,
+        .init = list(c(), list())
+    ) %dopar% {
+        # it's implemented this way to work with doParallel
+        thedata <- tidyr::drop_na(merge(dplyr::select(bulk, 1, h),
+            reference,
+            by = "IDs"
+        ))[, -1]
+        # merge each sample to reference table,
+        mix <- as.matrix(thedata[, 1])
+        # first column is the bulk mixed sample
+        ref <- as.matrix(thedata[, -1])
+        # the rest of columns come from reference
+        coefficients <- train_model(model, ref, mix)
+        if (model == "svr") {
+            sumOfCof <- sum(coefficients)
+            coefficients <- as.numeric(coefficients / sumOfCof)
+        } else {
+            sumOfCof <- sum(coefficients)
+            coefficients <- coefficients / sumOfCof
+        }
+        return(list(
+            find_partial_rsq(mix, ref %*% coefficients, ref, vec),
+            coefficients
+        ))
+    }
+
     rsq_partial <- oper[[1]]
+    # results table will have coefficient predictions of each sample
     get_res <- function(i) {
         res <- unlist(oper[[2]][[i]])
         return(res)
-        # results table will have coefficient predictions of each sample
     }
-    expect <- NCOL(reference) - 1
+    expect <- NCOL(reference[-1])
     results <- data.frame(t(
         vapply(seq_along(oper[[2]]), get_res, FUN.VALUE = numeric(expect))
     ))

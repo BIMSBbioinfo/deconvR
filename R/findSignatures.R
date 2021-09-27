@@ -26,8 +26,10 @@
 #'     "Biosample_term_name" = "example_cell_type"
 #' )
 #' colnames(exampleSamples)[-1] <- c("example_sample")
-#' signatures <- findSignatures(samples = exampleSamples,
-#'                                                   sampleMeta = exampleMeta)
+#' signatures <- findSignatures(
+#'     samples = exampleSamples,
+#'     sampleMeta = exampleMeta
+#' )
 #' signatures <- findSignatures(
 #'     samples = exampleSamples, sampleMeta = exampleMeta,
 #'     atlas = exampleReference
@@ -98,7 +100,7 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
         if (length(accession_ids) > 0) {
             # if no accession IDs map to this cell type
             tissueLabel <- gsub(" ", "_", tissue)
-            #units with variance within tissue above variation_cutoff excluded
+            # units with variance within tissue above variation_cutoff excluded
             if (!(is.null(variation_cutoff))) {
                 tissue_variance <-
                     extendedAtlas[, matrixStats::rowVars(as.matrix(.SD)),
@@ -106,7 +108,7 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
                     ]
 
                 tissue_variance <- nafill(tissue_variance, fill = 0)
-                #variance NA (e.g. if only one sample), will be replaced with 0
+                # variance NA (e.g. if only one sample), will be replaced with 0
                 extendedAtlas <- extendedAtlas[tissue_variance <=
                     variation_cutoff, ]
             }
