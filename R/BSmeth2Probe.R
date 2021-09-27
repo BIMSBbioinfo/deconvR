@@ -12,7 +12,7 @@
 #' metadata column(s) of methylation values of sample(s) (i.e. one column per
 #' sample). These methylation values must be between 0 and 1.
 #' @param cutoff The maximum number of basepairs distance to consider for probes
-#'  which have not been directly covered in the WGBS data. Default value is 10.
+#' which have not been directly covered in the WGBS data. Default value is 10.
 #' @param multipleMapping When searching for matches for probes not directly
 #' covered in WGBS data, should WGBS CpGs which have already been mapped to
 #' another probe still be considered? If TRUE, then yes. If FALSE, then no.
@@ -30,7 +30,10 @@
 #'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges,
 #'     cutoff = 500, multipleMapping = TRUE
 #' )
-#' BSmeth2Probe(probe_id_locations = probe_ids[100:200], WGBS_data = WGBS_GRanges[1:10])
+#' BSmeth2Probe(
+#'     probe_id_locations = probe_ids[100:200],
+#'     WGBS_data = WGBS_GRanges[1:10]
+#' )
 #' @return A dataframe with first column "IDs" for CpG IDs, then 1 or more
 #' columns for methylation values of sample(s) (same number of samples as in
 #' WGBS_data)
@@ -61,19 +64,21 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         "GRanges", "methylRawList",
         "methylBaseDB", "methylBase"
     ))) {
-        stop("WGBS_data must be either GRanges object or,
-         methylKit object (methylBase, methylRawList,or methylBaseDB")
+        stop("WGBS_data must be either GRanges object or, a methylKit object,
+    such as methylBase, methylRawList, methylBaseDB")
     }
 
     if ((is.data.frame(probe_id_locations) == TRUE)) {
-        names(probe_id_locations) <- sapply(names(probe_id_locations), tolower)
+        names(probe_id_locations) <- vapply(names(probe_id_locations), tolower)
         if (any(
-            is.null(probe_id_locations$seqnames), is.null(probe_id_locations$end),
-            is.null(probe_id_locations$start), is.null(probe_id_locations$strand),
+            is.null(probe_id_locations$seqnames),
+            is.null(probe_id_locations$end),
+            is.null(probe_id_locations$start),
+            is.null(probe_id_locations$strand),
             is.null(probe_id_locations$id)
         ) == TRUE) {
-            stop("probe_id_locations must contain columns named ID, Seqnames, Start, End,
-           and Strand.")
+            stop("probe_id_locations must contain columns named ID, Seqnames,
+    Start, End, and Strand.")
         }
         if (anyNA(probe_id_locations) == TRUE) {
             message("Dropping row containing NA: " +
@@ -122,24 +127,24 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     if (methods::isClass(WGBS_data, Class = "GRanges") == TRUE) {
         column_names <- colnames(GenomicRanges::mcols(WGBS_data))
         S4Vectors::elementMetadata(WGBS_data) <-
-            data.table::nafill(as.data.frame(S4Vectors::elementMetadata(WGBS_data)),
-                fill = 0
-            )
+            data.table::nafill(as.data.frame(
+                S4Vectors::elementMetadata(WGBS_data)
+            ), fill = 0)
         colnames(GenomicRanges::mcols(WGBS_data)) <- column_names
         if (NCOL(S4Vectors::elementMetadata(WGBS_data)) == 0) {
-            stop("WGBS_data should have at least one metadata column. No samples?")
+            stop("WGBS_data must have at least one metadata column.")
         }
         if (any(BiocGenerics::lapply(
             as.data.frame(S4Vectors::elementMetadata(WGBS_data)),
             class
         ) != "numeric")) {
-            stop("WGBS_data metadata columns should be methylation values of
-           sample(s), between 0 and 1")
+            stop("The metadata columns of WGBS_data must contain methylation
+    values of sample(s) between 0 and 1")
         }
         if ((any(as.data.frame(S4Vectors::elementMetadata(WGBS_data)) < 0)) ||
             (any(as.data.frame(S4Vectors::elementMetadata(WGBS_data)) > 1))) {
-            stop("WGBS_data metadata columns should be methylation values of sample(s)
-           ,between 0 and 1")
+            stop("The metadata columns of WGBS_data must contain methylation
+    values of sample(s) between 0 and 1")
         }
     }
 
@@ -156,49 +161,51 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
 
     if (cutoff > 0) {
         # only need to do "nearlyOverlaps" if cutoff > 0
-        nearlyOverlaps_df <- IRanges::mergeByOverlaps(WGBS_data, probe_id_locations,
+        nearolaps_df <- IRanges::mergeByOverlaps(WGBS_data,
+            probe_id_locations,
             maxgap = cutoff
         )
         ## same mapping as first time, but now with cutoff gap allowed
-        nearlyOverlaps_df <- subset(
-            nearlyOverlaps_df,
-            !(nearlyOverlaps_df$ID %in% overlaps_df$ID)
+        nearolaps_df <- subset(
+            nearolaps_df,
+            !(nearolaps_df$ID %in% overlaps_df$ID)
         )
         ## discard probes already mapped in first round
-        if (nrow(nearlyOverlaps_df) == 0) {
-            nearlyOverlaps_df$distance <- numeric()
+        if (nrow(nearolaps_df) == 0) {
+            nearolaps_df$distance <- numeric()
         }
-        if (nrow(nearlyOverlaps_df) > 0) {
-            nearlyOverlaps_df <- cbind(nearlyOverlaps_df,
+        if (nrow(nearolaps_df) > 0) {
+            nearolaps_df <- cbind(nearolaps_df,
                 distance = IRanges::distance(
-                    nearlyOverlaps_df$WGBS_data,
-                    nearlyOverlaps_df$probe_id_locations
+                    nearolaps_df$WGBS_data,
+                    nearolaps_df$probe_id_locations
                 )
             )
-            ## the distance of the gap between probe location and WGBS data location
-            nearlyOverlaps_df <- nearlyOverlaps_df[order(nearlyOverlaps_df$distance), ]
-            # order the df by distance so that when we delete duplicates
-            # the duplicate with the largest gap is deleted
+        ##the distance of the gap between probe  and WGBS data location
+        nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
+        # order the df by distance so that when we delete duplicates
+        # the duplicate with the largest gap is deleted
 
             if (!multipleMapping) {
                 if (nrow(overlaps_df) > 0) {
-                    ## remove where CpG already mapped in first round if multipleMapping
-                    # has been set to false
-                    nearlyOverlaps_df <- subset(nearlyOverlaps_df, !(is.element(
+                    ## remove where CpG already mapped in first round
+                    ## if multipleMapping  has been set to false
+                    nearolaps_df <- subset(nearolaps_df, !(is.element(
                         data.table::transpose(BiocGenerics::as.data.frame(
-                            nearlyOverlaps_df$WGBS_data
+                            nearolaps_df$WGBS_data
                         )),
                         data.table::transpose(BiocGenerics::as.data.frame(
                             overlaps_df$WGBS_data
                         ))
                     )))
                 }
-                ## remove multiple mappings of CpG if multipleMapping has been set to false
-                nearlyOverlaps_df <-
-                    nearlyOverlaps_df[!duplicated(nearlyOverlaps_df$WGBS_data), ]
+                ## remove multiple mappings of CpG if multipleMapping has been
+                ## set to false
+                nearolaps_df <-
+                    nearolaps_df[!duplicated(nearolaps_df$WGBS_data), ]
             }
         }
-        allresults <- rbind(overlaps_df, nearlyOverlaps_df)
+        allresults <- rbind(overlaps_df, nearolaps_df)
         ## combine all of the mapping into one dataframe
     }
     if (cutoff == 0) {
@@ -215,7 +222,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             by = list(ID = allresults[, 1]),
             FUN = mean
         )
-        ## if a probe was mapped to multiple CpGs, take the mean methylation value
+        ## if a probe was mapped to multiple CpGs,take the mean  value
         for (i in seq(2, ncol(allresults))) {
             colnames(allresults)[i] <-
                 colnames(GenomicRanges::mcols(WGBS_data))[i - 1]

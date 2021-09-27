@@ -58,6 +58,9 @@ BSmeth2Probe(
     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges,
     cutoff = 500, multipleMapping = TRUE
 )
-BSmeth2Probe(probe_id_locations = probe_ids[100:200], WGBS_data = WGBS_GRanges[1:10])
+BSmeth2Probe(
+    probe_id_locations = probe_ids[100:200],
+    WGBS_data = WGBS_GRanges[1:10]
+)
 }
 \keyword{mapping}

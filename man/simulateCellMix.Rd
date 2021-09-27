@@ -15,7 +15,7 @@ simulateCellMix(
 \item{numberOfSamples}{The number of simulated samples to be generated in the
 dataframe.}
 
-\item{mixingVector}{Specify the cell origin proportions. If numberOfSamples =
+\item{mixingVector}{Specify the cell origin proportions.If numberOfSamples =
 1, this can be a vector of length = number of cell types in reference.
 Otherwise, this is a dataframe with rows for cell types (must be equal to
 cell types in reference) and columns for samples. Cells contain the
@@ -51,7 +51,9 @@ samples using given reference atlas.
 simulateCellMix(50)
 simulateCellMix(
     numberOfSamples = 100,
-    reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
+    reference = readRDS(system.file("reference_atlas_nodup.RDS",
+        package = "deconvR"
+    ))
 )
 simulateCellMix(1, mixingVector = c(
     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -63,12 +65,12 @@ simulateCellMix(1, data.frame(c(
 )))
 simulateCellMix(2, data.frame(
     c(
-        0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0,
-        0, 0
+        0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0,
+        0, , 0
     ),
     c(
-        0.1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0, 0,
-        0, 0, 0
+        0.1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0,
+        0, 0, 0, 0
     )
 ))
 }

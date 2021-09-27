@@ -95,16 +95,18 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
     for (tissue in unlist(unique(sampleMeta[, 2]))) {
         accession_ids <- sampleMeta[sampleMeta[[2]] %in% tissue, 1]
         if (length(accession_ids) > 0) {
-            # if no accession IDs map to this cell type then no need to continue
+            #if no accession IDs map to this cell type then no need to continue
             tissueLabel <- gsub(" ", "_", tissue)
             if (!(is.null(variation_cutoff))) {
-                # units with variance within tissue above variation_cutoff are excluded
-                tissue_variance <- extendedAtlas[, matrixStats::rowVars(as.matrix(.SD)),
-                    .SDcols = unlist(accession_ids)
-                ]
+            # units with variance within tissue above variation_cutoff excluded
+                tissue_variance <-
+                    extendedAtlas[, matrixStats::rowVars(as.matrix(.SD)),
+                        .SDcols = unlist(accession_ids)
+                    ]
                 tissue_variance <- nafill(tissue_variance, fill = 0)
-                # variance NA (e.g. if only one sample), will be replaced with 0
-                extendedAtlas <- extendedAtlas[tissue_variance <= variation_cutoff, ]
+                #variance NA (e.g. if only one sample), will be replaced with 0
+                extendedAtlas <- extendedAtlas[tissue_variance <=
+                    variation_cutoff, ]
             }
             setDT(extendedAtlas)
             extendedAtlas <- stats::na.omit(extendedAtlas)
