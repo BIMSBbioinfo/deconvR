@@ -29,10 +29,6 @@
 #'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges[5:1000],
 #'     cutoff = 2
 #' )
-#' methp_cutxl <- BSmeth2Probe(
-#'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges,
-#'     cutoff = 500, multipleMapping = TRUE
-#' )
 #' @return A dataframe with first column "IDs" for CpG IDs, then 1 or more
 #' columns for methylation values of sample(s) (same number of samples as in
 #' WGBS_data)

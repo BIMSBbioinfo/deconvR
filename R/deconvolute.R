@@ -30,7 +30,7 @@
 #' linear regression). If not given, defaults to "nnls".
 #' @keywords deconvolution
 #' @examples
-#' results_nnls <- deconvolute(bulk = simulateCellMix(50)[[1]])
+#' results_nnls <- deconvolute(bulk = simulateCellMix(10)[[1]])
 #' results_rlm <- deconvolute(
 #'     reference = readRDS(system.file("reference_atlas_nodup.RDS",
 #'         package = "deconvR"
