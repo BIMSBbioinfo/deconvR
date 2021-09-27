@@ -57,7 +57,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
 
     if ((methods::isClass(probe_id_locations, Class = "data.frame") != TRUE) &&
         (methods::isClass(probe_id_locations, Class = "GRanges") != TRUE)) {
-        stop("probe_id_locations must be either dataframe or GRanges object")
+            stop("Probe IDs must be either dataframe or GRanges objects.")
     }
 
     if (!(class(WGBS_data) %in% c(
@@ -65,7 +65,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         "methylBaseDB", "methylBase"
     ))) {
         stop("WGBS_data must be either GRanges object or, a methylKit object,
-    such as methylBase, methylRawList, methylBaseDB")
+            such as methylBase, methylRawList, methylBaseDB")
     }
 
     if ((is.data.frame(probe_id_locations) == TRUE)) {
@@ -80,7 +80,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             is.null(probe_id_locations$id)
         ) == TRUE) {
             stop("probe_id_locations must contain columns named ID, Seqnames,
-    Start, End, and Strand.")
+                 Start, End, and Strand.")
         }
         if (anyNA(probe_id_locations) == TRUE) {
             message("Dropping row containing NA: " +
@@ -119,8 +119,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         WGBS_data <- methods::as(WGBS_data, "GRanges")
         GenomicRanges::mcols(WGBS_data) <- as.data.frame(pm)
     }
+    ## turn WGBS_data to GRanges object if it is not already one
     if (methods::isClass(WGBS_data, Class = "GRanges") != TRUE) {
-        ## turn WGBS_data to GRanges object if it is not already one
         sampleName <- methylKit::getSampleID(WGBS_data)
         WGBS_data <- methods::as(WGBS_data, "GRanges")
         GenomicRanges::mcols(WGBS_data) <- WGBS_data$numCs / WGBS_data$coverage
@@ -141,12 +141,12 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             class
         ) != "numeric")) {
             stop("The metadata columns of WGBS_data must contain methylation
-    values of sample(s) between 0 and 1")
+                 values of sample(s) between 0 and 1")
         }
         if ((any(as.data.frame(S4Vectors::elementMetadata(WGBS_data)) < 0)) ||
             (any(as.data.frame(S4Vectors::elementMetadata(WGBS_data)) > 1))) {
             stop("The metadata columns of WGBS_data must contain methylation
-    values of sample(s) between 0 and 1")
+                values of sample(s) between 0 and 1")
         }
     }
 
