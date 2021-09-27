@@ -9,8 +9,7 @@ Summary of partial R-squared values of model (min, median, mean, max...) are
 printed upon completion.}
 \usage{
 deconvolute(
-  reference = readRDS(system.file("reference_atlas_nodup.RDS",
-  package = "deconvR")),
+  reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
   vec = NULL,
   bulk,
   model = "nnls"

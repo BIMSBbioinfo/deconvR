@@ -8,8 +8,7 @@ samples using given reference atlas.}
 simulateCellMix(
   numberOfSamples,
   mixingVector = NULL,
-  reference = readRDS(system.file("reference_atlas_nodup.RDS",
-  package = "deconvR"))
+  reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
 )
 }
 \arguments{
