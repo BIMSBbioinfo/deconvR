@@ -2,14 +2,15 @@
 % Please edit documentation in R/deconvolute.R
 \name{deconvolute}
 \alias{deconvolute}
-\title{A function to deconvolute of bulk samples to their origin proportions using
-data from reference atlas (e.g. methylation signatures)
+\title{A function to deconvolute of bulk samples to their origin proportions
+using data from reference atlas (e.g. methylation signatures)
 Results of model are returned in dataframe "results".
 Summary of partial R-squared values of model (min, median, mean, max...) are
 printed upon completion.}
 \usage{
 deconvolute(
-  reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
+  reference = readRDS(system.file("reference_atlas_nodup.RDS",
+  package = "deconvR")),
   vec = NULL,
   bulk,
   model = "nnls"
@@ -50,8 +51,8 @@ proportions of bulk methylation profiles in "bulk", second is a list of
 partial-rsq values of results, one value per sample.
 }
 \description{
-A function to deconvolute of bulk samples to their origin proportions using
-data from reference atlas (e.g. methylation signatures)
+A function to deconvolute of bulk samples to their origin proportions
+using data from reference atlas (e.g. methylation signatures)
 Results of model are returned in dataframe "results".
 Summary of partial R-squared values of model (min, median, mean, max...) are
 printed upon completion.

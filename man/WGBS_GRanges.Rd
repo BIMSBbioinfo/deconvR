@@ -5,8 +5,8 @@
 \alias{WGBS_GRanges}
 \title{An example of WGBS data has been included as the GRanges object
 This object contains the methylation values of 11715 genomic loci
-(identified using the “seqnames”, “ranges”, and “strand” values) for a single
-example sample. It can be used directly as WGBS_data in BSmeth2Probe.}
+(identified using the “seqnames”, “ranges”, and “strand” values) for a
+single example sample. It can be used directly as WGBS_data in BSmeth2Probe.}
 \format{
 GRanges object with 11715 ranges and 1 metadata column:
 \describe{
@@ -24,7 +24,7 @@ data(WGBS_GRanges)
 \description{
 An example of WGBS data has been included as the GRanges object
 This object contains the methylation values of 11715 genomic loci
-(identified using the “seqnames”, “ranges”, and “strand” values) for a single
-example sample. It can be used directly as WGBS_data in BSmeth2Probe.
+(identified using the “seqnames”, “ranges”, and “strand” values) for a
+single example sample. It can be used directly as WGBS_data in BSmeth2Probe.
 }
 \keyword{datasets}

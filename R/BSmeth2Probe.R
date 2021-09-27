@@ -69,7 +69,9 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
 
     if ((is.data.frame(probe_id_locations) == TRUE)) {
-        names(probe_id_locations) <- vapply(names(probe_id_locations), tolower)
+        names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
+            FUN.VALUE = character(NCOL(probe_id_locations))
+        )
         if (any(
             is.null(probe_id_locations$seqnames),
             is.null(probe_id_locations$end),
@@ -181,10 +183,10 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
                     nearolaps_df$probe_id_locations
                 )
             )
-        ##the distance of the gap between probe  and WGBS data location
-        nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
-        # order the df by distance so that when we delete duplicates
-        # the duplicate with the largest gap is deleted
+            ## the distance of the gap between probe  and WGBS data location
+            nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
+            # order the df by distance so that when we delete duplicates
+            # the duplicate with the largest gap is deleted
 
             if (!multipleMapping) {
                 if (nrow(overlaps_df) > 0) {

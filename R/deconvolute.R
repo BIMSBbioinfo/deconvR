@@ -1,5 +1,5 @@
-#' A function to deconvolute of bulk samples to their origin proportions using
-#' data from reference atlas (e.g. methylation signatures)
+#' A function to deconvolute of bulk samples to their origin proportions
+#' using data from reference atlas (e.g. methylation signatures)
 #' Results of model are returned in dataframe "results".
 #' Summary of partial R-squared values of model (min, median, mean, max...) are
 #' printed upon completion.
