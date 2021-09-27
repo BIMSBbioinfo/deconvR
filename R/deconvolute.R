@@ -248,7 +248,7 @@ deconvolute <- function(reference =
         return(res)
         # results table will have coefficient predictions of each sample
     }
-    expect <- ncol(reference) - 1
+    expect <- NCOL(reference) - 1
     results <- data.frame(t(
         vapply(seq_along(oper[[2]]), get_res, FUN.VALUE = numeric(expect))
     ))

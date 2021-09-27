@@ -70,7 +70,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
 
     if ((is.data.frame(probe_id_locations) == TRUE)) {
         names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
-            FUN.VALUE = character(NCOL(probe_id_locations))
+            FUN.VALUE = character(1)
         )
         if (any(
             is.null(probe_id_locations$seqnames),
