@@ -46,23 +46,17 @@
 
 deconvolute <- function(reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
     vec = NULL, bulk, model = "nnls") {
-    message("DECONVOLUTION WITH", toupper(model))
+    message("DECONVOLUTION WITH ", toupper(model))
 
-    results <- data.frame(matrix(
-        ncol = length(colnames(reference)) - 1,
-        nrow = length(colnames(bulk)) - 1,
-        dimnames = list(
-            colnames(bulk)[-1],
-            colnames(reference)[-1]
-        )
-    ))
     h <- 2
+
     comb <- function(x, ...) {
         lapply(
             seq_along(x),
             function(i) c(x[[i]], lapply(list(...), function(y) y[[i]]))
         )
     }
+
 
     bulk <- tidyr::drop_na(bulk)
     ## get rid of rows in both tables with na values
@@ -236,13 +230,23 @@ deconvolute <- function(reference = readRDS(system.file("reference_atlas_nodup.R
     } else {
         stop("Model should be either \"nnls\" or  \"svr\" or  \"qp\" or \"rlm\"")
     }
-
+    # results <- c()
+    # for (i in seq_along(oper[[2]])) {
+    #   results[i, ] <- unlist(oper[[2]][[i]])
+    # results table will have coefficient predictions of each sample
+    # }
     rsq_partial <- oper[[1]]
-    for (i in seq_along(oper[[2]])) {
-        results[i, ] <- unlist(oper[[2]][[i]])
+    get_res <- function(i) {
+        res <- unlist(oper[[2]][[i]])
+        return(res)
         # results table will have coefficient predictions of each sample
     }
-
+    expect <- ncol(reference) - 1
+    results <- data.frame(t(
+        vapply(seq_along(oper[[2]]), get_res, FUN.VALUE = numeric(expect))
+    ))
+    rownames(results) <- colnames(bulk)[-1]
+    colnames(results) <- colnames(reference)[-1]
     message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
     print(summary(unlist(rsq_partial)))
 

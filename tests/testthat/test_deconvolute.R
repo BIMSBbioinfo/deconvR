@@ -124,7 +124,7 @@ test_that("deconvolute rlm", {
 
     vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas, by = "IDs"))[, -1])
 
-    expect_output(deconvolute(bulk = bulkTable, model = "rlm"), message("DECONVOLUTION WITH RLM"))
+    expect_output(deconvolute(bulk = bulkTable, model = "rlm"), message("DECONVOLUTION WITH RLM", "\n"))
     expect_output(deconvolute(bulk = bulkTable, model = "rlm"), message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR RLM : "))
 
     expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
