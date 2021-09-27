@@ -157,7 +157,7 @@ deconvolute <- function(reference =
         res <- unlist(oper[[2]][[i]])
         return(res)
     }
-    expect <- NCOL(reference[-1])
+    expect <- NCOL(reference) -1
     results <- data.frame(t(
         vapply(seq_along(oper[[2]]), get_res, FUN.VALUE = numeric(expect))
     ))

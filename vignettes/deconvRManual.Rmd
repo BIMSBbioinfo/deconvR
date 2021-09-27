@@ -187,24 +187,24 @@ BSmeth2Probe(
   multipleMapping = FALSE)
 ```
 
-The `probe_id_locations` parameter can be either a dataframe or **GRanges** object
-containing probe IDs and their locations. If it's a dataframe, it must contain
-columns named "ID", "CHR", "Start", "End", and "Strand". If it's a **GRanges**
-object, it should have locations ("seqnames", "ranges", "strand"), as well as
-metadata column "ID". Start and end locations should be 1-based coordinates.
-Note that any row with NA values will not be used.
+The `probe_id_locations` parameter can be either a dataframe or **GRanges**
+object containing probe IDs and their locations. If it's a dataframe, it must
+contain columns named "ID", "CHR", "Start", "End", and "Strand". If it's a
+**GRanges** object, it should have locations ("seqnames", "ranges", "strand"),
+as well as metadata column "ID". Start and end locations should be 1-based
+coordinates. Note that any row with NA values will not be used.
 
 The user may use the example dataframe `illumina_probes_hg38_GRanges.RDS` in the
 `inst` folder of the package (more information on this file can be found below).
-The `WGBS_data` parameter can be either a **GRanges** object or **methylKit** object
-(methylRaw, methylBase, methylRawDB, or methylBaseDB) of CpG locations and their
-methylation values.
+The `WGBS_data` parameter can be either a **GRanges** object or **methylKit**
+object (methylRaw, methylBase, methylRawDB, or methylBaseDB) of CpG locations
+and their methylation values.
  
 This parameter must contain locations ("seqnames", "ranges", "strand") and
 metadata column(s) of methylation values of sample(s) (i.e. one column per
 sample). These methylation values must be between 0 and 1. The user may use the
-example **GRanges** object `WGBS_GRanges.RDS` in the `inst` folder of the package
-(more information on this file can be found below).
+example **GRanges** object `WGBS_GRanges.RDS` in the `inst` folder of the
+package (more information on this file can be found below).
 
 The `cutoff` is the maximum distance (in number of base-pairs) to consider for
 probes which have not been exactly covered in the WGBS data. The default value
@@ -311,14 +311,11 @@ WGBS_GRanges
 ## Illumina hg38 Probes
 
 The **GRanges** object `illumina_probes_hg38_GRanges.RDS` contains the Illumina
-probe IDs of 400000 genomic loci (identified using the "seqnames", "ranges",
-and "strand" values). This object is based off of the Infinium MethylationEPIC
-v1.0 B5 Manifest File ^[Illumina Inc. "Infinium MethylationEPIC Product Files."
-Available at
-<https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html>].
-Unnecessary columns were removed and rows were truncated to reduce file size
-before converting the file to a **GRanges** object. It can be used directly as
-`probe_id_locations` in `BSmeth2Probe`.
+probe IDs of 400000 genomic loci (identified using the "seqnames", "ranges", and
+"strand" values). This object is based off of the Infinium MethylationEPIC v1.0
+B5 Manifest data. Unnecessary columns were removed and rows were truncated to
+reduce file size before converting the file to a **GRanges** object. It can be
+used directly as `probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
 data("probe_ids")
@@ -400,7 +397,8 @@ mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids,
 head(mapped_WGBS_data)
 ```
 
-This mapped data can now be used in `deconvolute`. Here we will deconvolute it using the previously extended signature matrix as the reference atlas.
+This mapped data can now be used in `deconvolute`. Here we will deconvolute it
+using the previously extended signature matrix as the reference atlas.
 
 ``` {r, output.lines=10}
 deconvolution <- deconvolute(reference = extended_matrix, 
