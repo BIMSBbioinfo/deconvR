@@ -21,31 +21,18 @@
 #'
 #' @keywords simulation
 #' @examples
-#' simulateCellMix(50)
-#' simulateCellMix(
-#'     numberOfSamples = 100,
-#'     reference = readRDS(system.file("reference_atlas_nodup.RDS",
-#'         package = "deconvR"
-#'     ))
+#' bulkTable <-  simulateCellMix(50)
+#' bulkTable <-  simulateCellMix(
+#'     numberOfSamples = 100
 #' )
-#' simulateCellMix(1, mixingVector = c(
+#' bulkTable <- simulateCellMix(1, mixingVector = c(
 #'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 #' ))
-#' simulateCellMix(1, data.frame(c(
+#' bulkTable <- simulateCellMix(1, data.frame(c(
 #'     0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0
 #' )))
-#' simulateCellMix(2, data.frame(
-#'     c(
-#'         0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0,
-#'         0, , 0
-#'     ),
-#'     c(
-#'        0.1, 0, 0, 0, 0, 0, 0.5, 0, 0, 0.2, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0,
-#'         0, 0, 0, 0
-#'     )
-#' ))
 #' @return A list containing two data frames. First: A dataframe which contains
 #' mixed cell-type origin simulated samples. The first column contains a
 #' unique ID (used from reference) which can be used in deconvolution to match

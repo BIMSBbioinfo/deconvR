@@ -57,8 +57,8 @@ Summary of partial R-squared values of model (min, median, mean, max...) are
 printed upon completion.
 }
 \examples{
-deconvolute(bulk = simulateCellMix(50)[[1]])
-deconvolute(
+results <- deconvolute(bulk = simulateCellMix(50)[[1]])
+results <- deconvolute(
     reference = readRDS(system.file("reference_atlas_nodup.RDS",
         package = "deconvR"
     )),
