@@ -1,4 +1,3 @@
-context("findSignatures")
 library(deconvR)
 
 test_that("findSignatures", {

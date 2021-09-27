@@ -1,4 +1,3 @@
-context("BSmeth2Probe")
 library(deconvR)
 
 test_that("BSmeth2Probe", {

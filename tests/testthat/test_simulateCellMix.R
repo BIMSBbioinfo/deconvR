@@ -1,4 +1,3 @@
-context("simulateCellMix")
 library(deconvR)
 
 test_that("simulateCellMix", {
