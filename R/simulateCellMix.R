@@ -1,13 +1,13 @@
 #' A function to generate a dataframe of mixed cell-type origin simulated
 #' samples using given reference atlas.
-#' @param numberOfSamples The number of simulated samples to be generated in the
-#'   dataframe.
-#' @param mixingVector Specify the cell origin proportions.If numberOfSamples =
-#' 1, this can be a vector of length = number of cell types in reference.
-#' Otherwise, this is a dataframe with rows for cell types (must be equal to
-#' cell types in reference) and columns for samples. Cells contain the
-#' proportion of the sample from the cell type. Use zeros for any unused cell
-#' type. If this object is not given,will use random values for the
+#' @param numberOfSamples The number of simulated samples to be generated in
+#' the dataframe.
+#' @param mixingVector Specify the cell origin proportions.If
+#' numberOfSamples = 1, this can be a vector of length = number of cell types
+#' in reference.Otherwise, this is a dataframe with rows for cell types (must
+#' be equal to cell types in reference) and columns for samples. Cells contain
+#' the proportion of the sample from the cell type. Use zeros for any unused
+#' cell type. If this object is not given,will use random values for the
 #' simulation.
 #' @param reference A dataframe containing signatures of different cell types
 #' used to generate the simulation. The first column should contain a unique
@@ -21,15 +21,15 @@
 #'
 #' @keywords simulation
 #' @examples
-#' bulkTable <-  simulateCellMix(50)
-#' bulkTable <-  simulateCellMix(
+#' bulk_mix50 <- simulateCellMix(50)
+#' bulk_mix100 <- simulateCellMix(
 #'     numberOfSamples = 100
 #' )
-#' bulkTable <- simulateCellMix(1, mixingVector = c(
+#' bulk_mixVec <- simulateCellMix(1, mixingVector = c(
 #'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 #' ))
-#' bulkTable <- simulateCellMix(1, data.frame(c(
+#' bulk_mix <- simulateCellMix(1, data.frame(c(
 #'     0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0
 #' )))

@@ -49,18 +49,17 @@ A function to map WGBS methylation data to Illumina Probe IDs
 \examples{
 data("probe_ids")
 data("WGBS_GRanges")
-methprobres <- BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges)
-methprobres <-  BSmeth2Probe(
+meth_probres <- BSmeth2Probe(
+    probe_id_locations = probe_ids,
+    WGBS_data = WGBS_GRanges
+)
+methp_cut <- BSmeth2Probe(
     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges[5:1000],
     cutoff = 2
 )
-methprobres <- BSmeth2Probe(
+methp_cutxl <- BSmeth2Probe(
     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges,
     cutoff = 500, multipleMapping = TRUE
-)
-methprobres <- BSmeth2Probe(
-    probe_id_locations = probe_ids[100:200],
-    WGBS_data = WGBS_GRanges[1:10]
 )
 }
 \keyword{mapping}

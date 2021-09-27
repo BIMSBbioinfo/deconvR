@@ -21,18 +21,17 @@
 #' @examples
 #' data("probe_ids")
 #' data("WGBS_GRanges")
-#' methprobres <- BSmeth2Probe(probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges)
-#' methprobres <-  BSmeth2Probe(
+#' meth_probres <- BSmeth2Probe(
+#'     probe_id_locations = probe_ids,
+#'     WGBS_data = WGBS_GRanges
+#' )
+#' methp_cut <- BSmeth2Probe(
 #'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges[5:1000],
 #'     cutoff = 2
 #' )
-#' methprobres <- BSmeth2Probe(
+#' methp_cutxl <- BSmeth2Probe(
 #'     probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges,
 #'     cutoff = 500, multipleMapping = TRUE
-#' )
-#' methprobres <- BSmeth2Probe(
-#'     probe_id_locations = probe_ids[100:200],
-#'     WGBS_data = WGBS_GRanges[1:10]
 #' )
 #' @return A dataframe with first column "IDs" for CpG IDs, then 1 or more
 #' columns for methylation values of sample(s) (same number of samples as in
@@ -57,7 +56,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
 
     if ((methods::isClass(probe_id_locations, Class = "data.frame") != TRUE) &&
         (methods::isClass(probe_id_locations, Class = "GRanges") != TRUE)) {
-            stop("Probe IDs must be either dataframe or GRanges objects.")
+        stop("Probe IDs must be either dataframe or GRanges objects.")
     }
 
     if (!(class(WGBS_data) %in% c(

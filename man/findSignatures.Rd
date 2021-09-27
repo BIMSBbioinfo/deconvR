@@ -42,7 +42,8 @@ exampleMeta <- data.table(
     "Biosample_term_name" = "example_cell_type"
 )
 colnames(exampleSamples)[-1] <- c("example_sample")
-signatures <- findSignatures(samples = exampleSamples, sampleMeta = exampleMeta)
+signatures <- findSignatures(samples = exampleSamples,
+                                                  sampleMeta = exampleMeta)
 signatures <- findSignatures(
     samples = exampleSamples, sampleMeta = exampleMeta,
     atlas = exampleReference
