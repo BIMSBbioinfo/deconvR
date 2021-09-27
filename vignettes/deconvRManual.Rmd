@@ -29,8 +29,6 @@ knitr::opts_chunk$set(tidy = FALSE,
 BiocStyle::markdown()
 library(knitr)
 library(deconvR)
-library(ggplot2)
-library(reshape2)
 library(doParallel)
 library(dplyr)
 
@@ -334,6 +332,8 @@ signature matrix) are compliant with the function requirements.Below is an
 example dataframe to illustrate the `atlas` format.
 
 ``` {r, message = FALSE, output.lines=10}
+library(deconvR) 
+
 atlas <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
 head(atlas)
 ```
