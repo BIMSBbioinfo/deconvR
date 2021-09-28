@@ -1,7 +1,6 @@
 # History files
-.Rhistory
 .Rapp.history
-deconvR.Rproj
+
 # User-specific files
 .Ruserdata
 
@@ -34,7 +33,7 @@ deconvR.Rproj
 .Rproj.user
 .DS_Store
 /inst/deconvRManual.html
-.Renviron
+
 # vignettes/
 *.build.timestamp
 /doc/
