@@ -92,7 +92,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
             colnames(simulatedMixtureTable)[i + 1] <- paste("Sample", i)
         }
     } else {
-        if (is(mixingVector, "data.frame") == TRUE) {
+        if (is(mixingVector, "data.frame")) {
             if (ncol(mixingVector) != numberOfSamples) {
                 stop("numberOfSamples must have the same number of rows with the
                 mixingVector")
@@ -120,7 +120,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
                     colnames(simulatedMixtureTable)[s + 1] <- paste("Sample", s)
                 }
             }
-        } else if (is(mixingVector, "numeric") == TRUE) {
+        } else if (is(mixingVector, "numeric")) {
             if (1 != numberOfSamples) {
                 stop("Only use a vector for mixingVector if numberOfSamples = 1,
             otherwise use dataframe with columns for samples and rows for cell
