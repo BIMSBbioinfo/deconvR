@@ -21,7 +21,7 @@
 #' @importFrom tidyr drop_na
 #' @importFrom methylKit percMethylation unite getSampleID
 #' @importFrom GenomicRanges GRanges
-#' @importFrom data.table nafill
+#' @importFrom data.table nafill transpose
 #' @importFrom IRanges IRanges mergeByOverlaps distance
 #' @importFrom S4Vectors 'elementMetadata<-' runValue elementMetadata
 #' @importFrom S4Vectors 'mcols<-' runValue mcols
@@ -191,10 +191,10 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
                     ## remove where CpG already mapped in first round
                     ## if multipleMapping  has been set to false
                     nearolaps_df <- subset(nearolaps_df, !(is.element(
-                        data.table::transpose(as.data.frame(
+                        transpose(as.data.frame(
                             nearolaps_df$WGBS_data
                         )),
-                        data.table::transpose(as.data.frame(
+                        transpose(as.data.frame(
                             overlaps_df$WGBS_data
                         ))
                     )))
