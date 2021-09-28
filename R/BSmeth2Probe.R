@@ -47,7 +47,7 @@
 #' @export
 
 BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
-                         multipleMapping = FALSE) {
+    multipleMapping = FALSE) {
     if (cutoff < 0) {
         stop("cutoff must be >= 0")
     }
@@ -73,7 +73,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
 
     if ((is.data.frame(probe_id_locations) == TRUE)) {
         names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
-                                            FUN.VALUE = character(1)
+            FUN.VALUE = character(1)
         )
         if (any(
             is.null(probe_id_locations$seqnames),
@@ -87,7 +87,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         }
         if (anyNA(probe_id_locations) == TRUE) {
             message("Dropping row containing NA: " +
-                        which(is.na(probe_id_locations)))
+                which(is.na(probe_id_locations)))
             probe_id_locations <- drop_na(probe_id_locations)
         }
         probe_id_locations <- GRanges(
@@ -167,8 +167,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     if (cutoff > 0) {
         # only need to do "nearlyOverlaps" if cutoff > 0
         nearolaps_df <- mergeByOverlaps(WGBS_data,
-                                                 probe_id_locations,
-                                                 maxgap = cutoff
+            probe_id_locations,
+            maxgap = cutoff
         )
         ## same mapping as first time, but now with cutoff gap allowed
         nearolaps_df <- subset(
@@ -181,10 +181,10 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         }
         if (nrow(nearolaps_df) > 0) {
             nearolaps_df <- cbind(nearolaps_df,
-                                  distance = distance(
-                                      nearolaps_df$WGBS_data,
-                                      nearolaps_df$probe_id_locations
-                                  )
+                distance = distance(
+                    nearolaps_df$WGBS_data,
+                    nearolaps_df$probe_id_locations
+                )
             )
             ## the distance of the gap between probe  and WGBS data location
             nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]

@@ -75,7 +75,6 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
             msg = "First column of atlas should be IDs"
         )
         for (celltype in colnames(atlas)[-1]) {
-            ## looking at all cell types in the atlas
             if (!(celltype %in% unlist(sampleMeta[, 1]))) {
                 sampleMeta <- rbind(sampleMeta, list(celltype, celltype))
                 ## if the cell type isn't in metadata,
