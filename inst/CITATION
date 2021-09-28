@@ -11,8 +11,8 @@ c(
         title = "deconvR: Simulation and Deconvolution of Omic Profiles",
         author = personList(
         as.person("İrem B. Gündüz"),
-        as.person("Veronika Ebenal")
-
+        as.person("Veronika Ebenal"),
+        as.person("Altuna Akalin")
         ),
         year = format(Sys.Date(), "%Y"),
         url = "http://www.bioconductor.org/packages/deconvR",

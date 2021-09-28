@@ -59,8 +59,9 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         stop("WGBS_data should not be empty")
     }
 
-    if ((isClass(probe_id_locations, Class = "data.frame") != TRUE) &&
-        (isClass(probe_id_locations, Class = "GRanges") != TRUE)) {
+    if (!(class(probe_id_locations) %in% c(
+        "data.frame", "GRanges"
+    ))) {
         stop("Probe IDs must be either dataframe or GRanges objects.")
     }
 
@@ -72,7 +73,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             such as methylBase, methylRawList, methylBaseDB")
     }
 
-    if ((is.data.frame(probe_id_locations) == TRUE)) {
+    if (is.data.frame(probe_id_locations) == TRUE) {
         names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
             FUN.VALUE = character(1)
         )
@@ -158,7 +159,6 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         # since there is no gap, say distance is NA
     }
 
-
     if (cutoff > 0) {
         # only need to do "nearlyOverlaps" if cutoff > 0
         nearolaps_df <- mergeByOverlaps(WGBS_data,
@@ -199,8 +199,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
                         ))
                     )))
                 }
-                ## remove multiple mappings of CpG if multipleMapping has been
-                ## set to false
+                ## remove multiple mappings of CpG if multipleMapping is false
                 nearolaps_df <-
                     nearolaps_df[!duplicated(nearolaps_df$WGBS_data), ]
             }
@@ -216,24 +215,23 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     allresults <- allresults[, -c(1, NCOL(allresults) - 2, NCOL(allresults))]
     ## these are just cleaning up allresults a bit to make aggregation easier
     allresults <- allresults[c(ncol(allresults), seq_len(ncol(allresults) - 1))]
+    ## if a probe was mapped to multiple CpGs,take the mean  value
     if (nrow(allresults) > 0) {
         allresults <- stats::aggregate(
             x = allresults[, -1],
             by = list(ID = allresults[, 1]),
             FUN = mean
         )
-        ## if a probe was mapped to multiple CpGs,take the mean  value
+        ## set column names to match WGBS data
         for (i in seq(2, ncol(allresults))) {
             colnames(allresults)[i] <-
                 colnames(mcols(WGBS_data))[i - 1]
-            ## set column names to match WGBS data
         }
     }
     colnames(allresults)[1] <- "IDs"
     if (nrow(allresults) == 0) {
         message("Result dataframe is empty. No matches could be found.")
     }
-
-    return(as.data.frame(allresults))
     ## the return value is a dataframe with column for CpG IDs
+    return(as.data.frame(allresults))
 }

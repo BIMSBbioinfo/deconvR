@@ -3,7 +3,7 @@
 #' Results of model are returned in dataframe "results".
 #' Summary of partial R-squared values of model (min, median, mean, max...) are
 #' printed upon completion.
-#' @importFrom foreach %dopar%
+#' @importFrom foreach %dopar% foreach
 #' @importFrom rsq rsq.partial
 #' @importFrom stats lm na.omit
 #' @importFrom e1071 best.tune
@@ -83,7 +83,7 @@ deconvolute <- function(reference =
             )
         }
 
-        rsq_partial <- rsq::rsq.partial(
+        rsq_partial <- rsq.partial(
             lm(predicted ~ observed + vec),
             lm(predicted ~ vec)
         )$partial.rsq
@@ -93,7 +93,7 @@ deconvolute <- function(reference =
 
     train_model <- function(model, ref, mix) {
         if (model == "nnls") {
-            model <- nnls::nnls(data.matrix(ref), mix)
+            model <- nnls(data.matrix(ref), mix)
             coefficients <- model$x
         } else if (model == "svr") { # support vector regression
             model <- best.tune("svm",
@@ -122,12 +122,12 @@ deconvolute <- function(reference =
         }
     }
     # non negative least squares
-    oper <- foreach::foreach(
+    oper <- foreach(
         h = seq(2, ncol(bulk)), .inorder = TRUE,
         .combine = "comb", .multicombine = TRUE,
         .init = list(c(), list())
     ) %dopar% {
-        thedata <- na.omit(merge(dplyr::select(bulk, 1, h),
+        thedata <- na.omit(merge(select(bulk, 1, h),
             reference,
             by = "IDs"
         ))[, -1]
