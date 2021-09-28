@@ -12,11 +12,7 @@
 #' samples from the same cell type, ignore CpGs with variation >
 #' variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)
 #' @importFrom magrittr %>%
-#' @import data.table
-#' @import utils
-#' @import tidyverse
-#' @import tibble
-#' @importFrom data.table  merge.data.table
+#' @importFrom data.table  merge.data.table .SD setDT :=
 #' @importFrom assertthat assert_that
 #' @importFrom matrixStats rowVars
 #' @importFrom stats na.omit

@@ -4,6 +4,13 @@
 #' Summary of partial R-squared values of model (min, median, mean, max...) are
 #' printed upon completion.
 #' @importFrom foreach %dopar%
+#' @importFrom rsq rsq.partial
+#' @importFrom stats lm na.omit
+#' @importFrom e1071 best.tune
+#' @importFrom quadprog solve.QP
+#' @importFrom dplyr select
+#' @importFrom nnls nnls
+#' @importFrom assertthat assert_that
 #' @param reference A dataframe containing signatures of different cell types
 #' (e.g. methylation signature) used to train the model. The first column
 #' should contain a unique ID (e.g. target ID) to match rows of the reference
@@ -29,14 +36,6 @@
 #' (support vector regression) or "qp" (quadratic programming) or "rlm" (robust
 #' linear regression). If not given, defaults to "nnls".
 #' @keywords deconvolution
-#' @importFrom  rsq rsq.partial
-#' @importFrom stats lm
-#' @importFrom tidyr drop_na
-#' @importFrom e1071 best.tune
-#' @importFrom quadprog solve.QP
-#' @importFrom dplyr select
-#' @importFrom nnls nnls
-#' @importFrom assertthat assert_that
 #' @examples
 #' results_nnls <- deconvolute(bulk = simulateCellMix(10)[[1]])
 #' results_qp <- deconvolute(
@@ -66,9 +65,9 @@ deconvolute <- function(reference =
     }
 
     h <- NULL # assign a number so you can reuse it
-    bulk <- drop_na(bulk)
+    bulk <- na.omit(bulk)
     ## get rid of rows in both tables with na values
-    reference <- drop_na(reference)
+    reference <- na.omit(reference)
     find_partial_rsq <- function(observed, predicted, ref, vec) {
         if (is.null(vec)) {
             vec <- rowMeans(ref)
@@ -83,7 +82,7 @@ deconvolute <- function(reference =
             )
         }
 
-        rsq_partial <- rsq.partial(
+        rsq_partial <- rsq::rsq.partial(
             lm(predicted ~ observed + vec),
             lm(predicted ~ vec)
         )$partial.rsq
@@ -93,7 +92,7 @@ deconvolute <- function(reference =
 
     train_model <- function(model, ref, mix) {
         if (model == "nnls") {
-            model <- nnls(data.matrix(ref), mix)
+            model <- nnls::nnls(data.matrix(ref), mix)
             coefficients <- model$x
         } else if (model == "svr") { # support vector regression
             model <- best.tune("svm",
@@ -127,7 +126,7 @@ deconvolute <- function(reference =
         .combine = "comb", .multicombine = TRUE,
         .init = list(c(), list())
     ) %dopar% {
-        thedata <- drop_na(merge(select(bulk, 1, h),
+        thedata <- na.omit(merge(dplyr::select(bulk, 1, h),
             reference,
             by = "IDs"
         ))[, -1]
