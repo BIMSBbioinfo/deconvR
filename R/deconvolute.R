@@ -10,6 +10,7 @@
 #' @importFrom quadprog solve.QP
 #' @importFrom dplyr select
 #' @importFrom nnls nnls
+#' @importFrom MASS rlm
 #' @importFrom assertthat assert_that
 #' @param reference A dataframe containing signatures of different cell types
 #' (e.g. methylation signature) used to train the model. The first column
@@ -116,7 +117,7 @@ deconvolute <- function(reference =
                 meq = meq
             )$solution
         } else if (model == "rlm") { # robust linear regression
-            model <- suppressWarnings(MASS::rlm(ref, mix, maxit = 100))
+            model <- rlm(ref, mix, maxit = 100)
             coefficients <- model$coefficients
         }
     }
