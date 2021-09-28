@@ -1,5 +1,6 @@
 # History files
 .Rapp.history
+.Rhistory
 
 # User-specific files
 .Ruserdata
@@ -15,7 +16,7 @@
 
 # RStudio files
 .Rproj.user/
-deconvR.Rproj
+
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
 
