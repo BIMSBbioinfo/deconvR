@@ -25,6 +25,7 @@
 #' @importFrom IRanges IRanges mergeByOverlaps distance
 #' @importFrom S4Vectors 'elementMetadata<-' runValue elementMetadata
 #' @importFrom S4Vectors 'mcols<-' runValue mcols
+#' @importFrom BiocGenerics  lapply as.data.frame
 #' @keywords mapping
 #' @examples
 #' data("probe_ids")
@@ -75,13 +76,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
             FUN.VALUE = character(1)
         )
-        if (any(
-            is.null(probe_id_locations$seqnames),
-            is.null(probe_id_locations$end),
-            is.null(probe_id_locations$start),
-            is.null(probe_id_locations$strand),
-            is.null(probe_id_locations$id)
-        ) == TRUE) {
+        if (any(is.null(c("seqnames", "end", "start", "strand", "id") %in%
+            names(probe_id_locations))) == TRUE) {
             stop("probe_id_locations must contain columns named ID, Seqnames,
                  Start, End, and Strand.")
         }
@@ -92,7 +88,6 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         }
         probe_id_locations <- GRanges(
             seqnames = probe_id_locations[, "seqnames"],
-            ## if the probe_id_locations is a dataframe,
             ## turn it into GRanges before continuing
             ranges = IRanges(
                 start = probe_id_locations[, "start"],
@@ -132,14 +127,14 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     if (isClass(WGBS_data, Class = "GRanges") == TRUE) {
         column_names <- colnames(mcols(WGBS_data))
         elementMetadata(WGBS_data) <-
-            nafill(as.data.frame(
-                elementMetadata(WGBS_data)
-            ), fill = 0)
+            nafill(as.data.frame(elementMetadata(WGBS_data)),
+                fill = 0
+            )
         colnames(mcols(WGBS_data)) <- column_names
         if (NCOL(elementMetadata(WGBS_data)) == 0) {
             stop("WGBS_data must have at least one metadata column.")
         }
-        if (any(BiocGenerics::lapply(
+        if (any(lapply(
             as.data.frame(elementMetadata(WGBS_data)),
             class
         ) != "numeric")) {
@@ -196,10 +191,10 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
                     ## remove where CpG already mapped in first round
                     ## if multipleMapping  has been set to false
                     nearolaps_df <- subset(nearolaps_df, !(is.element(
-                        data.table::transpose(BiocGenerics::as.data.frame(
+                        data.table::transpose(as.data.frame(
                             nearolaps_df$WGBS_data
                         )),
-                        data.table::transpose(BiocGenerics::as.data.frame(
+                        data.table::transpose(as.data.frame(
                             overlaps_df$WGBS_data
                         ))
                     )))
@@ -240,6 +235,5 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
 
     return(as.data.frame(allresults))
-    ## the return value is a dataframe with column for CpG IDs,
-    ## then 1 or more columns for methylation values of sample(s)
+    ## the return value is a dataframe with column for CpG IDs
 }
