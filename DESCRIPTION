@@ -1,31 +1,30 @@
 Package: deconvR
 Title: Simulation and Deconvolution of Omic Profiles
 Version: 0.99.2
-Date: 2021-09-26
+Date: 2021-09-28
 Authors@R: 
-    c(person(given = "Veronika",
-           family = "Ebenal",
-           role = c("aut"),
-           email = "veronikaebenal@gmail.com",
-           comment = c(ORCID = "0000-0001-7976-3964")),
-      person(given = "İrem B.",
+    c(person(given = "İrem B.",
            family = "Gündüz",
            role = c("aut", "cre"),
            email = "irembgunduz@gmail.com",
            comment = c(ORCID = "0000-0003-2641-0916")),
-      person(given = "Altuna",
+    person(given = "Veronika",
+           family = "Ebenal",
+           role = c("aut"),
+           email = "veronikaebenal@gmail.com",
+           comment = c(ORCID = "0000-0001-7976-3964")),
+    person(given = "Altuna",
            family = "Akalin",
            role = c("aut"),
            email = "aakalin@gmail.com",
            comment = c(ORCID = "0000-0002-0468-0117")))
-Description: This package designed for analyzing deconvolution of the bulk 
-    sample(s) using an atlas of reference signature profiles and a user-selected 
-    model (non-negative least squares, support vector,quadratic programming, or
-    robust linear). Users can also simulate a bulk signature profile of a given
-    size using the reference atlas. Users may create or extend a reference atlas 
-    containing signatures of cell types using findSignatures. Additionally,
-    methylation data can used to map WGBS methylation data to probe IDs using
-    BSmeth2Probe.
+Description: This package designed for analyzing deconvolution of the bulk sample(s)
+    using an atlas of reference signature profiles and a user-selected model 
+    (non-negative least squares support vector,quadratic programming, or robust 
+    linear). Users are given option to create or extend a reference atlas and, 
+    also simulate a bulk signature profile of a given size containing signatures 
+    of cell types. Additionally, methylation data can used to map WGBS methylation 
+    data to probe IDs using BSmeth2Probe function.
 License: Artistic-2.0
 URL: https://github.com/BIMSBbioinfo/deconvR
 BugReports: https://support.bioconductor.org/t/deconvR
