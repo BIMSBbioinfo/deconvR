@@ -17,7 +17,14 @@
 #' covered in WGBS data, should WGBS CpGs which have already been mapped to
 #' another probe still be considered? If TRUE, then yes. If FALSE, then no.
 #' Default value is FALSE.
-#' @importFrom methods is
+#' @importFrom methods is isClass as
+#' @importFrom tidyr drop_na
+#' @importFrom methylKit percMethylation unite getSampleID
+#' @importFrom GenomicRanges GRanges
+#' @importFrom data.table nafill
+#' @importFrom IRanges IRanges mergeByOverlaps distance
+#' @importFrom S4Vectors 'elementMetadata<-' runValue elementMetadata
+#' @importFrom S4Vectors 'mcols<-' runValue mcols
 #' @keywords mapping
 #' @examples
 #' data("probe_ids")
@@ -40,7 +47,7 @@
 #' @export
 
 BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
-    multipleMapping = FALSE) {
+                         multipleMapping = FALSE) {
     if (cutoff < 0) {
         stop("cutoff must be >= 0")
     }
@@ -51,8 +58,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         stop("WGBS_data should not be empty")
     }
 
-    if ((methods::isClass(probe_id_locations, Class = "data.frame") != TRUE) &&
-        (methods::isClass(probe_id_locations, Class = "GRanges") != TRUE)) {
+    if ((isClass(probe_id_locations, Class = "data.frame") != TRUE) &&
+        (isClass(probe_id_locations, Class = "GRanges") != TRUE)) {
         stop("Probe IDs must be either dataframe or GRanges objects.")
     }
 
@@ -66,7 +73,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
 
     if ((is.data.frame(probe_id_locations) == TRUE)) {
         names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
-            FUN.VALUE = character(1)
+                                            FUN.VALUE = character(1)
         )
         if (any(
             is.null(probe_id_locations$seqnames),
@@ -80,14 +87,14 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         }
         if (anyNA(probe_id_locations) == TRUE) {
             message("Dropping row containing NA: " +
-                which(is.na(probe_id_locations)))
-            probe_id_locations <- tidyr::drop_na(probe_id_locations)
+                        which(is.na(probe_id_locations)))
+            probe_id_locations <- drop_na(probe_id_locations)
         }
-        probe_id_locations <- GenomicRanges::GRanges(
+        probe_id_locations <- GRanges(
             seqnames = probe_id_locations[, "seqnames"],
             ## if the probe_id_locations is a dataframe,
             ## turn it into GRanges before continuing
-            ranges = IRanges::IRanges(
+            ranges = IRanges(
                 start = probe_id_locations[, "start"],
                 end = probe_id_locations[, "end"]
             ),
@@ -102,51 +109,51 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
     if ((is(WGBS_data, "methylBaseDB") == TRUE) ||
         (is(WGBS_data, "methylBase") == TRUE)) {
-        pm <- methylKit::percMethylation(WGBS_data)
+        pm <- percMethylation(WGBS_data)
         pm <- pm / 100
-        WGBS_data <- methods::as(WGBS_data, "GRanges")
-        GenomicRanges::mcols(WGBS_data) <- as.data.frame(pm)
+        WGBS_data <- as(WGBS_data, "GRanges")
+        mcols(WGBS_data) <- as.data.frame(pm)
     }
     if (is(WGBS_data, "methylRawList") == TRUE) {
         ## Convert methylRawList to methylbase object
-        WGBS_data <- methylKit::unite(WGBS_data, destrand = FALSE)
-        pm <- methylKit::percMethylation(WGBS_data)
+        WGBS_data <- unite(WGBS_data, destrand = FALSE)
+        pm <- percMethylation(WGBS_data)
         pm <- pm / 100
-        WGBS_data <- methods::as(WGBS_data, "GRanges")
-        GenomicRanges::mcols(WGBS_data) <- as.data.frame(pm)
+        WGBS_data <- as(WGBS_data, "GRanges")
+        mcols(WGBS_data) <- as.data.frame(pm)
     }
     ## turn WGBS_data to GRanges object if it is not already one
-    if (methods::isClass(WGBS_data, Class = "GRanges") != TRUE) {
-        sampleName <- methylKit::getSampleID(WGBS_data)
-        WGBS_data <- methods::as(WGBS_data, "GRanges")
-        GenomicRanges::mcols(WGBS_data) <- WGBS_data$numCs / WGBS_data$coverage
-        colnames(GenomicRanges::mcols(WGBS_data)) <- sampleName
+    if (isClass(WGBS_data, Class = "GRanges") != TRUE) {
+        sampleName <- getSampleID(WGBS_data)
+        WGBS_data <- as(WGBS_data, "GRanges")
+        mcols(WGBS_data) <- WGBS_data$numCs / WGBS_data$coverage
+        colnames(mcols(WGBS_data)) <- sampleName
     }
-    if (methods::isClass(WGBS_data, Class = "GRanges") == TRUE) {
-        column_names <- colnames(GenomicRanges::mcols(WGBS_data))
-        S4Vectors::elementMetadata(WGBS_data) <-
-            data.table::nafill(as.data.frame(
-                S4Vectors::elementMetadata(WGBS_data)
+    if (isClass(WGBS_data, Class = "GRanges") == TRUE) {
+        column_names <- colnames(mcols(WGBS_data))
+        elementMetadata(WGBS_data) <-
+            nafill(as.data.frame(
+                elementMetadata(WGBS_data)
             ), fill = 0)
-        colnames(GenomicRanges::mcols(WGBS_data)) <- column_names
-        if (NCOL(S4Vectors::elementMetadata(WGBS_data)) == 0) {
+        colnames(mcols(WGBS_data)) <- column_names
+        if (NCOL(elementMetadata(WGBS_data)) == 0) {
             stop("WGBS_data must have at least one metadata column.")
         }
         if (any(BiocGenerics::lapply(
-            as.data.frame(S4Vectors::elementMetadata(WGBS_data)),
+            as.data.frame(elementMetadata(WGBS_data)),
             class
         ) != "numeric")) {
             stop("The metadata columns of WGBS_data must contain methylation
                  values of sample(s) between 0 and 1")
         }
-        if ((any(as.data.frame(S4Vectors::elementMetadata(WGBS_data)) < 0)) ||
-            (any(as.data.frame(S4Vectors::elementMetadata(WGBS_data)) > 1))) {
+        if ((any(as.data.frame(elementMetadata(WGBS_data)) < 0)) ||
+            (any(as.data.frame(elementMetadata(WGBS_data)) > 1))) {
             stop("The metadata columns of WGBS_data must contain methylation
                 values of sample(s) between 0 and 1")
         }
     }
 
-    overlaps_df <- IRanges::mergeByOverlaps(WGBS_data, probe_id_locations)
+    overlaps_df <- mergeByOverlaps(WGBS_data, probe_id_locations)
     # mapping CpG locations to probe locations by overlap
     if (nrow(overlaps_df) == 0) {
         overlaps_df$distance <- numeric()
@@ -159,9 +166,9 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
 
     if (cutoff > 0) {
         # only need to do "nearlyOverlaps" if cutoff > 0
-        nearolaps_df <- IRanges::mergeByOverlaps(WGBS_data,
-            probe_id_locations,
-            maxgap = cutoff
+        nearolaps_df <- mergeByOverlaps(WGBS_data,
+                                                 probe_id_locations,
+                                                 maxgap = cutoff
         )
         ## same mapping as first time, but now with cutoff gap allowed
         nearolaps_df <- subset(
@@ -174,10 +181,10 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         }
         if (nrow(nearolaps_df) > 0) {
             nearolaps_df <- cbind(nearolaps_df,
-                distance = IRanges::distance(
-                    nearolaps_df$WGBS_data,
-                    nearolaps_df$probe_id_locations
-                )
+                                  distance = distance(
+                                      nearolaps_df$WGBS_data,
+                                      nearolaps_df$probe_id_locations
+                                  )
             )
             ## the distance of the gap between probe  and WGBS data location
             nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
@@ -223,7 +230,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         ## if a probe was mapped to multiple CpGs,take the mean  value
         for (i in seq(2, ncol(allresults))) {
             colnames(allresults)[i] <-
-                colnames(GenomicRanges::mcols(WGBS_data))[i - 1]
+                colnames(mcols(WGBS_data))[i - 1]
             ## set column names to match WGBS data
         }
     }
