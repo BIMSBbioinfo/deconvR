@@ -19,6 +19,7 @@
 #' deconvR/inst/reference_atlas_nodup.RDS). This reference atlas comes from
 #' Moss et al. (2018)
 #' @importFrom methods is
+#' @importFrom stats runif
 #' @keywords simulation
 #' @examples
 #' bulk_mix50 <- simulateCellMix(50)
@@ -74,7 +75,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
             n <- sample(1:25, 1)
             ## n is the randomly chosen number of cell origins
             picks <- sample(1:25, n, replace = FALSE)
-            amts <- stats::runif(n)
+            amts <- runif(n)
             ## amts is the randomly chosen proportions
             sumAmts <- sum(amts)
             amts <- amts / sumAmts

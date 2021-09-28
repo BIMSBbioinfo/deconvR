@@ -29,6 +29,14 @@
 #' (support vector regression) or "qp" (quadratic programming) or "rlm" (robust
 #' linear regression). If not given, defaults to "nnls".
 #' @keywords deconvolution
+#' @importFrom  rsq rsq.partial
+#' @importFrom stats lm
+#' @importFrom tidyr drop_na
+#' @importFrom e1071 best.tune
+#' @importFrom quadprog solve.QP
+#' @importFrom dplyr select
+#' @importFrom nnls nnls
+#' @importFrom assertthat assert_that
 #' @examples
 #' results_nnls <- deconvolute(bulk = simulateCellMix(10)[[1]])
 #' results_qp <- deconvolute(
@@ -58,15 +66,15 @@ deconvolute <- function(reference =
     }
 
     h <- NULL # assign a number so you can reuse it
-    bulk <- tidyr::drop_na(bulk)
+    bulk <- drop_na(bulk)
     ## get rid of rows in both tables with na values
-    reference <- tidyr::drop_na(reference)
+    reference <- drop_na(reference)
     find_partial_rsq <- function(observed, predicted, ref, vec) {
         if (is.null(vec)) {
             vec <- rowMeans(ref)
             ## vector defaults to row means of reference
         } else {
-            assertthat::assert_that(length(vec) == length(predicted),
+            assert_that(length(vec) == length(predicted),
                 msg = paste(
                     "vector should be length",
                     length(predicted), "but is length",
@@ -75,9 +83,9 @@ deconvolute <- function(reference =
             )
         }
 
-        rsq_partial <- rsq::rsq.partial(
-            stats::lm(predicted ~ observed + vec),
-            stats::lm(predicted ~ vec)
+        rsq_partial <- rsq.partial(
+            lm(predicted ~ observed + vec),
+            lm(predicted ~ vec)
         )$partial.rsq
         # calculate partial r-squared
         return(rsq_partial)
@@ -85,10 +93,10 @@ deconvolute <- function(reference =
 
     train_model <- function(model, ref, mix) {
         if (model == "nnls") {
-            model <- nnls::nnls(data.matrix(ref), mix)
+            model <- nnls(data.matrix(ref), mix)
             coefficients <- model$x
         } else if (model == "svr") { # support vector regression
-            model <- e1071::best.tune("svm",
+            model <- best.tune("svm",
                 train.x = mix ~ ref, kernel = "linear",
                 type = "nu-regression", scale = FALSE,
                 ranges = list(nu = seq(0.25, 0.5, 0.75))
@@ -103,7 +111,7 @@ deconvolute <- function(reference =
             Dmat <- t(ref) %*% ref
             dvec <- t(ref) %*% mix
 
-            coefficients <- quadprog::solve.QP(
+            coefficients <- solve.QP(
                 Dmat = Dmat, dvec = dvec,
                 Amat = t(Amat), bvec = bvec,
                 meq = meq
@@ -119,7 +127,7 @@ deconvolute <- function(reference =
         .combine = "comb", .multicombine = TRUE,
         .init = list(c(), list())
     ) %dopar% {
-        thedata <- tidyr::drop_na(merge(dplyr::select(bulk, 1, h),
+        thedata <- drop_na(merge(select(bulk, 1, h),
             reference,
             by = "IDs"
         ))[, -1]

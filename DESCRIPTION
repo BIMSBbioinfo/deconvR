@@ -40,6 +40,7 @@ Imports:
     GenomicRanges (>= 1.44.0),
     BiocGenerics (>= 0.38.0),
     stats,
+    assertthat,
     utils,
     tibble (>= 3.1.4),
     methods,
@@ -69,6 +70,5 @@ Suggests:
     rmarkdown,
     devtools (>= 2.4.2),
     sessioninfo (>= 1.1.1),
-    assertthat (>= 0.2.1),
     covr
 Config/testthat/edition: 3
