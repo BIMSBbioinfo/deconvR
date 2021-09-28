@@ -31,7 +31,6 @@ Encoding: UTF-8
 LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-VignetteBuilder: knitr
 Imports:
     S4Vectors (>= 0.30.0),
     methylKit (>= 1.18.0),
@@ -67,3 +66,4 @@ Suggests:
     devtools (>= 2.4.2),
     sessioninfo (>= 1.1.1),
     covr
+VignetteBuilder: knitr
