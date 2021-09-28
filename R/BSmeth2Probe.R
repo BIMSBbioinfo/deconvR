@@ -19,6 +19,7 @@
 #' Default value is FALSE.
 #' @importFrom methods is isClass as
 #' @importFrom tidyr drop_na
+#' @importFrom stats aggregate
 #' @importFrom methylKit percMethylation unite getSampleID
 #' @importFrom GenomicRanges GRanges
 #' @importFrom data.table nafill transpose
@@ -73,16 +74,16 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             such as methylBase, methylRawList, methylBaseDB")
     }
 
-    if (is.data.frame(probe_id_locations) == TRUE) {
+    if (is.data.frame(probe_id_locations) ) {
         names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
             FUN.VALUE = character(1)
         )
         if (any(is.null(c("seqnames", "end", "start", "strand", "id") %in%
-            names(probe_id_locations))) == TRUE) {
+            names(probe_id_locations))) ) {
             stop("probe_id_locations must contain columns named ID, Seqnames,
                  Start, End, and Strand.")
         }
-        if (anyNA(probe_id_locations) == TRUE) {
+        if (anyNA(probe_id_locations) ) {
             message("Dropping row containing NA: " +
                 which(is.na(probe_id_locations)))
             probe_id_locations <- drop_na(probe_id_locations)
@@ -98,19 +99,19 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             ID = probe_id_locations[, "id"]
         )
     }
-    if (is(probe_id_locations, "GRanges") == TRUE) {
-        if (is.null(probe_id_locations$ID) == TRUE) {
+    if (is(probe_id_locations, "GRanges") ) {
+        if (is.null(probe_id_locations$ID) ) {
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((is(WGBS_data, "methylBaseDB") == TRUE) ||
-        (is(WGBS_data, "methylBase") == TRUE)) {
+    if ((is(WGBS_data, "methylBaseDB") ) ||
+        (is(WGBS_data, "methylBase") )) {
         pm <- percMethylation(WGBS_data)
         pm <- pm / 100
         WGBS_data <- as(WGBS_data, "GRanges")
         mcols(WGBS_data) <- as.data.frame(pm)
     }
-    if (is(WGBS_data, "methylRawList") == TRUE) {
+    if (is(WGBS_data, "methylRawList") ) {
         ## Convert methylRawList to methylbase object
         WGBS_data <- unite(WGBS_data, destrand = FALSE)
         pm <- percMethylation(WGBS_data)
@@ -125,7 +126,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         mcols(WGBS_data) <- WGBS_data$numCs / WGBS_data$coverage
         colnames(mcols(WGBS_data)) <- sampleName
     }
-    if (isClass(WGBS_data, Class = "GRanges") == TRUE) {
+    if (isClass(WGBS_data, Class = "GRanges") ) {
         column_names <- colnames(mcols(WGBS_data))
         elementMetadata(WGBS_data) <-
             nafill(as.data.frame(elementMetadata(WGBS_data)),
@@ -217,7 +218,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     allresults <- allresults[c(ncol(allresults), seq_len(ncol(allresults) - 1))]
     ## if a probe was mapped to multiple CpGs,take the mean  value
     if (nrow(allresults) > 0) {
-        allresults <- stats::aggregate(
+        allresults <- aggregate(
             x = allresults[, -1],
             by = list(ID = allresults[, 1]),
             FUN = mean
