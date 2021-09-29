@@ -70,9 +70,9 @@ deconvolute <- function(reference =
     ## get rid of rows in both tables with na values
     reference <- na.omit(reference)
     find_partial_rsq <- function(observed, predicted, ref, vec) {
+        ## vector defaults to row means of reference
         if (is.null(vec)) {
             vec <- rowMeans(ref)
-            ## vector defaults to row means of reference
         } else {
             assert_that(length(vec) == length(predicted),
                 msg = paste(
@@ -103,18 +103,13 @@ deconvolute <- function(reference =
             )
             coefficients <- t(model$coefs) %*% model$SV
         } else if (model == "qp") { # quadratic programming
-            beq <- c(1)
-            bvec <- c(beq, rep(0, ncol(reference[, -1])))
             Aeq <- matrix(rep(1, ncol(reference[, -1])), nrow = 1)
             Amat <- rbind(Aeq, diag(ncol(reference[, -1])))
-            meq <- 1
-            Dmat <- t(ref) %*% ref
-            dvec <- t(ref) %*% mix
 
             coefficients <- solve.QP(
-                Dmat = Dmat, dvec = dvec,
-                Amat = t(Amat), bvec = bvec,
-                meq = meq
+                Dmat = (t(ref) %*% ref), dvec = (t(ref) %*% mix),
+                Amat = t(Amat), bvec = c(c(1), rep(0, ncol(reference[, -1]))),
+                meq = 1
             )$solution
         } else if (model == "rlm") { # robust linear regression
             model <- rlm(ref, mix, maxit = 100)
@@ -148,19 +143,16 @@ deconvolute <- function(reference =
         ))
     }
 
-    rsq_partial <- oper[[1]]
-    expect <- NCOL(reference) - 1
     results <- data.frame(t(
         vapply(seq_along(oper[[2]]), function(i) {
             res <- unlist(oper[[2]][[i]])
             return(res)
-        }, FUN.VALUE = numeric(expect))
-    ))
-    rownames(results) <- colnames(bulk)[-1]
+        }, FUN.VALUE = numeric(NCOL(reference) - 1))
+    ), row.names = colnames(bulk)[-1])
     colnames(results) <- colnames(reference)[-1]
     message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
-    print(summary(unlist(rsq_partial)))
+    print(summary(unlist(oper[[1]])))
 
     # results table will have coefficient predictions of each sample
-    return(list(results, rsq_partial))
+    return(list(results, oper[[1]]))
 }
