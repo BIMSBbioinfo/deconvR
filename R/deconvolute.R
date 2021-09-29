@@ -62,13 +62,15 @@ deconvolute <- function(reference =
     message("DECONVOLUTION WITH ", toupper(model))
 
     comb <- function(x, ...) {
-        lapply(seq_along(x), function(i) c(x[[i]], lapply(list(...), function(y) y[[i]])))
+        lapply(seq_along(x), function(i) {
+            c(x[[i]], lapply(
+                list(...),
+                function(y) y[[i]]
+            ))
+        })
     }
-
-    h <- NULL # assign a number so you can reuse it
-    bulk <- na.omit(bulk)
     ## get rid of rows in both tables with na values
-    reference <- na.omit(reference)
+    clean <- lapply(list(bulk, reference), na.omit)
     find_partial_rsq <- function(observed, predicted, ref, vec) {
         ## vector defaults to row means of reference
         if (is.null(vec)) {
@@ -82,19 +84,17 @@ deconvolute <- function(reference =
                 )
             )
         }
-
+        # calculate partial r-squared
         rsq_partial <- rsq.partial(
             lm(predicted ~ observed + vec),
             lm(predicted ~ vec)
         )$partial.rsq
-        # calculate partial r-squared
         return(rsq_partial)
     }
 
     train_model <- function(model, ref, mix) {
-        if (model == "nnls") {
-            model <- nnls(data.matrix(ref), mix)
-            coefficients <- model$x
+        if (model == "nnls") { # non negative least squares
+            coefficients <- (nnls(data.matrix(ref), mix))$x
         } else if (model == "svr") { # support vector regression
             model <- best.tune("svm",
                 train.x = mix ~ ref, kernel = "linear",
@@ -103,27 +103,28 @@ deconvolute <- function(reference =
             )
             coefficients <- t(model$coefs) %*% model$SV
         } else if (model == "qp") { # quadratic programming
-            Aeq <- matrix(rep(1, ncol(reference[, -1])), nrow = 1)
-            Amat <- rbind(Aeq, diag(ncol(reference[, -1])))
+            Amat <- rbind(
+                matrix(rep(1, ncol(clean[[2]][, -1])), nrow = 1),
+                diag(ncol(clean[[2]][, -1]))
+            )
 
             coefficients <- solve.QP(
                 Dmat = (t(ref) %*% ref), dvec = (t(ref) %*% mix),
-                Amat = t(Amat), bvec = c(c(1), rep(0, ncol(reference[, -1]))),
+                Amat = t(Amat), bvec = c(c(1), rep(0, ncol(clean[[2]][, -1]))),
                 meq = 1
             )$solution
         } else if (model == "rlm") { # robust linear regression
-            model <- rlm(ref, mix, maxit = 100)
-            coefficients <- model$coefficients
+            coefficients <- (rlm(ref, mix, maxit = 100))$coefficients
         }
     }
-    # non negative least squares
+    h <- NULL
     oper <- foreach(
-        h = seq(2, ncol(bulk)), .inorder = TRUE,
+        h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
         .combine = "comb", .multicombine = TRUE,
         .init = list(c(), list())
     ) %dopar% {
-        thedata <- na.omit(merge(select(bulk, 1, h),
-            reference,
+        thedata <- na.omit(merge(select(clean[[1]], 1, h),
+            clean[[2]],
             by = "IDs"
         ))[, -1]
         # merge each sample to reference table
@@ -131,11 +132,10 @@ deconvolute <- function(reference =
         ref <- as.matrix(thedata[, -1])
         coefficients <- train_model(model, ref, mix)
         coefficients <- ifelse(coefficients < 0, 0, coefficients)
-        sumOfCof <- sum(coefficients)
         if (model == "svr") {
-            coefficients <- as.numeric(coefficients / sumOfCof)
+            coefficients <- as.numeric(coefficients / sum(coefficients))
         } else {
-            coefficients <- coefficients / sumOfCof
+            coefficients <- coefficients / sum(coefficients)
         }
         return(list(
             find_partial_rsq(mix, ref %*% coefficients, ref, vec),
@@ -147,9 +147,9 @@ deconvolute <- function(reference =
         vapply(seq_along(oper[[2]]), function(i) {
             res <- unlist(oper[[2]][[i]])
             return(res)
-        }, FUN.VALUE = numeric(NCOL(reference) - 1))
-    ), row.names = colnames(bulk)[-1])
-    colnames(results) <- colnames(reference)[-1]
+        }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
+    ), row.names = colnames(clean[[1]])[-1])
+    colnames(results) <- colnames(clean[[2]])[-1]
     message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
     print(summary(unlist(oper[[1]])))
 
