@@ -1,9 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <a name="deconvR_logo"/>
-
 <div align="center">
-
 <img src="https://github.com/BIMSBbioinfo/deconvR/blob/master/inst/deconvR_logo.png" alt="deconvR_logo" width="500"/ ></img>
 </a>
 
