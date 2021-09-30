@@ -53,11 +53,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     if (cutoff < 0) {
         stop("cutoff must be >= 0")
     }
-    if (NROW(probe_id_locations) == 0) {
-        stop("probe_id_locations should not be empty")
-    }
-    if (NROW(WGBS_data) == 0) {
-        stop("WGBS_data should not be empty")
+    if (NROW(probe_id_locations) == 0 || NROW(WGBS_data) == 0 ) {
+        stop("Probe ID locations or WGBS data must not be empty")
     }
 
     if (!(class(probe_id_locations) %in% c(
@@ -183,9 +180,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             )
             ## the distance of the gap between probe and WGBS data location
             nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
-            # order the df by distance so that when we delete duplicates
             # the duplicate with the largest gap is deleted
-
             if (!multipleMapping) {
                 if (nrow(overlaps_df) > 0) {
                     ## remove where CpG already mapped in first round
@@ -199,7 +194,6 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
                         ))
                     )))
                 }
-                ## remove multiple mappings of CpG if multipleMapping is false
                 nearolaps_df <-
                     nearolaps_df[!duplicated(nearolaps_df$WGBS_data), ]
             }
@@ -213,7 +207,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
 
     allresults <- allresults[, -c(1, NCOL(allresults) - 2, NCOL(allresults))]
-    ## these are just cleaning up allresults a bit to make aggregation easier
+    ##cleaning up 
     allresults <- allresults[c(ncol(allresults), seq_len(ncol(allresults) - 1))]
     ## if a probe was mapped to multiple CpGs,take the mean  value
     if (nrow(allresults) > 0) {

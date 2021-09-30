@@ -39,15 +39,15 @@
 #' @keywords deconvolution
 #' @examples
 #' data("reference_atlas")
-#' #non-least negative square regression
+#' # non-least negative square regression
 #' results_nnls <- deconvolute(
 #'     bulk = simulateCellMix(10, reference = reference_atlas)[[1]],
 #'     reference = reference_atlas
 #' )
-#' #Quadric programming
+#' # Quadric programming
 #' results_qp <- deconvolute(
 #'     reference = reference_atlas,
-#'     bulk = simulateCellMix(5,reference = reference_atlas)[[1]], model = "qp"
+#'     bulk = simulateCellMix(5, reference = reference_atlas)[[1]], model = "qp"
 #' )
 #' @return A list, first is a dataframe which contains predicted cell-type
 #' proportions of bulk methylation profiles in "bulk", second is a list of
