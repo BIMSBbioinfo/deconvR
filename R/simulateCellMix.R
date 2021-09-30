@@ -24,17 +24,11 @@
 #' @examples
 #' data("reference_atlas")
 #' bulk_mix50 <- simulateCellMix(50, reference = reference_atlas)
-#' bulk_mix100 <- simulateCellMix(
-#'     numberOfSamples = 100, reference = reference_atlas
-#' )
+#'
 #' bulk_mixVec <- simulateCellMix(1, mixingVector = c(
 #'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 #' ), reference = reference_atlas)
-#' bulk_mix <- simulateCellMix(1, data.frame(c(
-#'     0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
-#'     0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0
-#' )), reference = reference_atlas)
 #' @return A list containing two data frames. First: A dataframe which contains
 #' mixed cell-type origin simulated samples. The first column contains a
 #' unique ID (used from reference) which can be used in deconvolution to match
@@ -119,7 +113,8 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
                     colnames(simulatedMixtureTable)[s + 1] <- paste("Sample", s)
                 }
             }
-        } else if (is(mixingVector, "numeric")) {
+        }
+        if (is(mixingVector, "numeric")) {
             if (1 != numberOfSamples) {
                 stop("Only use a vector for mixingVector if numberOfSamples = 1,
             otherwise use dataframe with columns for samples and rows for cell

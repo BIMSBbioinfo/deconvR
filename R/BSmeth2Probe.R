@@ -16,16 +16,14 @@
 #' covered in WGBS data, should WGBS CpGs which have already been mapped to
 #' another probe still be considered? If TRUE, then yes. If FALSE, then no.
 #' Default value is FALSE.
-#' @importFrom methods is isClass as
+#' @importFrom methods is as
 #' @importFrom tidyr drop_na
 #' @importFrom stats aggregate
-#' @importFrom methylKit percMethylation unite getSampleID
-#' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame
+#' @importFrom GenomicRanges GRanges
 #' @importFrom data.table nafill transpose
 #' @importFrom IRanges IRanges mergeByOverlaps distance
 #' @importFrom S4Vectors 'elementMetadata<-' runValue elementMetadata
 #' @importFrom S4Vectors 'mcols<-' runValue mcols
-#' @importFrom dplyr select starts_with
 #' @importFrom BiocGenerics  lapply as.data.frame
 #' @keywords mapping
 #' @examples
@@ -53,7 +51,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     if (cutoff < 0) {
         stop("cutoff must be >= 0")
     }
-    if (NROW(probe_id_locations) == 0 || NROW(WGBS_data) == 0 ) {
+    if (NROW(probe_id_locations) == 0 || NROW(WGBS_data) == 0) {
         stop("Probe ID locations or WGBS data must not be empty")
     }
 
@@ -101,26 +99,9 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    ## turn WGBS_data to GRanges object if it is not already one
-    meth_convert <- function(WGBS_data) {
-        sampleName <- getSampleID(WGBS_data)
-        if (is(WGBS_data, "methylRawList") ||
-            is(WGBS_data, "methylRawListDB")) {
-            WGBS_data <- unite(WGBS_data, destrand = FALSE)
-        }
-        WGBS_data <- as(WGBS_data, "GRanges")
-        WGBS_data <- as.data.frame(WGBS_data)
-        pm <- select(WGBS_data, starts_with("numCs")) /
-            select(WGBS_data, starts_with("coverage"))
-        WGBS_data <- makeGRangesFromDataFrame(WGBS_data,
-            keep.extra.columns = TRUE
-        )
-        mcols(WGBS_data) <- pm
-        colnames(mcols(WGBS_data)) <- sampleName
-        return(WGBS_data)
-    }
+
     if (!is(WGBS_data, "GRanges")) {
-        WGBS_data <- meth_convert(WGBS_data)
+        WGBS_data <- convertMe(WGBS_data)
     }
     if (is(WGBS_data, "GRanges")) {
         column_names <- colnames(mcols(WGBS_data))
@@ -207,7 +188,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
 
     allresults <- allresults[, -c(1, NCOL(allresults) - 2, NCOL(allresults))]
-    ##cleaning up 
+    ## cleaning up
     allresults <- allresults[c(ncol(allresults), seq_len(ncol(allresults) - 1))]
     ## if a probe was mapped to multiple CpGs,take the mean  value
     if (nrow(allresults) > 0) {

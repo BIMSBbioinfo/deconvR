@@ -314,7 +314,7 @@ data("probe_ids")
 probe_ids
 ```
 
-# Example Workflow
+# Example Workflow For Whole Genome Bisulfate Sequencing Data
 
 ## Expanding Reference Atlas
 
@@ -394,10 +394,51 @@ head(mapped_WGBS_data)
 This mapped data can now be used in `deconvolute`. Here we will deconvolute it
 using the previously extended signature matrix as the reference atlas.
 
-``` {r, output.lines=10}
+``` {r}
 deconvolution <- deconvolute(reference = extended_matrix, 
                              bulk = mapped_WGBS_data)
 deconvolution[[1]]
+```
+
+# Example Workflow For RNA Sequencing Data
+
+`simulateCellMix` and `findSignatures` don't suppor other data type than WGBS
+yet. However,`deconvolute` can be used to deconvolute any kind of RNA-seq data. 
+Here, we will use RNA-seq example data from the **granulator** package. We will
+only use small sample of data. Notice that we set IDs column. In order to run
+`deconvolute` function, `IDs` column is necessary.
+
+``` {r }
+library(granulator)
+#To load the data from granulator package
+granulator::load_ABIS()
+
+#Read the bulk RNA-seq data
+bulk_RNA <- bulkRNAseq_ABIS[1:100,] %>% 
+  as.data.frame() %>% 
+  mutate(IDs = rownames(bulkRNAseq_ABIS[1:100,])) %>%
+  select("IDs", everything())
+
+head(bulk_RNA[,1:5])
+```
+
+
+``` {r}
+#Read the reference RNAseq data
+reference_RNA <- sigMatrix_ABIS_S0 %>%
+  as.data.frame() %>% 
+  mutate(IDs = rownames(sigMatrix_ABIS_S0))%>%
+  select("IDs", everything())
+
+head(reference_RNA[1:5])
+```
+
+``` {r}
+deconv_RNA <- deconvR::deconvolute(reference = reference_RNA, 
+                             bulk = bulk_RNA,model = "qp")
+```
+```{r }
+deconv_RNA[[1]]
 ```
 
 # sessionInfo

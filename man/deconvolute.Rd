@@ -53,15 +53,16 @@ printed upon completion.
 }
 \examples{
 data("reference_atlas")
+bulk_data <- simulateCellMix(10, reference = reference_atlas)[[1]]
 # non-least negative square regression
 results_nnls <- deconvolute(
-    bulk = simulateCellMix(10, reference = reference_atlas)[[1]],
+    bulk = bulk_data,
     reference = reference_atlas
 )
 # Quadric programming
 results_qp <- deconvolute(
     reference = reference_atlas,
-    bulk = simulateCellMix(5, reference = reference_atlas)[[1]], model = "qp"
+    bulk = bulk_data, model = "qp"
 )
 }
 \references{

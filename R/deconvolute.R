@@ -39,15 +39,16 @@
 #' @keywords deconvolution
 #' @examples
 #' data("reference_atlas")
+#' bulk_data <- simulateCellMix(10, reference = reference_atlas)[[1]]
 #' # non-least negative square regression
 #' results_nnls <- deconvolute(
-#'     bulk = simulateCellMix(10, reference = reference_atlas)[[1]],
+#'     bulk = bulk_data,
 #'     reference = reference_atlas
 #' )
 #' # Quadric programming
 #' results_qp <- deconvolute(
 #'     reference = reference_atlas,
-#'     bulk = simulateCellMix(5, reference = reference_atlas)[[1]], model = "qp"
+#'     bulk = bulk_data, model = "qp"
 #' )
 #' @return A list, first is a dataframe which contains predicted cell-type
 #' proportions of bulk methylation profiles in "bulk", second is a list of
@@ -118,8 +119,8 @@ deconvolute <- function(reference,
             coefficients <- (rlm(ref, mix, maxit = 100))$coefficients
         }
     }
-    h <- NULL
-    oper <- foreach(
+    
+    operation <- foreach(
         h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
         .combine = "comb", .multicombine = TRUE,
         .init = list(c(), list())
@@ -145,15 +146,15 @@ deconvolute <- function(reference,
     }
 
     results <- data.frame(t(
-        vapply(seq_along(oper[[2]]), function(i) {
-            res <- unlist(oper[[2]][[i]])
+        vapply(seq_along(operation[[2]]), function(i) {
+            res <- unlist(operation[[2]][[i]])
             return(res)
         }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
     ), row.names = colnames(clean[[1]])[-1])
     colnames(results) <- colnames(clean[[2]])[-1]
     message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
-    print(summary(unlist(oper[[1]])))
+    print(summary(unlist(operation[[1]])))
 
     # results table will have coefficient predictions of each sample
-    return(list(results, oper[[1]]))
+    return(list(results, operation[[1]]))
 }
