@@ -2,7 +2,7 @@ library(deconvR)
 
 test_that("findSignatures", {
     # first a simple example.. only one cell type and 1 sample, no reference
-    exampleSamples <- simulateCellMix(1)[[1]]
+    exampleSamples <- simulateCellMix(1, reference = reference_atlas)[[1]]
     exampleMeta <- data.table(
         "Experiment_accession" = "one",
         "Biosample_term_name" = "example_cell_type"
@@ -22,9 +22,8 @@ test_that("findSignatures", {
     expect_gte(min(unlist(results[, -1])), 0)
 
     # new example.. three cell types and 25 samples, still no reference
-    exampleSamples <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
+    data("reference_atlas")
+    exampleSamples <- reference_atlas
     exampleMeta <- data.table(
         "Experiment_accession" = as.character(1:25),
         "Biosample_term_name" = c(
@@ -57,23 +56,21 @@ test_that("findSignatures", {
 
     # now a more complex example, with 10 cell types, 100 samples,
     # and a reference atlas of 25 cell types
-    exampleReference <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
+    data("reference_atlas")
     exampleSamples <- simulateCellMix(100,
         reference =
-            exampleReference[c(1:1000, 2000:5000), ]
+            reference_atlas[c(1:1000, 2000:5000), ]
     )[[1]]
-    exampleReference <- exampleReference[sample(nrow(exampleReference)), ]
+    reference_atlas <- reference_atlas[sample(nrow(reference_atlas)), ]
     exampleMeta <- data.table(
         "Experiment_accession" = c(
             colnames(exampleSamples)[-1],
-            colnames(exampleReference)[-1],
+            colnames(reference_atlas)[-1],
             as.character(1:200)
         ),
         "Biosample_term_name" = c(
             rep("this", 2), rep("that", 13), rep("else", 25),
-            rep(colnames(exampleReference)[2], 1),
+            rep(colnames(reference_atlas)[2], 1),
             rep("this_v2", 31), rep("that_v2", 17),
             rep("else_v2", 90), rep("other", 146)
         )
@@ -82,14 +79,14 @@ test_that("findSignatures", {
     results <- findSignatures(
         samples = exampleSamples,
         sampleMeta = exampleMeta,
-        atlas = exampleReference
+        atlas = reference_atlas
     )
 
     expect_equal(NCOL(results), 8)
     expect_setequal(colnames(results), c(
         "IDs", "this", "that", "else",
         "this_v2", "that_v2", "else_v2",
-        colnames(exampleReference)[2]
+        colnames(reference_atlas)[2]
     ))
     expect_equal(colnames(results)[1], "IDs")
     expect_lte(NROW(results), NROW(exampleSamples))

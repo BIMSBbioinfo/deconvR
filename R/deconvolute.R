@@ -38,12 +38,16 @@
 #' linear regression). If not given, defaults to "nnls".
 #' @keywords deconvolution
 #' @examples
-#' results_nnls <- deconvolute(bulk = simulateCellMix(10)[[1]])
+#' data("reference_atlas")
+#' #non-least negative square regression
+#' results_nnls <- deconvolute(
+#'     bulk = simulateCellMix(10, reference = reference_atlas)[[1]],
+#'     reference = reference_atlas
+#' )
+#' #Quadric programming
 #' results_qp <- deconvolute(
-#'     reference = readRDS(system.file("reference_atlas_nodup.RDS",
-#'         package = "deconvR"
-#'     )),
-#'     bulk = simulateCellMix(5)[[1]], model = "qp"
+#'     reference = reference_atlas,
+#'     bulk = simulateCellMix(5,reference = reference_atlas)[[1]], model = "qp"
 #' )
 #' @return A list, first is a dataframe which contains predicted cell-type
 #' proportions of bulk methylation profiles in "bulk", second is a list of
@@ -54,10 +58,7 @@
 #' \url{https://doi.org/10.1038/s41467-018-07466-6}
 #' @export
 
-deconvolute <- function(reference =
-        readRDS(system.file("reference_atlas_nodup.RDS",
-            package = "deconvR"
-        )),
+deconvolute <- function(reference,
     vec = NULL, bulk, model = "nnls") {
     message("DECONVOLUTION WITH ", toupper(model))
 

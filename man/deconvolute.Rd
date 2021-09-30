@@ -8,12 +8,7 @@ Results of model are returned in dataframe "results".
 Summary of partial R-squared values of model (min, median, mean, max...) are
 printed upon completion.}
 \usage{
-deconvolute(
-  reference = readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR")),
-  vec = NULL,
-  bulk,
-  model = "nnls"
-)
+deconvolute(reference, vec = NULL, bulk, model = "nnls")
 }
 \arguments{
 \item{reference}{A dataframe containing signatures of different cell types
@@ -57,12 +52,16 @@ Summary of partial R-squared values of model (min, median, mean, max...) are
 printed upon completion.
 }
 \examples{
-results_nnls <- deconvolute(bulk = simulateCellMix(10)[[1]])
+data("reference_atlas")
+#non-least negative square regression
+results_nnls <- deconvolute(
+    bulk = simulateCellMix(10, reference = reference_atlas)[[1]],
+    reference = reference_atlas
+)
+#Quadric programming
 results_qp <- deconvolute(
-    reference = readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    )),
-    bulk = simulateCellMix(5)[[1]], model = "qp"
+    reference = reference_atlas,
+    bulk = simulateCellMix(5,reference = reference_atlas)[[1]], model = "qp"
 )
 }
 \references{

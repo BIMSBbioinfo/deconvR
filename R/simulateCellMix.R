@@ -22,18 +22,19 @@
 #' @importFrom stats runif
 #' @keywords simulation
 #' @examples
-#' bulk_mix50 <- simulateCellMix(50)
+#' data("reference_atlas")
+#' bulk_mix50 <- simulateCellMix(50, reference = reference_atlas)
 #' bulk_mix100 <- simulateCellMix(
-#'     numberOfSamples = 100
+#'     numberOfSamples = 100, reference = reference_atlas
 #' )
 #' bulk_mixVec <- simulateCellMix(1, mixingVector = c(
 #'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-#' ))
+#' ), reference = reference_atlas)
 #' bulk_mix <- simulateCellMix(1, data.frame(c(
 #'     0, 0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0
-#' )))
+#' )), reference = reference_atlas)
 #' @return A list containing two data frames. First: A dataframe which contains
 #' mixed cell-type origin simulated samples. The first column contains a
 #' unique ID (used from reference) which can be used in deconvolution to match
@@ -49,9 +50,7 @@
 #' @export
 
 simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
-    reference = readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))) {
+    reference) {
     simulatedMixtureTable <- data.frame(matrix(
         ncol = numberOfSamples + 1,
         nrow = nrow(reference)

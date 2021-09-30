@@ -79,8 +79,7 @@ given reference atlas.
 simulateCellMix(
   numberOfSamples,
   mixingVector=NULL,
-  reference = readRDS(system.file("reference_atlas_nodup.RDS",
-                                   package = "deconvR")))
+  reference = reference_atlas)
 ```
 
 The parameter `numberOfSamples` is a non-negative integer stating the number of
@@ -125,8 +124,7 @@ from a reference atlas.
 
 ``` {r eval=FALSE}
 deconvolute(
-  reference = readRDS(system.file("reference_atlas_nodup.RDS",
-                                  package = "deconvR")),vec = NULL, bulk,
+  reference = reference_atlas,vec = NULL, bulk,
   model= "nnls")
 
 ```
@@ -290,11 +288,6 @@ the CpG locus. The atlas therefore provides a unique methylation pattern for
 each cell type and can be directly used as `reference` in `deconvolute` and
 `simulateCellMix`, and `atlas` in `findSignatures`.
 
-``` {r, message = FALSE, output.lines=10}
-atlas <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
-head(atlas)
-```
-
 ## WGBS Data
 
 An example of WGBS data has been included as the **GRanges** object
@@ -334,14 +327,14 @@ example dataframe to illustrate the `atlas` format.
 ``` {r, message = FALSE, output.lines=10}
 library(deconvR) 
 
-atlas <- readRDS(system.file("reference_atlas_nodup.RDS", package = "deconvR"))
-head(atlas)
+data("reference_atlas")
+head(reference_atlas)
 ```
 
 And below illustrates the `samples` format.
 
 ``` {r, message = FALSE, output.lines=10}
-samples <- simulateCellMix(3)[[1]]
+samples <- simulateCellMix(3,reference = reference_atlas)[[1]]
 head(samples)
 ```
 
@@ -358,7 +351,7 @@ Use `findSignatures` to extend the matrix.
 ``` {r, output.lines=10}
 extended_matrix <- findSignatures(samples = samples, 
                                  sampleMeta = sampleMeta, 
-                                 atlas = atlas)
+                                 atlas = reference_atlas)
 head(extended_matrix)
 ```
 

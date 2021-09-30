@@ -1,36 +1,40 @@
 library(deconvR)
 
 test_that("deconvolute nnls", {
-    ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
-    simulation <- simulateCellMix(5)
+    data("reference_atlas")
+    simulation <- simulateCellMix(5, reference = reference_atlas)
     bulkTable <- simulation[[1]]
     proportionsTable <- simulation[[2]]
 
-    deconvolution <- deconvolute(bulk = bulkTable, model = "nnls")
+    deconvolution <- deconvolute(
+        bulk = bulkTable,
+        model = "nnls", reference = reference_atlas
+    )
     results <- deconvolution[[1]]
     partial_rsq <- deconvolution[[2]]
 
-    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas,
+    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, reference_atlas,
         by = "IDs"
     ))[, -1])
 
     expect_output(
-        deconvolute(bulk = bulkTable),
+        deconvolute(bulk = bulkTable, reference = reference_atlas),
         message("DECONVOLUTION WITH NNLS")
     )
     expect_output(
-        deconvolute(bulk = bulkTable),
+        deconvolute(bulk = bulkTable, reference = reference_atlas),
         message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR NNLS : ")
     )
 
-    expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
+    expect_equal(dim(results), c(5, length(colnames(reference_atlas[, -1]))))
     expect_equal(
-        dim(deconvolute(bulk = bulkTable[-1, ])[[1]]),
-        c(5, length(colnames(ref_atlas[, -1])))
+        dim(deconvolute(
+            bulk = bulkTable[-1, ],
+            reference = reference_atlas
+        )[[1]]),
+        c(5, length(colnames(reference_atlas[, -1])))
     )
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(lapply(unlist(results[, ]), typeof)[[1]],
         print("double"),
         ignore_attr = TRUE
@@ -40,20 +44,26 @@ test_that("deconvolute nnls", {
     expect_equal(sum(results[3, ]), 1)
     expect_equal(sum(results[4, ]), 1)
     expect_equal(sum(results[5, ]), 1)
-    expect_error(deconvolute())
-    expect_error(deconvolute(bulk = bulkTable, model = "n"))
+    expect_error(deconvolute(reference = reference_atlas))
+    expect_error(deconvolute(
+        bulk = bulkTable, model = "n",
+        reference = reference_atlas
+    ))
     expect_error(deconvolute(
         bulk = bulkTable, model = "nnls",
-        vec = rep_len(1, vectorlength)
+        vec = rep_len(1, vectorlength), reference = reference_atlas
     ), NA)
     expect_error(deconvolute(
         bulk = bulkTable, model = "nnls",
-        vec = rep_len(1, vectorlength - 1)
+        vec = rep_len(1, vectorlength - 1), reference = reference_atlas
     ))
-    expect_error(deconvolute(bulk = bulkTable[, -1], model = "nnls"))
-    expect_error(deconvolute(model = "nnls"))
+    expect_error(deconvolute(
+        bulk = bulkTable[, -1], model = "nnls",
+        reference = reference_atlas
+    ))
+    expect_error(deconvolute(model = "nnls", reference = reference_atlas))
     expect_equal(dim(results), dim(proportionsTable))
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(rownames(results), rownames(proportionsTable))
 
 
@@ -61,45 +71,49 @@ test_that("deconvolute nnls", {
 })
 
 test_that("deconvolute svr", {
-    ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
-    simulation <- simulateCellMix(5)
+    data("reference_atlas")
+    simulation <- simulateCellMix(5, reference = reference_atlas)
     bulkTable <- simulation[[1]]
     proportionsTable <- simulation[[2]]
 
-    deconvolution <- deconvolute(bulk = bulkTable, model = "svr")
+    deconvolution <- deconvolute(
+        bulk = bulkTable, model = "svr",
+        reference = reference_atlas
+    )
     results <- deconvolution[[1]]
     partial_rsq <- deconvolution[[2]]
 
-    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas,
+    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, reference_atlas,
         by = "IDs"
     ))[, -1])
 
     expect_output(
-        deconvolute(bulk = bulkTable, model = "svr"),
+        deconvolute(
+            bulk = bulkTable, model = "svr",
+            reference = reference_atlas
+        ),
         message("DECONVOLUTION WITH SVR")
     )
     expect_output(
-        deconvolute(bulk = bulkTable, model = "svr"),
+        deconvolute(
+            bulk = bulkTable, model = "svr",
+            reference = reference_atlas
+        ),
         message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR SVR : ")
     )
 
-    ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
-    simulation <- simulateCellMix(5)
+    simulation <- simulateCellMix(5, reference = reference_atlas)
     bulkTable <- simulation[[1]]
     proportionsTable <- simulation[[2]]
-    expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
+    expect_equal(dim(results), c(5, length(colnames(reference_atlas[, -1]))))
     expect_equal(
         dim(deconvolute(
             bulk = bulkTable[-1, ],
-            model = "svr"
+            model = "svr", reference = reference_atlas
         )[[1]]),
-        c(5, length(colnames(ref_atlas[, -1])))
+        c(5, length(colnames(reference_atlas[, -1])))
     )
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(lapply(unlist(results[, ]), typeof)[[1]],
         print("double"),
         ignore_attr = TRUE
@@ -108,54 +122,67 @@ test_that("deconvolute svr", {
     expect_equal(sum(results[3, ]), 1)
     expect_equal(sum(results[4, ]), 1)
     expect_equal(sum(results[5, ]), 1)
-    expect_error(deconvolute(bulk = bulkTable[, -1], model = "svr"))
+    expect_error(deconvolute(
+        bulk = bulkTable[, -1], model = "svr",
+        reference = reference_atlas
+    ))
     expect_error(deconvolute(
         bulk = bulkTable, model = "svr",
-        vec = rep_len(1, vectorlength)
+        vec = rep_len(1, vectorlength), reference = reference_atlas
     ), NA)
     expect_error(deconvolute(
         bulk = bulkTable, model = "svr",
-        vec = rep_len(1, vectorlength - 1)
+        vec = rep_len(1, vectorlength - 1), reference = reference_atlas
     ))
-    expect_error(deconvolute(model = "svr"))
+    expect_error(deconvolute(model = "svr", reference = reference_atlas))
     expect_equal(dim(results), dim(proportionsTable))
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(rownames(results), rownames(proportionsTable))
 
     expect_equal(length(partial_rsq), length(simulation[[1]]) - 1)
 })
 
 test_that("deconvolute qp", {
-    ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
-    simulation <- simulateCellMix(5)
+    data("reference_atlas")
+    simulation <- simulateCellMix(5, reference = reference_atlas)
     bulkTable <- simulation[[1]]
     proportionsTable <- simulation[[2]]
 
-    deconvolution <- deconvolute(bulk = bulkTable, model = "qp")
+    deconvolution <- deconvolute(
+        bulk = bulkTable, model = "qp",
+        reference = reference_atlas
+    )
     results <- deconvolution[[1]]
     partial_rsq <- deconvolution[[2]]
 
-    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas,
+    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, reference_atlas,
         by = "IDs"
     ))[, -1])
 
     expect_output(
-        deconvolute(bulk = bulkTable, model = "qp"),
+        deconvolute(
+            bulk = bulkTable, model = "qp",
+            reference = reference_atlas
+        ),
         message("DECONVOLUTION WITH QP")
     )
     expect_output(
-        deconvolute(bulk = bulkTable, model = "qp"),
+        deconvolute(
+            bulk = bulkTable, model = "qp",
+            reference = reference_atlas
+        ),
         message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR QP : ")
     )
 
-    expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
+    expect_equal(dim(results), c(5, length(colnames(reference_atlas[, -1]))))
     expect_equal(
-        dim(deconvolute(bulk = bulkTable[-1, ], model = "qp")[[1]]),
-        c(5, length(colnames(ref_atlas[, -1])))
+        dim(deconvolute(
+            bulk = bulkTable[-1, ], model = "qp",
+            reference = reference_atlas
+        )[[1]]),
+        c(5, length(colnames(reference_atlas[, -1])))
     )
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(lapply(unlist(results[, ]), typeof)[[1]], print("double"),
         ignore_attr = TRUE
     )
@@ -164,54 +191,67 @@ test_that("deconvolute qp", {
     expect_equal(sum(results[3, ]), 1)
     expect_equal(sum(results[4, ]), 1)
     expect_equal(sum(results[5, ]), 1)
-    expect_error(deconvolute(bulk = bulkTable[, -1], model = "qp"))
+    expect_error(deconvolute(
+        bulk = bulkTable[, -1], model = "qp",
+        reference = reference_atlas
+    ))
     expect_error(deconvolute(
         bulk = bulkTable, model = "qp",
-        vec = rep_len(1, vectorlength)
+        vec = rep_len(1, vectorlength), reference = reference_atlas
     ), NA)
     expect_error(deconvolute(
         bulk = bulkTable, model = "qp",
-        vec = rep_len(1, vectorlength - 1)
+        vec = rep_len(1, vectorlength - 1), reference = reference_atlas
     ))
-    expect_error(deconvolute(model = "qp"))
+    expect_error(deconvolute(model = "qp", reference = reference_atlas))
     expect_equal(dim(results), dim(proportionsTable))
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(rownames(results), rownames(proportionsTable))
 
     expect_equal(length(partial_rsq), length(simulation[[1]]) - 1)
 })
 
 test_that("deconvolute rlm", {
-    ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
-    simulation <- simulateCellMix(5)
+    data("reference_atlas")
+    simulation <- simulateCellMix(5, reference = reference_atlas)
     bulkTable <- simulation[[1]]
     proportionsTable <- simulation[[2]]
 
-    deconvolution <- deconvolute(bulk = bulkTable, model = "rlm")
+    deconvolution <- deconvolute(
+        bulk = bulkTable, model = "rlm",
+        reference = reference_atlas
+    )
     results <- deconvolution[[1]]
     partial_rsq <- deconvolution[[2]]
 
-    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, ref_atlas,
+    vectorlength <- NROW(tidyr::drop_na(merge(bulkTable, reference_atlas,
         by = "IDs"
     ))[, -1])
 
     expect_output(
-        deconvolute(bulk = bulkTable, model = "rlm"),
+        deconvolute(
+            bulk = bulkTable, model = "rlm",
+            reference = reference_atlas
+        ),
         message("DECONVOLUTION WITH RLM", "\n")
     )
     expect_output(
-        deconvolute(bulk = bulkTable, model = "rlm"),
+        deconvolute(
+            bulk = bulkTable, model = "rlm",
+            reference = reference_atlas
+        ),
         message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR RLM : ")
     )
 
-    expect_equal(dim(results), c(5, length(colnames(ref_atlas[, -1]))))
+    expect_equal(dim(results), c(5, length(colnames(reference_atlas[, -1]))))
     expect_equal(
-        dim(deconvolute(bulk = bulkTable[-1, ], model = "rlm")[[1]]),
-        c(5, length(colnames(ref_atlas[, -1])))
+        dim(deconvolute(
+            bulk = bulkTable[-1, ], model = "rlm",
+            reference = reference_atlas
+        )[[1]]),
+        c(5, length(colnames(reference_atlas[, -1])))
     )
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(lapply(unlist(results[, ]), typeof)[[1]], print("double"),
         ignore_attr = TRUE
     )
@@ -220,18 +260,21 @@ test_that("deconvolute rlm", {
     expect_equal(sum(results[3, ]), 1)
     expect_equal(sum(results[4, ]), 1)
     expect_equal(sum(results[5, ]), 1)
-    expect_error(deconvolute(bulk = bulkTable[, -1], model = "rlm"))
+    expect_error(deconvolute(
+        bulk = bulkTable[, -1], model = "rlm",
+        reference = reference_atlas
+    ))
     expect_error(deconvolute(
         bulk = bulkTable, model = "rlm",
-        vec = rep_len(1, vectorlength)
+        vec = rep_len(1, vectorlength), reference = reference_atlas
     ), NA)
     expect_error(deconvolute(
         bulk = bulkTable, model = "rlm",
-        vec = rep_len(1, vectorlength - 1)
+        vec = rep_len(1, vectorlength - 1), reference = reference_atlas
     ))
-    expect_error(deconvolute(model = "rlm"))
+    expect_error(deconvolute(model = "rlm", reference = reference_atlas))
     expect_equal(dim(results), dim(proportionsTable))
-    expect_equal(colnames(results), colnames(ref_atlas[, -1]))
+    expect_equal(colnames(results), colnames(reference_atlas[, -1]))
     expect_equal(rownames(results), rownames(proportionsTable))
 
     expect_equal(length(partial_rsq), length(simulation[[1]]) - 1)

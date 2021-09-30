@@ -17,8 +17,7 @@ probe IDs and their locations. If dataframe: must contain columns named "ID",
 "seqnames", "Start", "End", and "Strand". If GRanges: should have locations
 ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and
 end locations should be 1-based coordinates. Note that any row with NA values
-will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
-folder included in package.}
+will not be used.}
 
 \item{WGBS_data}{Either a GRanges object or methylKit object (methylRaw,
 methylBase, methylRawDB, or methylBaseDB) of CpG locations and their

@@ -1,55 +1,68 @@
 library(deconvR)
 
 test_that("simulateCellMix", {
-    ref_atlas <- readRDS(system.file("reference_atlas_nodup.RDS",
-        package = "deconvR"
-    ))
+    data("reference_atlas")
     expect_equal(
-        dim(simulateCellMix(1)[[1]]),
-        c(dim(ref_atlas[, -1])[1], 1 + 1)
+        dim(simulateCellMix(1, reference = reference_atlas)[[1]]),
+        c(dim(reference_atlas[, -1])[1], 1 + 1)
     )
-    expect_equal(simulateCellMix(1)[[1]][, 1], ref_atlas[, 1])
+    expect_equal(
+        simulateCellMix(1, reference = reference_atlas)[[1]][, 1],
+        reference_atlas[, 1]
+    )
     expect_equal(
         dim(simulateCellMix(
             numberOfSamples = 50,
-            reference = ref_atlas
+            reference = reference_atlas
         )[[1]]),
-        c(dim(ref_atlas[, -1])[1], 50 + 1)
+        c(dim(reference_atlas[, -1])[1], 50 + 1)
     )
     expect_equal(
         simulateCellMix(
             numberOfSamples = 50,
-            reference = ref_atlas
+            reference = reference_atlas
         )[[1]][, 1],
-        ref_atlas[, 1]
+        reference_atlas[, 1]
     )
-    expect_equal(sum(simulateCellMix(5)[[2]][1, ]), 1)
-    expect_equal(sum(simulateCellMix(5)[[2]][2, ]), 1)
-    expect_equal(sum(simulateCellMix(5)[[2]][3, ]), 1)
-    expect_equal(sum(simulateCellMix(5)[[2]][4, ]), 1)
-    expect_equal(sum(simulateCellMix(5)[[2]][5, ]), 1)
-    expect_equal(sum(simulateCellMix(10)[[2]]), 10)
+    expect_equal(sum(simulateCellMix(5,
+        reference = reference_atlas
+    )[[2]][1, ]), 1)
+    expect_equal(sum(simulateCellMix(5,
+        reference = reference_atlas
+    )[[2]][2, ]), 1)
+    expect_equal(sum(simulateCellMix(5,
+        reference = reference_atlas
+    )[[2]][3, ]), 1)
+    expect_equal(sum(simulateCellMix(5,
+        reference = reference_atlas
+    )[[2]][4, ]), 1)
+    expect_equal(sum(simulateCellMix(5,
+        reference = reference_atlas
+    )[[2]][5, ]), 1)
+    expect_equal(sum(simulateCellMix(10,
+        reference = reference_atlas
+    )[[2]]), 10)
     expect_equal(
-        rownames(simulateCellMix(5)[[2]]),
-        colnames(simulateCellMix(5)[[1]])[-1]
+        rownames(simulateCellMix(5, reference = reference_atlas)[[2]]),
+        colnames(simulateCellMix(5, reference = reference_atlas)[[1]])[-1]
     )
-    expect_error(simulateCellMix(0)[[1]])
-    expect_error(simulateCellMix(-1)[[1]])
+    expect_error(simulateCellMix(0, reference = reference_atlas)[[1]])
+    expect_error(simulateCellMix(-1, reference = reference_atlas)[[1]])
 
-    expect_equal(length(simulateCellMix(1, c(
+    expect_equal(length(simulateCellMix(1, reference = reference_atlas, c(
         0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     ))), 2)
-    expect_equal(dim(simulateCellMix(1, c(
+    expect_equal(dim(simulateCellMix(1, reference = reference_atlas, c(
         0, 0, 0, 0, 0.3, 0, 0, 0, 0.5, 0, 0,
         0, 0, 0, 0.1, 0, 0, 0, 0, 0.05, 0.05,
         0, 0, 0, 0
     ))[[1]]), c(
-        nrow(ref_atlas),
+        nrow(reference_atlas),
         1 + 1
     ))
     expect_equal(
-        dim(simulateCellMix(2, data.frame(c(
+        dim(simulateCellMix(2, reference = reference_atlas, data.frame(c(
             0, 0, 0, 0, 0, 1, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0
@@ -59,27 +72,27 @@ test_that("simulateCellMix", {
             0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0
         )))[[2]]),
-        c(2, ncol(ref_atlas) - 1)
+        c(2, ncol(reference_atlas) - 1)
     )
     expect_equal(
-        colnames(simulateCellMix(1, data.frame(c(
+        colnames(simulateCellMix(1, reference = reference_atlas, data.frame(c(
             0.1, 0.7, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0,
             0.01, 0, 0.09, 0, 0,
             0.1, 0, 0, 0, 0, 0, 0
         )))[[2]]),
-        colnames(ref_atlas[, -1])
+        colnames(reference_atlas[, -1])
     )
-    expect_error(simulateCellMix(10, c(
+    expect_error(simulateCellMix(10, reference = reference_atlas, c(
         0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     )))
-    expect_error(simulateCellMix(2, data.frame(c(
+    expect_error(simulateCellMix(2, reference = reference_atlas, data.frame(c(
         0.1, 0.7, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0.01, 0, 0.09, 0,
         0, 0.1, 0, 0, 0, 0, 0, 0
     ))))
-    expect_error(simulateCellMix(1, data.frame(c(
+    expect_error(simulateCellMix(1, reference = reference_atlas, data.frame(c(
         0, 0, 0, 0, 0.3, 0, 0, 0, 0.5,
         0, 0, 0, 0, 0, 0.1, 0, 0, 0, 0,
         0.05, 0.05, 0, 0, 0, 0

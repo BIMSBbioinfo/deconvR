@@ -4,8 +4,7 @@
 #' "seqnames", "Start", "End", and "Strand". If GRanges: should have locations
 #' ("seqnames", "ranges", "strand"), as well as metadata column "ID". Start and
 #' end locations should be 1-based coordinates. Note that any row with NA values
-#' will not be used. Example dataframe illumina_probes_hg38_GRanges.RDS in inst
-#' folder included in package.
+#' will not be used.
 #' @param WGBS_data Either a GRanges object or methylKit object (methylRaw,
 #' methylBase, methylRawDB, or methylBaseDB) of CpG locations and their
 #' methylation values. Contains locations ("seqnames", "ranges", "strand") and
@@ -21,11 +20,12 @@
 #' @importFrom tidyr drop_na
 #' @importFrom stats aggregate
 #' @importFrom methylKit percMethylation unite getSampleID
-#' @importFrom GenomicRanges GRanges
+#' @importFrom GenomicRanges GRanges makeGRangesFromDataFrame
 #' @importFrom data.table nafill transpose
 #' @importFrom IRanges IRanges mergeByOverlaps distance
 #' @importFrom S4Vectors 'elementMetadata<-' runValue elementMetadata
 #' @importFrom S4Vectors 'mcols<-' runValue mcols
+#' @importFrom dplyr select starts_with
 #' @importFrom BiocGenerics  lapply as.data.frame
 #' @keywords mapping
 #' @examples
@@ -67,7 +67,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     }
 
     if (!(class(WGBS_data) %in% c(
-        "GRanges", "methylRawList",
+        "GRanges", "methylRawList", "methylRaw", "methylRawListDB",
         "methylBaseDB", "methylBase"
     ))) {
         stop("WGBS_data must be either GRanges object or, a methylKit object,
@@ -104,29 +104,28 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             stop("probe_id_locations must have metadata column ID")
         }
     }
-    if ((is(WGBS_data, "methylBaseDB")) ||
-        (is(WGBS_data, "methylBase"))) {
-        pm <- percMethylation(WGBS_data)
-        pm <- pm / 100
-        WGBS_data <- as(WGBS_data, "GRanges")
-        mcols(WGBS_data) <- as.data.frame(pm)
-    }
-    if (is(WGBS_data, "methylRawList")) {
-        ## Convert methylRawList to methylbase object
-        WGBS_data <- unite(WGBS_data, destrand = FALSE)
-        pm <- percMethylation(WGBS_data)
-        pm <- pm / 100
-        WGBS_data <- as(WGBS_data, "GRanges")
-        mcols(WGBS_data) <- as.data.frame(pm)
-    }
     ## turn WGBS_data to GRanges object if it is not already one
-    if (isClass(WGBS_data, Class = "GRanges") != TRUE) {
+    meth_convert <- function(WGBS_data) {
         sampleName <- getSampleID(WGBS_data)
+        if (is(WGBS_data, "methylRawList") ||
+            is(WGBS_data, "methylRawListDB")) {
+            WGBS_data <- unite(WGBS_data, destrand = FALSE)
+        }
         WGBS_data <- as(WGBS_data, "GRanges")
-        mcols(WGBS_data) <- WGBS_data$numCs / WGBS_data$coverage
+        WGBS_data <- as.data.frame(WGBS_data)
+        pm <- select(WGBS_data, starts_with("numCs")) /
+            select(WGBS_data, starts_with("coverage"))
+        WGBS_data <- makeGRangesFromDataFrame(WGBS_data,
+            keep.extra.columns = TRUE
+        )
+        mcols(WGBS_data) <- pm
         colnames(mcols(WGBS_data)) <- sampleName
+        return(WGBS_data)
     }
-    if (isClass(WGBS_data, Class = "GRanges")) {
+    if (!is(WGBS_data, "GRanges")) {
+        WGBS_data <- meth_convert(WGBS_data)
+    }
+    if (is(WGBS_data, "GRanges")) {
         column_names <- colnames(mcols(WGBS_data))
         elementMetadata(WGBS_data) <-
             nafill(as.data.frame(elementMetadata(WGBS_data)),
@@ -182,7 +181,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
                     nearolaps_df$probe_id_locations
                 )
             )
-            ## the distance of the gap between probe  and WGBS data location
+            ## the distance of the gap between probe and WGBS data location
             nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
             # order the df by distance so that when we delete duplicates
             # the duplicate with the largest gap is deleted
