@@ -119,7 +119,7 @@ deconvolute <- function(reference,
             coefficients <- (rlm(ref, mix, maxit = 100))$coefficients
         }
     }
-    
+    h <- NULL
     operation <- foreach(
         h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
         .combine = "comb", .multicombine = TRUE,

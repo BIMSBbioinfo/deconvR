@@ -69,6 +69,7 @@ Suggests:
     rmarkdown,
     devtools (>= 2.4.2),
     sessioninfo (>= 1.1.1),
-    covr
+    covr,
+    granulator
 VignetteBuilder: knitr
 Config/testthat/edition: 3

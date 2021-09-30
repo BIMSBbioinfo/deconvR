@@ -411,7 +411,7 @@ only use small sample of data. Notice that we set IDs column. In order to run
 ``` {r }
 library(granulator)
 #To load the data from granulator package
-granulator::load_ABIS()
+load_ABIS()
 
 #Read the bulk RNA-seq data
 bulk_RNA <- bulkRNAseq_ABIS[1:100,] %>% 
