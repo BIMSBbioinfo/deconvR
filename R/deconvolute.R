@@ -45,7 +45,7 @@
 #'     bulk = bulk_data, model = "qp"
 #' )
 #' @return A list, first is a dataframe which contains predicted cell-type
-#' proportions of bulk methylation profiles in "bulk", second is a list of
+#' proportions of bulk sample profiles in "bulk", second is a list of
 #' partial-rsq values of results, one value per sample.
 #' @references Moss, J. et al.  (2018). Comprehensive human cell-type
 #' methylation atlas reveals origins of circulating cell-free DNA in health
