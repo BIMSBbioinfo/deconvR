@@ -403,9 +403,11 @@ deconvolution[[1]]
 
 # Example Workflow For RNA Sequencing Data
 
+`simulateCellMix` and `findSignatures` don't suppor other data type than WGBS
+yet. However,`deconvolute` can be used to deconvolute any kind of RNA-seq data. 
 Here, we will use RNA-seq example data from the **granulator** package. We will
-only use small sample of data. Notice that we set an IDs column. In order to run
-`deconvR` functions, you have to set the `Gene names` colname as `IDs`.
+only use small sample of data. Notice that we set IDs column. In order to run
+`deconvolute` function, `IDs` column is necessary.
 
 ``` {r }
 library(granulator)
@@ -431,42 +433,14 @@ reference_RNA <- sigMatrix_ABIS_S0 %>%
 
 head(reference_RNA[1:5])
 ```
-First, we will simulate the cell mixture using `simulateCellMix`
-
-``` {r, message = FALSE, output.lines=10}
-samples <- simulateCellMix(3,reference = reference_RNA)[[1]]
-head(samples)
-```
-
-
-`sampleMeta` includes the information of where the origins they should be mapped
-to when added to `atlas` and also, all of the sample names in `samples`.
-
-``` {r, message = FALSE, output.lines=10}
-sampleMeta <- data.table("Experiment_accession" = colnames(samples)[-1],
-                         "Biosample_term_name" = "new cell type")
-head(sampleMeta)
-```
-
-We will use `findSignatures` to extend the matrix.
-
-``` {r, output.lines=10}
-extended_matrix <- findSignatures(samples = samples, 
-                                  sampleMeta = sampleMeta, 
-                                  atlas = reference_RNA)
-head(extended_matrix)
-```
-Then we will use `deconvolute` to deconvolute cell type proportions of the bulk
-samples to their origin proportions using a **quadric programming** model. 
 
 ``` {r}
 deconv_RNA <- deconvR::deconvolute(reference = reference_RNA,
                              bulk = bulk_RNA,model = "qp")
 ```
-Then we can access the deconvoluted proportions of bulk sample profiles.
 
 ```{r }
-head(deconv_RNA[[1]])
+deconv_RNA[[1]]
 ```
 
 # sessionInfo

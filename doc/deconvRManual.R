@@ -121,27 +121,12 @@ reference_RNA <- sigMatrix_ABIS_S0 %>%
 
 head(reference_RNA[1:5])
 
-## ---- message = FALSE, output.lines=10----------------------------------------
-samples <- simulateCellMix(3,reference = reference_RNA)[[1]]
-head(samples)
-
-## ---- message = FALSE, output.lines=10----------------------------------------
-sampleMeta <- data.table("Experiment_accession" = colnames(samples)[-1],
-                         "Biosample_term_name" = "new cell type")
-head(sampleMeta)
-
-## ---- output.lines=10---------------------------------------------------------
-extended_matrix <- findSignatures(samples = samples, 
-                                  sampleMeta = sampleMeta, 
-                                  atlas = reference_RNA)
-head(extended_matrix)
-
 ## -----------------------------------------------------------------------------
 deconv_RNA <- deconvR::deconvolute(reference = reference_RNA,
                              bulk = bulk_RNA,model = "qp")
 
 ## -----------------------------------------------------------------------------
-head(deconv_RNA[[1]])
+deconv_RNA[[1]]
 
 ## -----------------------------------------------------------------------------
 sessionInfo()

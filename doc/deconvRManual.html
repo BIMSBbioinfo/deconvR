@@ -589,13 +589,13 @@ head(reference_atlas)</code></pre>
 <p>And below illustrates the <code>samples</code> format.</p>
 <pre class="r"><code>samples &lt;- simulateCellMix(3,reference = reference_atlas)[[1]]
 head(samples)</code></pre>
-<pre><code>##          IDs  Sample 1  Sample 2  Sample 3
-## 1 cg08169020 0.3459600 0.6177111 0.8222526
-## 2 cg25913761 0.4408274 0.5716266 0.7953530
-## 3 cg26955540 0.3120926 0.4459379 0.7202836
-## 4 cg25170017 0.4442429 0.7250075 0.8282265
-## 5 cg12827637 0.2587707 0.4524615 0.4844016
-## 6 cg19442545 0.1172705 0.1636186 0.1909285</code></pre>
+<pre><code>##          IDs  Sample 1   Sample 2   Sample 3
+## 1 cg08169020 0.4278684 0.05312585 0.13529411
+## 2 cg25913761 0.2543311 0.18016281 0.31262496
+## 3 cg26955540 0.1009908 0.09363022 0.20790104
+## 4 cg25170017 0.5113455 0.10862716 0.21677514
+## 5 cg12827637 0.2666879 0.07210606 0.13101916
+## 6 cg19442545 0.1116699 0.01811682 0.04522118</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the
 origins they should be mapped to when added to <code>atlas</code>.</p>
 <pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
@@ -638,12 +638,12 @@ head(sampleMeta)</code></pre>
 ## Uterus_cervix</code></pre>
 <pre class="r"><code>head(extended_matrix)</code></pre>
 <pre><code>##           IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1: cg08169020     0.5953079         0.8866       0.2615          0.0149
-## 2: cg25913761     0.6026023         0.8363       0.2210          0.2816
-## 3: cg26955540     0.4927714         0.7658       0.0222          0.1492
-## 4: cg25170017     0.6658256         0.8861       0.5116          0.1021
-## 5: cg12827637     0.3985446         0.5212       0.3614          0.0227
-## 6: cg19442545     0.1572725         0.2013       0.1137          0.0608
+## 1: cg08169020    0.20542945         0.8866       0.2615          0.0149
+## 2: cg25913761    0.24903964         0.8363       0.2210          0.2816
+## 3: cg26955540    0.13417401         0.7658       0.0222          0.1492
+## 4: cg25170017    0.27891594         0.8861       0.5116          0.1021
+## 5: cg12827637    0.15660439         0.5212       0.3614          0.0227
+## 6: cg19442545    0.05833595         0.2013       0.1137          0.0608
 ##    NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1:        0.0777          0.0164           0.8680                  0.9509
 ## 2:        0.4705          0.3961           0.8293                  0.2385
@@ -749,7 +749,7 @@ using the previously extended signature matrix as the reference atlas.</p>
 <pre class="r"><code>deconvolution &lt;- deconvolute(reference = extended_matrix, 
                              bulk = mapped_WGBS_data)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.4839  0.4839  0.4839  0.4839  0.4839  0.4839</code></pre>
+##  0.4985  0.4985  0.4985  0.4985  0.4985  0.4985</code></pre>
 <pre class="r"><code>deconvolution[[1]]</code></pre>
 <pre><code>##         new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
 ## sample1             0              0            0               0             0
@@ -769,9 +769,11 @@ using the previously extended signature matrix as the reference atlas.</p>
 </div>
 <div id="example-workflow-for-rna-sequencing-data" class="section level1" number="6">
 <h1><span class="header-section-number">6</span> Example Workflow For RNA Sequencing Data</h1>
-<p>Here, we will use RNA-seq example data from the <strong>granulator</strong> package. We will
-only use small sample of data. Notice that we set an IDs column. In order to run
-<code>deconvR</code> functions, you have to set the <code>Gene names</code> colname as <code>IDs</code>.</p>
+<p><code>simulateCellMix</code> and <code>findSignatures</code> don’t suppor other data type than WGBS
+yet. However,<code>deconvolute</code> can be used to deconvolute any kind of RNA-seq data.
+Here, we will use RNA-seq example data from the <strong>granulator</strong> package. We will
+only use small sample of data. Notice that we set IDs column. In order to run
+<code>deconvolute</code> function, <code>IDs</code> column is necessary.</p>
 <pre class="r"><code>library(granulator)
 #To load the data from granulator package
 load_ABIS()</code></pre>
@@ -804,85 +806,11 @@ head(reference_RNA[1:5])</code></pre>
 ## CLEC6A   CLEC6A   33.695996 0.0000000    0.0000000   0.0000000
 ## FXYD6     FXYD6  114.167642 0.4707691    0.1832934   0.2908456
 ## NRG1       NRG1  142.457347 0.1949568    0.1527024   0.2790682</code></pre>
-<p>First, we will simulate the cell mixture using <code>simulateCellMix</code></p>
-<pre class="r"><code>samples &lt;- simulateCellMix(3,reference = reference_RNA)[[1]]
-head(samples)</code></pre>
-<pre><code>##       IDs   Sample 1  Sample 2   Sample 3
-## 1   S1PR3 16.9042003 15.303022  45.720735
-## 2   RXFP2  6.5587383  5.920822  17.877398
-## 3 ADAMTS5  0.9356136  0.844614   2.550237
-## 4  CLEC6A 12.3621577 11.159789  33.695996
-## 5   FXYD6 42.0190750 38.034232 114.167642
-## 6    NRG1 52.3631050 47.297391 142.457347</code></pre>
-<p><code>sampleMeta</code> includes the information of where the origins they should be mapped
-to when added to <code>atlas</code> and also, all of the sample names in <code>samples</code>.</p>
-<pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
-                         &quot;Biosample_term_name&quot; = &quot;new cell type&quot;)
-head(sampleMeta)</code></pre>
-<pre><code>##    Experiment_accession Biosample_term_name
-## 1:             Sample 1       new cell type
-## 2:             Sample 2       new cell type
-## 3:             Sample 3       new cell type</code></pre>
-<p>We will use <code>findSignatures</code> to extend the matrix.</p>
-<pre class="r"><code>extended_matrix &lt;- findSignatures(samples = samples, 
-                                  sampleMeta = sampleMeta, 
-                                  atlas = reference_RNA)</code></pre>
-<pre><code>## CELL TYPES IN EXTENDED ATLAS: 
-## new cell type 
-## Monocytes.C 
-## NK 
-## T.CD8.Memory 
-## T.CD4.Naive 
-## T.CD8.Naive 
-## B.Naive 
-## T.CD4.Memory 
-## MAIT 
-## T.gd.Vd2 
-## Neutrophils.LD 
-## T.gd.non.Vd2 
-## Basophils.LD 
-## Monocytes.NC.I 
-## B.Memory 
-## mDCs 
-## pDCs 
-## Plasmablasts</code></pre>
-<pre class="r"><code>head(extended_matrix)</code></pre>
-<pre><code>##        IDs new_cell_type Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## 1:   S1PR3     25.975986   45.720735 0.2790023    0.1981103   0.3657506
-## 2:   RXFP2     10.118986   17.877398 0.0000000    0.0000000   0.0000000
-## 3: ADAMTS5      1.443488    2.550237 0.0000000    0.0000000   0.0000000
-## 4:  CLEC6A     19.072648   33.695996 0.0000000    0.0000000   0.0000000
-## 5:   FXYD6     64.740317  114.167642 0.4707691    0.1832934   0.2908456
-## 6:    NRG1     80.705947  142.457347 0.1949568    0.1527024   0.2790682
-##    T.CD8.Naive   B.Naive T.CD4.Memory      MAIT  T.gd.Vd2 Neutrophils.LD
-## 1:   0.1930285 1.5953677    0.3397065 0.1636009 0.2488113      0.1423922
-## 2:   0.0000000 0.2471771    0.0000000 0.0000000 0.0000000      0.0000000
-## 3:   0.0000000 0.0000000    0.0000000 0.0000000 0.0000000      0.0000000
-## 4:   0.0000000 0.7002068    0.0000000 0.0000000 0.0000000      0.7875472
-## 5:   0.1365307 3.2211361    0.6351566 0.4105997 0.5243060      0.2243309
-## 6:   0.1812984 4.3580607    0.4943492 0.3423420 0.0000000      0.5660338
-##    T.gd.non.Vd2 Basophils.LD Monocytes.NC.I  B.Memory      mDCs      pDCs
-## 1:    0.2793478   0.21340963     2.04098638 0.5061192  3.996206 0.2970846
-## 2:    0.0000000   0.16358915     0.87670988 0.3698694  2.138135 0.0249378
-## 3:    0.0000000   0.00000000     0.01469791 0.0000000  0.280055 0.0000000
-## 4:    0.0000000   0.00000000     1.09727042 0.5349834 16.186949 0.0000000
-## 5:    0.5340739   0.05958501    10.08437604 2.5147975 33.350827 2.4247225
-## 6:    0.5504710   0.81789264     5.93258595 2.7586357 43.091596 0.3021237
-##    Plasmablasts
-## 1:   0.61598689
-## 2:   0.09082579
-## 3:   0.00000000
-## 4:   0.00000000
-## 5:   2.32727493
-## 6:   6.59586777</code></pre>
-<p>Then we will use <code>deconvolute</code> to deconvolute cell type proportions of the bulk
-samples to their origin proportions using a <strong>quadric programming</strong> model.</p>
 <pre class="r"><code>deconv_RNA &lt;- deconvR::deconvolute(reference = reference_RNA,
                              bulk = bulk_RNA,model = &quot;qp&quot;)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  0.1519  0.3955  0.5334  0.4962  0.5817  0.7777</code></pre>
-<p>Then we can access the deconvoluted proportions of bulk sample profiles.</p>
-<pre class="r"><code>head(deconv_RNA[[1]])</code></pre>
+<pre class="r"><code>deconv_RNA[[1]]</code></pre>
 <pre><code>##      Monocytes.C         NK T.CD8.Memory  T.CD4.Naive  T.CD8.Naive      B.Naive
 ## CYFZ  0.07416583 0.00000000 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
 ## FY2H  0.22264048 0.00000000 1.313632e-15 1.695476e-16 2.308811e-15 0.000000e+00
@@ -890,6 +818,12 @@ samples to their origin proportions using a <strong>quadric programming</strong>
 ## 453W  0.17154526 0.01919854 6.054096e-16 5.854938e-16 1.976175e-15 0.000000e+00
 ## 684C  0.12357591 0.00000000 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
 ## CZJE  0.14139769 0.08937166 6.151678e-16 0.000000e+00 9.300368e-16 0.000000e+00
+## 925L  0.19552529 0.08609678 1.387765e-15 2.239021e-15 1.858144e-15 0.000000e+00
+## 9JD4  0.13292517 0.07042602 0.000000e+00 1.607218e-15 1.608161e-15 8.173561e-02
+## G4YW  0.20186282 0.10403384 6.605082e-02 0.000000e+00 0.000000e+00 0.000000e+00
+## 4DUY  0.13658508 0.04731196 0.000000e+00 1.372340e-15 2.213815e-15 0.000000e+00
+## 36TS  0.21174754 0.01848799 4.585981e-16 0.000000e+00 1.789674e-15 1.518910e-16
+## CR3L  0.13128162 0.09281024 5.288090e-16 0.000000e+00 0.000000e+00 3.776400e-01
 ##      T.CD4.Memory         MAIT     T.gd.Vd2 Neutrophils.LD T.gd.non.Vd2
 ## CYFZ 5.898052e-16 0.000000e+00 0.000000e+00      0.3259573 0.000000e+00
 ## FY2H 0.000000e+00 7.003482e-16 4.507442e-16      0.2513557 1.191015e-16
@@ -897,20 +831,38 @@ samples to their origin proportions using a <strong>quadric programming</strong>
 ## 453W 5.501729e-16 0.000000e+00 4.065209e-16      0.2730181 0.000000e+00
 ## 684C 1.412092e-15 0.000000e+00 0.000000e+00      0.2063113 2.345557e-17
 ## CZJE 3.787744e-16 0.000000e+00 0.000000e+00      0.3933722 6.308220e-17
-##      Basophils.LD Monocytes.NC.I     B.Memory         mDCs       pDCs
-## CYFZ 7.616545e-16      0.4918473 2.933647e-16 3.377447e-18 0.10802957
-## FY2H 0.000000e+00      0.0000000 0.000000e+00 0.000000e+00 0.52600378
-## FLWA 3.773419e-16      0.2282683 0.000000e+00 0.000000e+00 0.26797714
-## 453W 3.110657e-15      0.2234473 0.000000e+00 0.000000e+00 0.31279080
-## 684C 0.000000e+00      0.6701128 2.135170e-15 0.000000e+00 0.00000000
-## CZJE 5.105265e-16      0.3556935 7.442706e-17 0.000000e+00 0.02016491
+## 925L 0.000000e+00 8.530374e-16 0.000000e+00      0.6288469 0.000000e+00
+## 9JD4 0.000000e+00 8.643326e-16 0.000000e+00      0.6879206 0.000000e+00
+## G4YW 0.000000e+00 0.000000e+00 1.295563e-15      0.4603878 4.898274e-03
+## 4DUY 3.963938e-16 0.000000e+00 0.000000e+00      0.6341061 0.000000e+00
+## 36TS 0.000000e+00 1.852801e-15 0.000000e+00      0.6590367 0.000000e+00
+## CR3L 2.499710e-15 0.000000e+00 6.746674e-16      0.1204633 9.515600e-18
+##      Basophils.LD Monocytes.NC.I     B.Memory         mDCs         pDCs
+## CYFZ 7.616545e-16   4.918473e-01 2.933647e-16 3.377447e-18 1.080296e-01
+## FY2H 0.000000e+00   0.000000e+00 0.000000e+00 0.000000e+00 5.260038e-01
+## FLWA 3.773419e-16   2.282683e-01 0.000000e+00 0.000000e+00 2.679771e-01
+## 453W 3.110657e-15   2.234473e-01 0.000000e+00 0.000000e+00 3.127908e-01
+## 684C 0.000000e+00   6.701128e-01 2.135170e-15 0.000000e+00 0.000000e+00
+## CZJE 5.105265e-16   3.556935e-01 7.442706e-17 0.000000e+00 2.016491e-02
+## 925L 0.000000e+00   7.677590e-18 0.000000e+00 1.065603e-02 7.887495e-02
+## 9JD4 0.000000e+00   3.752663e-20 0.000000e+00 0.000000e+00 2.699256e-02
+## G4YW 9.613076e-16   0.000000e+00 1.211431e-01 0.000000e+00 4.162330e-02
+## 4DUY 2.838486e-15   1.819969e-01 0.000000e+00 1.101399e-18 8.178857e-18
+## 36TS 3.962680e-16   0.000000e+00 0.000000e+00 0.000000e+00 1.107277e-01
+## CR3L 3.324326e-15   1.929068e-01 1.671510e-15 4.544836e-02 3.944975e-02
 ##      Plasmablasts
 ## CYFZ 1.067149e-17
 ## FY2H 3.087322e-16
 ## FLWA 0.000000e+00
 ## 453W 8.088753e-17
 ## 684C 0.000000e+00
-## CZJE 2.453569e-18</code></pre>
+## CZJE 2.453569e-18
+## 925L 0.000000e+00
+## 9JD4 6.041228e-17
+## G4YW 0.000000e+00
+## 4DUY 0.000000e+00
+## 36TS 1.431685e-18
+## CR3L 0.000000e+00</code></pre>
 </div>
 <div id="sessioninfo" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> sessionInfo</h1>
