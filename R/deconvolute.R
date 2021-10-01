@@ -1,17 +1,11 @@
-#' A function to deconvolute of bulk samples to their origin proportions
+#' @title A function to deconvolute of bulk samples to their origin proportions
 #' using data from reference atlas (e.g. methylation signatures)
 #' Results of model are returned in dataframe "results".
 #' Summary of partial R-squared values of model (min, median, mean, max...) are
 #' printed upon completion.
 #' @importFrom foreach %dopar% foreach
-#' @importFrom rsq rsq.partial
-#' @importFrom stats lm na.omit
-#' @importFrom e1071 best.tune
-#' @importFrom quadprog solve.QP
+#' @importFrom stats  na.omit
 #' @importFrom dplyr select
-#' @importFrom nnls nnls
-#' @importFrom MASS rlm
-#' @importFrom assertthat assert_that
 #' @param reference A dataframe containing signatures of different cell types
 #' (e.g. methylation signature) used to train the model. The first column
 #' should contain a unique ID (e.g. target ID) to match rows of the reference
@@ -73,74 +67,33 @@ deconvolute <- function(reference,
     }
     ## get rid of rows in both tables with na values
     clean <- lapply(list(bulk, reference), na.omit)
-    find_partial_rsq <- function(observed, predicted, ref, vec) {
-        ## vector defaults to row means of reference
-        if (is.null(vec)) {
-            vec <- rowMeans(ref)
-        } else {
-            assert_that(length(vec) == length(predicted),
-                msg = paste(
-                    "vector should be length",
-                    length(predicted), "but is length",
-                    length(vec)
-                )
-            )
-        }
-        # calculate partial r-squared
-        rsq_partial <- rsq.partial(
-            lm(predicted ~ observed + vec),
-            lm(predicted ~ vec)
-        )$partial.rsq
-        return(rsq_partial)
-    }
-
-    train_model <- function(model, ref, mix) {
-        if (model == "nnls") { # non negative least squares
-            coefficients <- (nnls(data.matrix(ref), mix))$x
-        } else if (model == "svr") { # support vector regression
-            model <- best.tune("svm",
-                train.x = mix ~ ref, kernel = "linear",
-                type = "nu-regression", scale = FALSE,
-                ranges = list(nu = seq(0.25, 0.5, 0.75))
-            )
-            coefficients <- t(model$coefs) %*% model$SV
-        } else if (model == "qp") { # quadratic programming
-            Amat <- rbind(
-                matrix(rep(1, ncol(clean[[2]][, -1])), nrow = 1),
-                diag(ncol(clean[[2]][, -1]))
-            )
-
-            coefficients <- solve.QP(
-                Dmat = (t(ref) %*% ref), dvec = (t(ref) %*% mix),
-                Amat = t(Amat), bvec = c(c(1), rep(0, ncol(clean[[2]][, -1]))),
-                meq = 1
-            )$solution
-        } else if (model == "rlm") { # robust linear regression
-            coefficients <- (rlm(ref, mix, maxit = 100))$coefficients
-        }
-    }
+    colnum <- ncol(clean[[2]][, -1])
+    # save internal functions & variables within foreach,use parallelization
     h <- NULL
+    foreachList <- list()
+    foreachList$findPartialRsquare <- findPartialRsquare
+    foreachList$decoModel <- decoModel
     operation <- foreach(
         h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
         .combine = "comb", .multicombine = TRUE,
+        .export = c("findPartialRsquare", "decoModel"),
         .init = list(c(), list())
     ) %dopar% {
-        thedata <- na.omit(merge(select(clean[[1]], 1, h),
+        thedata <- na.omit(merge(dplyr::select(clean[[1]], 1, h),
             clean[[2]],
             by = "IDs"
         ))[, -1]
         # merge each sample to reference table
         mix <- as.matrix(thedata[, 1])
         ref <- as.matrix(thedata[, -1])
-        coefficients <- train_model(model, ref, mix)
-        coefficients <- ifelse(coefficients < 0, 0, coefficients)
+        coefficients <- decoModel(model, ref, mix, colnum)
         if (model == "svr") {
             coefficients <- as.numeric(coefficients / sum(coefficients))
         } else {
             coefficients <- coefficients / sum(coefficients)
         }
         return(list(
-            find_partial_rsq(mix, ref %*% coefficients, ref, vec),
+            findPartialRsquare(mix,(ref %*% coefficients) , ref, vec),
             coefficients
         ))
     }

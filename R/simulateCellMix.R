@@ -1,4 +1,4 @@
-#' A function to generate a dataframe of mixed cell-type origin simulated
+#' @title A function to generate a dataframe of mixed cell-type origin simulated
 #' samples using given reference atlas.
 #' @param numberOfSamples The number of simulated samples to be generated in
 #' the dataframe.

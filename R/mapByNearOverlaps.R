@@ -20,6 +20,7 @@
 #' which have not been directly covered in the WGBS data. Default value is 10.
 #' @param overlaps_df A data frame containing the WGBS data and probe IDs
 #' combined by overlaps
+#' @keywords internal
 #' @return A dataframe containing all of the maped CpGs based on near overlaps
 #' @noRd
 mapByNearOverlaps <- function(WGBS_data, probe_id_locations, cutoff, multipleMapping,

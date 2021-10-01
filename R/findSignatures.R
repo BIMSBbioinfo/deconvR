@@ -1,4 +1,4 @@
-#' A function to construct a signature matrix
+#' @title A function to construct a signature matrix
 #' @param samples dataframe, has first column IDs, rest of columns are samples
 #' (must have column name as sample accession ID which should be found in
 #' sampleMeta), rows are units of signature (e.g. CpGs)

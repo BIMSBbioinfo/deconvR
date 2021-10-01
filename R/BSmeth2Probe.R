@@ -19,7 +19,7 @@
 #' @importFrom methods is as
 #' @importFrom tidyr drop_na
 #' @importFrom GenomicRanges GRanges
-#' @importFrom data.table nafill 
+#' @importFrom data.table nafill
 #' @importFrom IRanges IRanges
 #' @importFrom S4Vectors 'elementMetadata<-' runValue elementMetadata
 #' @importFrom S4Vectors 'mcols<-' runValue mcols
