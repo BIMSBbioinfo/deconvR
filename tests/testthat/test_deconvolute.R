@@ -279,3 +279,4 @@ test_that("deconvolute rlm", {
 
     expect_equal(length(partial_rsq), length(simulation[[1]]) - 1)
 })
+

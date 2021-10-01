@@ -113,8 +113,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
                     colnames(simulatedMixtureTable)[s + 1] <- paste("Sample", s)
                 }
             }
-        }
-        else if (is(mixingVector, "numeric")) {
+        } else if (is(mixingVector, "numeric")) {
             if (1 != numberOfSamples) {
                 stop("Only use a vector for mixingVector if numberOfSamples = 1,
             otherwise use dataframe with columns for samples and rows for cell

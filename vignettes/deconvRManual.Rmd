@@ -437,6 +437,7 @@ head(reference_RNA[1:5])
 deconv_RNA <- deconvR::deconvolute(reference = reference_RNA, 
                              bulk = bulk_RNA,model = "qp")
 ```
+
 ```{r }
 deconv_RNA[[1]]
 ```

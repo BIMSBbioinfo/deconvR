@@ -69,16 +69,24 @@ test_that("BSmeth2Probe", {
         colnames(BSmeth2Probe(
             probe_id_locations = probe_ids,
             WGBS_data = methylKit::methRead(list(
-                system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
-                system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+                system.file("extdata", "test1.myCpG.txt",
+                    package = "methylKit"
+                ),
+                system.file("extdata", "test2.myCpG.txt",
+                    package = "methylKit"
+                )
             ),
             sample.id = list("test1", "test2"), assembly = "hg18",
             treatment = c(1, 1), context = "CpG"
             )
         )),
         c("IDs", methylKit::getSampleID(methylKit::methRead(list(
-            system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
-            system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+            system.file("extdata", "test1.myCpG.txt",
+                package = "methylKit"
+            ),
+            system.file("extdata", "test2.myCpG.txt",
+                package = "methylKit"
+            )
         ),
         sample.id = list("test1", "test2"), assembly = "hg18",
         treatment = c(1, 1), context = "CpG"
@@ -88,8 +96,12 @@ test_that("BSmeth2Probe", {
         colnames(BSmeth2Probe(
             probe_id_locations = probe_ids,
             WGBS_data = methylKit::methRead(list(
-                system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
-                system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+                system.file("extdata", "test1.myCpG.txt",
+                    package = "methylKit"
+                ),
+                system.file("extdata", "test2.myCpG.txt",
+                    package = "methylKit"
+                )
             ),
             sample.id = list("test1", "test2"), assembly = "hg18",
             treatment = c(1, 1), context = "CpG"
@@ -98,8 +110,12 @@ test_that("BSmeth2Probe", {
         colnames(BSmeth2Probe(
             cutoff = 100, probe_id_locations = probe_ids,
             WGBS_data = methylKit::methRead(list(
-                system.file("extdata", "test1.myCpG.txt", package = "methylKit"),
-                system.file("extdata", "test2.myCpG.txt", package = "methylKit")
+                system.file("extdata", "test1.myCpG.txt",
+                    package = "methylKit"
+                ),
+                system.file("extdata", "test2.myCpG.txt",
+                    package = "methylKit"
+                )
             ),
             sample.id = list("test1", "test2"), assembly = "hg18",
             treatment = c(1, 1), context = "CpG"

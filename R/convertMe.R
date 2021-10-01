@@ -1,4 +1,4 @@
-#' A function to calculate the percent of methylation and convert methylkit 
+#' A function to calculate the percent of methylation and convert methylkit
 #' objects to GRanges objects. Note that it does not support methylDiff objects.
 #' @param WGBS_data WGBS data in one of the following methylKit objects:
 #' methylRawList, methylRaw, methylRawListDB,methylBaseDB, methylBase.
@@ -12,7 +12,7 @@
 #' basegr <- convertMe(methylBase.obj)
 #' rawlistgr <- convertMe(methylRawList.obj)
 #' @return a GRanges object containing the methylation percent of samples
-#' @export
+#' @noRd
 convertMe <- function(WGBS_data) {
     if (!(class(WGBS_data) %in% c(
         "methylRawList", "methylRaw", "methylRawListDB",

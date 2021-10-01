@@ -1,4 +1,4 @@
-#' A function to map WGBS methylation data to Illumina Probe IDs
+#' @title A function to map WGBS methylation data to Illumina Probe IDs
 #' @param probe_id_locations Either a dataframe or GRanges object containing
 #' probe IDs and their locations. If dataframe: must contain columns named "ID",
 #' "seqnames", "Start", "End", and "Strand". If GRanges: should have locations
@@ -18,13 +18,11 @@
 #' Default value is FALSE.
 #' @importFrom methods is as
 #' @importFrom tidyr drop_na
-#' @importFrom stats aggregate
 #' @importFrom GenomicRanges GRanges
-#' @importFrom data.table nafill transpose
-#' @importFrom IRanges IRanges mergeByOverlaps distance
+#' @importFrom data.table nafill 
+#' @importFrom IRanges IRanges
 #' @importFrom S4Vectors 'elementMetadata<-' runValue elementMetadata
 #' @importFrom S4Vectors 'mcols<-' runValue mcols
-#' @importFrom BiocGenerics  lapply as.data.frame
 #' @keywords mapping
 #' @examples
 #' data("probe_ids")
@@ -99,7 +97,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
             stop("probe_id_locations must have metadata column ID")
         }
     }
-
+    # Convert methylKit objects to GRanges
     if (!is(WGBS_data, "GRanges")) {
         WGBS_data <- convertMe(WGBS_data)
     }
@@ -113,13 +111,6 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         if (NCOL(elementMetadata(WGBS_data)) == 0) {
             stop("WGBS_data must have at least one metadata column.")
         }
-        if (any(lapply(
-            as.data.frame(elementMetadata(WGBS_data)),
-            class
-        ) != "numeric")) {
-            stop("The metadata columns of WGBS_data must contain methylation
-                 values of sample(s) between 0 and 1")
-        }
         if ((any(as.data.frame(elementMetadata(WGBS_data)) < 0)) ||
             (any(as.data.frame(elementMetadata(WGBS_data)) > 1))) {
             stop("The metadata columns of WGBS_data must contain methylation
@@ -127,86 +118,14 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         }
     }
 
-    overlaps_df <- mergeByOverlaps(WGBS_data, probe_id_locations)
-    # mapping CpG locations to probe locations by overlap
-    if (nrow(overlaps_df) == 0) {
-        overlaps_df$distance <- numeric()
-    }
-    if (nrow(overlaps_df) > 0) {
-        overlaps_df[, "distance"] <- NA
-        # since there is no gap, say distance is NA
-    }
-
-    if (cutoff > 0) {
-        # only need to do "nearlyOverlaps" if cutoff > 0
-        nearolaps_df <- mergeByOverlaps(WGBS_data,
-            probe_id_locations,
-            maxgap = cutoff
-        )
-        ## same mapping as first time, but now with cutoff gap allowed
-        nearolaps_df <- subset(
-            nearolaps_df,
-            !(nearolaps_df$ID %in% overlaps_df$ID)
-        )
-        ## discard probes already mapped in first round
-        if (nrow(nearolaps_df) == 0) {
-            nearolaps_df$distance <- numeric()
-        }
-        if (nrow(nearolaps_df) > 0) {
-            nearolaps_df <- cbind(nearolaps_df,
-                distance = distance(
-                    nearolaps_df$WGBS_data,
-                    nearolaps_df$probe_id_locations
-                )
-            )
-            ## the distance of the gap between probe and WGBS data location
-            nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
-            # the duplicate with the largest gap is deleted
-            if (!multipleMapping) {
-                if (nrow(overlaps_df) > 0) {
-                    ## remove where CpG already mapped in first round
-                    ## if multipleMapping  has been set to false
-                    nearolaps_df <- subset(nearolaps_df, !(is.element(
-                        transpose(as.data.frame(
-                            nearolaps_df$WGBS_data
-                        )),
-                        transpose(as.data.frame(
-                            overlaps_df$WGBS_data
-                        ))
-                    )))
-                }
-                nearolaps_df <-
-                    nearolaps_df[!duplicated(nearolaps_df$WGBS_data), ]
-            }
-        }
-        allresults <- rbind(overlaps_df, nearolaps_df)
-        ## combine all of the mapping into one dataframe
-    }
-    if (cutoff == 0) {
-        ## if cutoff is 0, then all results are just exact overlaps
-        allresults <- overlaps_df
-    }
-
-    allresults <- allresults[, -c(1, NCOL(allresults) - 2, NCOL(allresults))]
-    ## cleaning up
-    allresults <- allresults[c(ncol(allresults), seq_len(ncol(allresults) - 1))]
-    ## if a probe was mapped to multiple CpGs,take the mean  value
-    if (nrow(allresults) > 0) {
-        allresults <- aggregate(
-            x = allresults[, -1],
-            by = list(ID = allresults[, 1]),
-            FUN = mean
-        )
-        ## set column names to match WGBS data
-        for (i in seq(2, ncol(allresults))) {
-            colnames(allresults)[i] <-
-                colnames(mcols(WGBS_data))[i - 1]
-        }
-    }
-    colnames(allresults)[1] <- "IDs"
+    allresults <- mapByOverlaps(
+        WGBS_data, probe_id_locations, cutoff,
+        multipleMapping
+    )
     if (nrow(allresults) == 0) {
-        message("Result dataframe is empty. No matches could be found.")
+        message("BSmeth2Probe couldn't find any match between the probe IDs and
+            WGBS data you have provided. Please make sure that you're using an
+            appropriate probe ID locations with your WGBS data.")
     }
-    ## the return value is a dataframe with column for CpG IDs
-    return(as.data.frame(allresults))
+    return(allresults)
 }
