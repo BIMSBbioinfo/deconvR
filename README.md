@@ -48,8 +48,7 @@ remotes::install_github("BIMSBbioinfo/deconvR")
 ## How to Use deconvR
 
 User who wish to expand their own reference atlas can use
-`findSignatures` function. Below is an example dataframe to illustrate
-the `atlas` format. `atlas` is the signature matrix to be extended and
+`findSignatures` function.`atlas` is the signature matrix to be extended and
 `samples` the new data to be added to the signature matrix. `atlas` and
 `samples` are compliant with the function requirements. After providing
 appropriate `atlas` format, users can create `samples` using
