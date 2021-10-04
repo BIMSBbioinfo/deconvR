@@ -24,10 +24,7 @@ used to generate the simulation. The first column should contain a unique
 ID (e.g. CpG target ID) which can be used in deconvolution to match rows of
 the reference to rows of the bulk. All subsequent columns are cell types.
 Rows are units of the signature. Each cell contains the value for the cell
-type and signature unit (e.g. methylation value at this CpG). If not given,
-defaults to a reference atlas which is included in this package (see
-deconvR/inst/reference_atlas_nodup.RDS). This reference atlas comes from
-Moss et al. (2018)}
+type and signature unit (e.g. methylation value at this CpG).}
 }
 \value{
 A list containing two data frames. First: A dataframe which contains

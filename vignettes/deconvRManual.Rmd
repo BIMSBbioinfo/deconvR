@@ -100,9 +100,7 @@ The dataframe `reference` contains the signatures to be used in the simulation.
 The first column should contain unique IDs (e.g. Illumina Probe IDs) which will
 also be used in the resulting bulk table. All subsequent columns are origins
 (e.g. cell types), and cells contain the corresponding value for this origin and
-ID (e.g. methylation value). If `reference` is not provided by the user, it will
-default to `reference_atlas_nodup.RDS` in the `inst` folder of the package (more
-information on this file can be found below).
+ID (e.g. methylation value). 
 
 `simulateCellMix` returns a list containing two dataframes. The first dataframe
 contains the simulated samples. Its first column contains unique IDs (from
@@ -133,9 +131,7 @@ The dataframe `reference` contains the signatures of different origins (e.g.
 cell types) used to train the model. The first column should contain unique IDs
 (e.g. Illumina Probe ID) to match rows of the reference to rows of the bulk. All
 subsequent columns are origins. Cells contain the corresponding value for this
-origin and ID (e.g. methylation value). If `reference` is not provided by the
-user, it will default to `reference_atlas_nodup.RDS` in the `inst` folder of the
-package (more information on this file can be found below).
+origin and ID (e.g. methylation value). 
 
 The user may provide a vector `vec` with which partial R-squared of the results
 will be calculated. The length must equal the number of rows of `reference` and
@@ -413,9 +409,9 @@ library(granulator)
 load_ABIS()
 
 #Read the bulk RNA-seq data
-bulk_RNA <- bulkRNAseq_ABIS[1:100,] %>% 
+bulk_RNA <- bulkRNAseq_ABIS[1:50,] %>% 
   as.data.frame() %>% 
-  mutate(IDs = rownames(bulkRNAseq_ABIS[1:100,])) %>%
+  mutate(IDs = rownames(bulkRNAseq_ABIS[1:50,])) %>%
   select("IDs", everything())
 
 head(bulk_RNA[,1:5])
