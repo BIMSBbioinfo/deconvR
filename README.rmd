@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-This **deconvR** package designed for analyzing deconvolution of the bulk
+The **deconvR** package designed for analyzing deconvolution of the bulk
 sample(s) using an atlas of reference signature profiles and a user-selected
 model (non-negative least squares regression, support vector regression,
 quadratic programming, or robust linear regression). Users can upload or expand
@@ -58,24 +58,7 @@ remotes::install_github("BIMSBbioinfo/deconvR")
 
 ## How to Use deconvR
 User who wish to expand their own reference atlas can use `findSignatures`
-function. Below is an example dataframe to illustrate the `atlas` format.
-`atlas` is the signature matrix to be extended and `samples` the new data to be
-added to the signature matrix. `atlas` and `samples` are compliant with the
-function requirements. After providing appropriate `atlas` format, users can
-create `samples` using `simulateCellMix` function.
-
-``` r 
-#Read the reference atlas provided within the package
-data("reference_atlas")
-```
-Such `atlas` format must provided in order to use `findSignatures` function.
-``` r 
-        IDs Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC CD8T.cells_EPIC
-1 cg08169020         0.8866       0.2615          0.0149        0.0777          0.0164
-2 cg25913761         0.8363       0.2210          0.2816        0.4705          0.3961
-3 cg26955540         0.7658       0.0222          0.1492        0.4005          0.3474
-4 cg25170017         0.8861       0.5116          0.1021        0.4363          0.0875
-5 cg12827637         0.5212       0.3614          0.0227        0.2120          0.0225
-6 cg19442545         0.2013       0.1137          0.0608        0.0410          0.0668
-```
-
+function. `atlas` is the signature matrix to be extended and `samples` the new
+data to be added to the signature matrix. `atlas` and `samples` are compliant
+with the function requirements. After providing appropriate `atlas` format,
+users can create `samples` using `simulateCellMix` function.

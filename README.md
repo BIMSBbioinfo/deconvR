@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <a name="deconvR_logo"/>
+
 <div align="center">
+
 <img src="https://github.com/BIMSBbioinfo/deconvR/blob/master/inst/deconvR_logo.png" alt="deconvR_logo" width="500"/ ></img>
 </a>
 
@@ -18,8 +20,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-This **deconvR** package designed for analyzing deconvolution of the
-bulk sample(s) using an atlas of reference signature profiles and a
+The **deconvR** package designed for analyzing deconvolution of the bulk
+sample(s) using an atlas of reference signature profiles and a
 user-selected model (non-negative least squares regression, support
 vector regression, quadratic programming, or robust linear regression).
 Users can upload or expand their own reference atlases using the
@@ -48,8 +50,8 @@ remotes::install_github("BIMSBbioinfo/deconvR")
 ## How to Use deconvR
 
 User who wish to expand their own reference atlas can use
-`findSignatures` function.`atlas` is the signature matrix to be extended and
-`samples` the new data to be added to the signature matrix. `atlas` and
-`samples` are compliant with the function requirements. After providing
-appropriate `atlas` format, users can create `samples` using
-`simulateCellMix` function.
+`findSignatures` function. `atlas` is the signature matrix to be
+extended and `samples` the new data to be added to the signature matrix.
+`atlas` and `samples` are compliant with the function requirements.
+After providing appropriate `atlas` format, users can create `samples`
+using `simulateCellMix` function.
