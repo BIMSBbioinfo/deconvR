@@ -41,13 +41,13 @@ A function to generate a dataframe of mixed cell-type origin simulated
 samples using given reference atlas.
 }
 \examples{
-data("reference_atlas")
-bulk_mix50 <- simulateCellMix(50, reference = reference_atlas)
+data("HumanCellTypeMethAtlas")
+bulk_mix50 <- simulateCellMix(50, reference = HumanCellTypeMethAtlas)
 
 bulk_mixVec <- simulateCellMix(1, mixingVector = c(
     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-), reference = reference_atlas)
+), reference = HumanCellTypeMethAtlas)
 }
 \references{
 Moss, J. et al.  (2018). Comprehensive human cell-type

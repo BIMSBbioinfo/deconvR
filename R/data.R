@@ -24,10 +24,7 @@
 "WGBS_GRanges"
 
 #' The comprehensive human methylome reference atlas
-#' This object contains the methylation values of 11715 genomic loci
-#' (identified using the “seqnames”, “ranges”, and “strand” values) for a
-#' single example sample. It can be used directly as WGBS_data in BSmeth2Probe.
-#' @usage data("reference_atlas")
+#' @usage data("HumanCellTypeMethAtlas")
 #' @format data.frame object with 6000 CpG loci and 25 human cell types column:
 #' \describe{
 #'   \item{cell type columns}{For each cell type and CpG locus, a methylation
@@ -40,4 +37,4 @@
 #' methylation atlas reveals origins of circulating cell-free DNA in health
 #' and disease. Nature communications, 9(1), 1-12.
 #' @source \url{https://doi.org/10.1038/s41467-018-07466-6}
-"reference_atlas"
+"HumanCellTypeMethAtlas"

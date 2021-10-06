@@ -17,8 +17,8 @@
 #' @importFrom matrixStats rowVars
 #' @importFrom stats na.omit
 #' @examples
-#' data("reference_atlas")
-#' exampleSamples <- simulateCellMix(1, reference = reference_atlas)[[1]]
+#' data("HumanCellTypeMethAtlas")
+#' exampleSamples <- simulateCellMix(1, reference = HumanCellTypeMethAtlas)[[1]]
 #' exampleMeta <- data.table(
 #'     "Experiment_accession" = "example_sample",
 #'     "Biosample_term_name" = "example_cell_type"
@@ -30,7 +30,7 @@
 #' )
 #' signatures <- findSignatures(
 #'     samples = exampleSamples, sampleMeta = exampleMeta,
-#'     atlas = reference_atlas
+#'     atlas = HumanCellTypeMethAtlas
 #' )
 #' @return A dataframe extendedAtlas which contains all cell types in atlas
 #' (if given), and those in samples added by cell type, has first column "IDs",

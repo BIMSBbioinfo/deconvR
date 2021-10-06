@@ -19,13 +19,13 @@
 #' @importFrom stats runif
 #' @keywords simulation
 #' @examples
-#' data("reference_atlas")
-#' bulk_mix50 <- simulateCellMix(50, reference = reference_atlas)
+#' data("HumanCellTypeMethAtlas")
+#' bulk_mix50 <- simulateCellMix(50, reference = HumanCellTypeMethAtlas)
 #'
 #' bulk_mixVec <- simulateCellMix(1, mixingVector = c(
 #'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-#' ), reference = reference_atlas)
+#' ), reference = HumanCellTypeMethAtlas)
 #' @return A list containing two data frames. First: A dataframe which contains
 #' mixed cell-type origin simulated samples. The first column contains a
 #' unique ID (used from reference) which can be used in deconvolution to match
@@ -67,7 +67,7 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
             picks <- sample(1:ncol(reference[-1]), n, replace = FALSE)
             amts <- runif(n)
             ## amts is the randomly chosen proportions
-            amts <- amts /  sum(amts)
+            amts <- amts / sum(amts)
             ## normalize so the proportions add to 1
 
             for (c in seq_len(n)) {

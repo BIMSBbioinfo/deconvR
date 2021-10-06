@@ -13,7 +13,7 @@
 #' of the signature (e.g. CpG). Each cell contains the value for the cell type
 #' of this unit (e.g. methylation value of the CpG). If not given, defaults to
 #' a reference atlas which is included in this package.
-#' (see deconvR/inst/reference_atlas_nodup.RDS).
+#' (see deconvR/inst/HumanCellTypeMethAtlas_nodup.RDS).
 #' This reference atlas comes from Moss et al. (2018)
 #' @param vec The user may provide a vector with which partial R-squared of the
 #' results will be calculated.
@@ -32,16 +32,16 @@
 #' linear regression). If not given, defaults to "nnls".
 #' @keywords deconvolution
 #' @examples
-#' data("reference_atlas")
-#' bulk_data <- simulateCellMix(10, reference = reference_atlas)[[1]]
+#' data("HumanCellTypeMethAtlas")
+#' bulk_data <- simulateCellMix(10, reference = HumanCellTypeMethAtlas)[[1]]
 #' # non-least negative square regression
 #' results_nnls <- deconvolute(
 #'     bulk = bulk_data,
-#'     reference = reference_atlas
+#'     reference = HumanCellTypeMethAtlas
 #' )
 #' # Quadric programming
 #' results_qp <- deconvolute(
-#'     reference = reference_atlas,
+#'     reference = HumanCellTypeMethAtlas,
 #'     bulk = bulk_data, model = "qp"
 #' )
 #' @return A list, first is a dataframe which contains predicted cell-type
@@ -93,7 +93,7 @@ deconvolute <- function(reference,
             coefficients <- coefficients / sum(coefficients)
         }
         return(list(
-            findPartialRsquare(mix,(ref %*% coefficients) , ref, vec),
+            findPartialRsquare(mix, (ref %*% coefficients), ref, vec),
             coefficients
         ))
     }

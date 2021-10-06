@@ -33,8 +33,8 @@ rest of columns are cell types, rows are have first cell with the ID
 A function to construct a signature matrix
 }
 \examples{
-data("reference_atlas")
-exampleSamples <- simulateCellMix(1, reference = reference_atlas)[[1]]
+data("HumanCellTypeMethAtlas")
+exampleSamples <- simulateCellMix(1, reference = HumanCellTypeMethAtlas)[[1]]
 exampleMeta <- data.table(
     "Experiment_accession" = "example_sample",
     "Biosample_term_name" = "example_cell_type"
@@ -46,6 +46,6 @@ signatures <- findSignatures(
 )
 signatures <- findSignatures(
     samples = exampleSamples, sampleMeta = exampleMeta,
-    atlas = reference_atlas
+    atlas = HumanCellTypeMethAtlas
 )
 }

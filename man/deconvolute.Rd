@@ -18,7 +18,7 @@ to rows of the bulk. All subsequent columns are cell types. One row per unit
 of the signature (e.g. CpG). Each cell contains the value for the cell type
 of this unit (e.g. methylation value of the CpG). If not given, defaults to
 a reference atlas which is included in this package.
-(see deconvR/inst/reference_atlas_nodup.RDS).
+(see deconvR/inst/HumanCellTypeMethAtlas_nodup.RDS).
 This reference atlas comes from Moss et al. (2018)}
 
 \item{vec}{The user may provide a vector with which partial R-squared of the
@@ -52,16 +52,16 @@ Summary of partial R-squared values of model (min, median, mean, max...) are
 printed upon completion.
 }
 \examples{
-data("reference_atlas")
-bulk_data <- simulateCellMix(10, reference = reference_atlas)[[1]]
+data("HumanCellTypeMethAtlas")
+bulk_data <- simulateCellMix(10, reference = HumanCellTypeMethAtlas)[[1]]
 # non-least negative square regression
 results_nnls <- deconvolute(
     bulk = bulk_data,
-    reference = reference_atlas
+    reference = HumanCellTypeMethAtlas
 )
 # Quadric programming
 results_qp <- deconvolute(
-    reference = reference_atlas,
+    reference = HumanCellTypeMethAtlas,
     bulk = bulk_data, model = "qp"
 )
 }
