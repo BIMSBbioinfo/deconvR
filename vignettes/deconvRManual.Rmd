@@ -343,16 +343,17 @@ be either a **GRanges** object or a **methylKit** object.
 Format of `WGBS_data` as **GRanges** object:
 
 ``` {r, message = FALSE, output.lines=10}
-data("WGBS_GRanges")
+WGBS_GRanges<- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
+                                     package = "deconvR"))
 WGBS_GRanges
 ```
 
 or as **methylKit** object:
 
 ``` {r, message = FALSE, output.lines=10}
-head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt",
-                                     package = "methylKit"), sample.id="test",
-                       assembly="hg38", treatment=1, context="CpG", mincov = 0))
+WGBS_data <- readRDS(system.file("extdata", "WGBS_methylkit.RDS",
+                                     package = "deconvR"))
+WGBS_data
 ```
 
 `probe_id_locations` contains information needed to map cellular loci to probe IDs

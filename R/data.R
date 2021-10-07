@@ -9,20 +9,6 @@
 #' @source \url{https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html}
 "probe_ids"
 
-#' An example of WGBS data has been included as the GRanges object
-#' This object contains the methylation values of 11715 genomic loci
-#' (identified using the “seqnames”, “ranges”, and “strand” values) for a
-#' single example sample. It can be used directly as WGBS_data in BSmeth2Probe.
-#' @usage data(WGBS_GRanges)
-#' @format GRanges object with 11715 ranges and 1 metadata column:
-#' \describe{
-#'   \item{metadata}{contains seqnames ranges strand and ID.
-#'   seqinfo: 25 sequences from an unspecified genome; no seqlengths}
-#'   ...
-#' }
-#' @source \url{https://www.encodeproject.org/data-standards/wgbs/}
-"WGBS_GRanges"
-
 #' The comprehensive human methylome reference atlas
 #' @usage data("HumanCellTypeMethAtlas")
 #' @format data.frame object with 6000 CpG loci and 25 human cell types column:
