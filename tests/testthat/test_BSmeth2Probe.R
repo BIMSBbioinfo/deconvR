@@ -1,8 +1,9 @@
 library(deconvR)
 
 test_that("BSmeth2Probe", {
-    WGBS_GRanges<- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
-                                       package = "deconvR"))
+    WGBS_GRanges <- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
+        package = "deconvR"
+    ))
     data("probe_ids")
     probe_ids_df <- GenomicRanges::as.data.frame(probe_ids)
 

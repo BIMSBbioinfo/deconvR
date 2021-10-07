@@ -62,9 +62,9 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
 
     if (is.null(mixingVector)) {
         for (i in seq_len(numberOfSamples)) {
-            n <- sample(1:ncol(reference[-1]), 1)
+            n <- sample(seq(ncol(reference[-1])), 1)
             ## n is the randomly chosen number of cell origins
-            picks <- sample(1:ncol(reference[-1]), n, replace = FALSE)
+            picks <- sample(seq(ncol(reference[-1])), n, replace = FALSE)
             amts <- runif(n)
             ## amts is the randomly chosen proportions
             amts <- amts / sum(amts)

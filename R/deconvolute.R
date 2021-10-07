@@ -6,6 +6,7 @@
 #' @importFrom foreach %dopar% foreach
 #' @importFrom stats  na.omit
 #' @importFrom dplyr select
+#' @importFrom utils getFromNamespace
 #' @param reference A dataframe containing signatures of different cell types
 #' (e.g. methylation signature) used to train the model. The first column
 #' should contain a unique ID (e.g. target ID) to match rows of the reference
@@ -70,9 +71,8 @@ deconvolute <- function(reference,
     colnum <- ncol(clean[[2]][, -1])
     # save internal functions & variables within foreach,use parallelization
     h <- NULL
-    foreachList <- list()
-    foreachList$findPartialRsquare <- findPartialRsquare
-    foreachList$decoModel <- decoModel
+    findPartialRsquare <- getFromNamespace("findPartialRsquare", "deconvR")
+    decoModel <- getFromNamespace("decoModel", "deconvR")
     operation <- foreach(
         h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
         .combine = "comb", .multicombine = TRUE,

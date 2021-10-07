@@ -412,6 +412,7 @@ reference_RNA <- sigMatrix_ABIS_S0 %>%
 
 head(reference_RNA[1:5])
 ```
+
 First, we will simulate the cell mixture using `simulateCellMix`
 
 ``` {r, message = FALSE, output.lines=10}
