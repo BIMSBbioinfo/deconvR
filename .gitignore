@@ -39,3 +39,6 @@ deconvR.Rproj
 # vignettes/
 *.build.timestamp
 /doc/
+_pkgdown.yml
+docs
+_pkgdown.yml

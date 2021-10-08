@@ -3,6 +3,8 @@
 
 # deconvR : Simulation and Deconvolution of Omic Profiles <img src="deconvR_logo.png" align="left"  alt="logo" width="250" style = "border: none; float: left ;">
 
+# deconvR : Simulation and Deconvolution of Omic Profiles
+
 [![R-CMD-check-bioc](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml)
 [![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/master/graph/badge.svg?token=F86XU6BI9S)](https://codecov.io/gh/BIMSBbioinfo/deconvR)
