@@ -1,15 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# deconvR : Simulation and Deconvolution of Omic Profiles
-
-<img src="docs/deconvR_logo.png" align="right" width="240" style = "border: none; float: right;">
+# deconvR : Simulation and Deconvolution of Omic Profiles <img src="deconvR_logo.png" align="right"  alt="logo" width="250" style = "border: none; float: left ;">
 
 [![R-CMD-check-bioc](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml)
 [![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml)
 [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/master/graph/badge.svg?token=F86XU6BI9S)](https://codecov.io/gh/BIMSBbioinfo/deconvR)
 [![BioCstatus](http://www.bioconductor.org/shields/build/release/bioc/deconvR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/deconvR)
+[![](https://img.shields.io/badge/download-NA/total-blue.svg)](https://bioconductor.org/packages/stats/bioc/deconvR)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -35,7 +34,8 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("deconvR")
 ```
 
-You can also install deconvR directly with github:
+You can also install the development version of the **deconvR** directly
+from GitHub:
 
 ``` r
 remotes::install_github("BIMSBbioinfo/deconvR")

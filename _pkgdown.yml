@@ -1,3 +1,7 @@
 template:
   params:
     bootswatch: flatly
+
+home:
+  title: deconvR
+  description: Simulation and Deconvolution of Omic Profiles

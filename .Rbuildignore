@@ -2,7 +2,7 @@
 ^Meta$
 ^\.github$
 ^\.travis\.yml$
-^\.inst\deconvR_logo.png
+^deconvR_logo.png
 ^codecov\.yml$
 ^doc$
 ^.*\.Rproj$
