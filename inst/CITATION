@@ -1,3 +1,4 @@
+citHeader("To cite the deconvR package in publications please use:")
 pkgVer <- function(pkg) {
     if (!exists("meta") || is.null(meta)) meta <- packageDescription(pkg)
     ver <- meta$Version
@@ -9,7 +10,7 @@ c(
     bibentry(bibtype="manual",
         title = "deconvR: Simulation and Deconvolution of Omic Profiles",
         author = personList(
-        as.person("Irem B. Gunduz"),
+        as.person("İrem B. Gündüz"),
         as.person("Veronika Ebenal"),
         as.person("Altuna Akalin")
         ),
@@ -19,3 +20,6 @@ c(
         doi = '10.18129/B9.bioc.deconvR'
     )
 )
+
+citFooter("Thank you very much for using deconvR!,",
+          "we appreciate if you remember to cite it in your paper! :)")

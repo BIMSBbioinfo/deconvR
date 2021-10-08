@@ -2,12 +2,9 @@
 ^Meta$
 ^\.github$
 ^\.travis\.yml$
-^deconvR_logo.png
+^\.inst\deconvR_logo.png
 ^codecov\.yml$
 ^doc$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-^_pkgdown\.yml$
-^docs$
-^pkgdown$

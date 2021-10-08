@@ -1,7 +1,5 @@
 #' A dataset Illumina probe IDs of 400000 genomic loci (identified using the
-#' “seqnames”, “ranges”, and “strand” values). This object is based on the
-#' Illumina Infinium MethylationEPIC v1.0 B5 Manifest File. Unnecessary columns
-#' were removed before converting into a GRanges object.
+#' “seqnames”, “ranges”, and “strand” values).
 #' @usage data(probe_ids)
 #' @format GRanges object with 400000 ranges and 1 metadata column:
 #' \describe{
@@ -9,7 +7,7 @@
 #'   ...
 #' }
 #' @source \url{https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html}
-"IlluminaInfiniumMethylationEpicv1B5ManifestProbes"
+"probe_ids"
 
 #' The comprehensive human methylome reference atlas
 #' @usage data("HumanCellTypeMethAtlas")
