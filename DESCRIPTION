@@ -28,7 +28,7 @@ Description: This package designed for analyzing deconvolution of the bulk
       also convert any methylKit objects (except for methylDiff) to GRanges with
       convertMe function.
 License: Artistic-2.0
-URL: https://github.com/BIMSBbioinfo/deconvR
+URL: http://bioinformatics.mdc-berlin.de/deconvR, https://github.com/BIMSBbioinfo/deconvR
 BugReports: https://support.bioconductor.org/t/deconvR
 biocViews: DNAMethylation, Regression, Epigenetics
 Encoding: UTF-8

@@ -22,8 +22,6 @@ provided in the package. `simulateCellMix` function included to simulate
 a bulk signature profile of a given size. Additionnaly, `BSmeth2Probe`
 function can be used to map methylation data to probe IDs.
 
-## Installation
-
 The **deconvR** package can be installed from Bioconductor with:
 
 ``` r

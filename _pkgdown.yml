@@ -1,7 +1,1 @@
-template:
-  params:
-    bootswatch: flatly
-
-home:
-  title: deconvR
-  description: Simulation and Deconvolution of Omic Profiles
+url: http://bioinformatics.mdc-berlin.de/deconvR

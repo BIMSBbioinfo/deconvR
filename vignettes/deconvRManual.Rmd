@@ -1,6 +1,6 @@
 ---
 title: "deconvR : Simulation and Deconvolution of Omic Profiles"
-author: 
+authors: 
   - name: İrem B. Gündüz
   - name: Veronika Ebenal
   - name: Altuna Akalin
