@@ -290,8 +290,8 @@ reduce file size before converting the file to a **GRanges** object. It can be
 used directly as `probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
-data("IlluminaInfiniumMethylationEpicv1B5ManifestProbes")
-IlluminaInfiniumMethylationEpicv1B5ManifestProbes
+data("probe_ids")
+probe_ids
 ```
 
 # Example Workflow For Whole Genome Bisulfate Sequencing Data
@@ -359,14 +359,14 @@ WGBS_data
 `probe_id_locations` contains information needed to map cellular loci to probe IDs
 
 ``` {r, message = FALSE, output.lines=10}
-data("IlluminaInfiniumMethylationEpicv1B5ManifestProbes")
-IlluminaInfiniumMethylationEpicv1B5ManifestProbes
+data("probe_ids")
+probe_ids
 ```
 
 Use `BSmeth2Probe` to map WGBS data to probe IDs.
 
 ``` {r, output.lines=10}
-mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = IlluminaInfiniumMethylationEpicv1B5ManifestProbes, 
+mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids, 
                                  WGBS_data = WGBS_GRanges,
                                  multipleMapping = TRUE,
                                  cutoff = 100)

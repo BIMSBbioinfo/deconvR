@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   deconvRManual: deconvRManual.html
-last_built: 2021-10-08T19:58Z
+last_built: 2021-10-08T19:30Z
 urls:
   reference: http://bioinformatics.mdc-berlin.de/deconvR/reference
   article: http://bioinformatics.mdc-berlin.de/deconvR/articles
