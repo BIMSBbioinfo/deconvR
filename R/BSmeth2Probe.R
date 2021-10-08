@@ -25,7 +25,7 @@
 #' @importFrom S4Vectors 'mcols<-' runValue mcols
 #' @keywords mapping
 #' @examples
-#' data("probe_ids")
+#' data("IlluminaInfiniumMethylationEpicv1B5ManifestProbes")
 #' WGBS_GRanges <- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
 #'     package = "deconvR"
 #' ))

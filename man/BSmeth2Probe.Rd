@@ -46,7 +46,7 @@ is taken.
 A function to map WGBS methylation data to Illumina Probe IDs
 }
 \examples{
-data("probe_ids")
+data("IlluminaInfiniumMethylationEpicv1B5ManifestProbes")
 WGBS_GRanges <- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
     package = "deconvR"
 ))
