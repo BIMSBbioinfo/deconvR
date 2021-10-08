@@ -24,7 +24,7 @@ function can be used to map methylation data to probe IDs.
 
 ## Installation
 
-The deconvR package can be installed from Bioconductor with:
+The **deconvR** package can be installed from Bioconductor with:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly = TRUE))
