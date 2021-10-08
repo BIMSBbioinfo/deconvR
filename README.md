@@ -5,7 +5,6 @@
 
 [![R-CMD-check-bioc](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml)
 [![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml)
 [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/master/graph/badge.svg?token=F86XU6BI9S)](https://codecov.io/gh/BIMSBbioinfo/deconvR)
 [![BioCstatus](http://www.bioconductor.org/shields/build/release/bioc/deconvR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/deconvR)
 [![](https://img.shields.io/badge/download-NA/total-blue.svg)](https://bioconductor.org/packages/stats/bioc/deconvR)
@@ -48,4 +47,5 @@ User who wish to expand their own reference atlas can use
 extended and `samples` the new data to be added to the signature matrix.
 `atlas` and `samples` are compliant with the function requirements.
 After providing appropriate `atlas` format, users can create `samples`
-using `simulateCellMix` function.
+using `simulateCellMix` function. You can get much more information from
+[here.](http://bioinformatics.mdc-berlin.de/deconvR/)
