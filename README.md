@@ -3,16 +3,15 @@
 
 # deconvR : Simulation and Deconvolution of Omic Profiles
 
-<img src="deconvR_logo.png" align="left" alt="logo" width="300" style = "border: none; float: left ;">
-
 [![R-CMD-check-bioc](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml)
 [![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/test-coverage.yaml)
 [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/master/graph/badge.svg?token=F86XU6BI9S)](https://codecov.io/gh/BIMSBbioinfo/deconvR)
 [![BioCstatus](http://www.bioconductor.org/shields/build/release/bioc/deconvR.svg)](https://bioconductor.org/checkResults/release/bioc-LATEST/deconvR)
 
 <!-- badges: start -->
 <!-- badges: end -->
+
+<img src="deconvR_logo.png" align="left" alt="logo" width="300" style = "border: none; float: center ;">
 
 The **deconvR** package designed for analyzing deconvolution of the bulk
 sample(s) using an atlas of reference signature profiles and a
@@ -24,9 +23,9 @@ provided in the package. `simulateCellMix` function included to simulate
 a bulk signature profile of a given size. Additionnaly, `BSmeth2Probe`
 function can be used to map methylation data to probe IDs.
 
-## Installation
+## Insallation
 
-The deconvR package can be installed from Bioconductor with:
+The deconvR package can be installed from Bioconductor:
 
 ``` r
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -35,7 +34,8 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("deconvR")
 ```
 
-You can also install deconvR directly with github:
+You can also install the development version of **deconvR** directly
+from Github:
 
 ``` r
 remotes::install_github("BIMSBbioinfo/deconvR")
