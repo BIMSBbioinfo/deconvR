@@ -1,13 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<a name="deconvR_logo"/>
-<div align="center">
-<img src="https://github.com/BIMSBbioinfo/deconvR/blob/master/inst/deconvR_logo.png" alt="deconvR_logo" width="500"/ ></img>
-</a>
-
-</div>
 
 # deconvR : Simulation and Deconvolution of Omic Profiles
+
+<img src="deconvR_logo.png" align="left" alt="logo" width="300" style = "border: none; float: left ;">
 
 [![R-CMD-check-bioc](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml)
 [![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml)
