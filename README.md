@@ -48,4 +48,5 @@ User who wish to expand their own reference atlas can use
 extended and `samples` the new data to be added to the signature matrix.
 `atlas` and `samples` are compliant with the function requirements.
 After providing appropriate `atlas` format, users can create `samples`
-using `simulateCellMix` function.
+using `simulateCellMix` function. You can get more information about
+**deconvR** from [here.](http://bioinformatics.mdc-berlin.de/deconvR/)
