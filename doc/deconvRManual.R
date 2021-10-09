@@ -24,11 +24,11 @@ doParallel::registerDoParallel(cl)
 #  simulateCellMix(
 #    numberOfSamples,
 #    mixingVector=NULL,
-#    reference = reference_atlas)
+#    reference = HumanCellTypeMethAtlas)
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  deconvolute(
-#    reference = reference_atlas,vec = NULL, bulk,
+#    reference = HumanCellTypeMethAtlas,vec = NULL, bulk,
 #    model= "nnls")
 #  
 
@@ -46,21 +46,17 @@ doParallel::registerDoParallel(cl)
 #                 variation_cutoff = NULL)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-data("WGBS_GRanges")
-WGBS_GRanges
-
-## ---- message = FALSE, output.lines=10----------------------------------------
 data("probe_ids")
 probe_ids
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
 library(deconvR) 
 
-data("reference_atlas")
-head(reference_atlas)
+data("HumanCellTypeMethAtlas")
+head(HumanCellTypeMethAtlas)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-samples <- simulateCellMix(3,reference = reference_atlas)[[1]]
+samples <- simulateCellMix(3,reference = HumanCellTypeMethAtlas)[[1]]
 head(samples)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
@@ -71,21 +67,22 @@ head(sampleMeta)
 ## ---- output.lines=10---------------------------------------------------------
 extended_matrix <- findSignatures(samples = samples, 
                                  sampleMeta = sampleMeta, 
-                                 atlas = reference_atlas)
+                                 atlas = HumanCellTypeMethAtlas)
 head(extended_matrix)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-data("WGBS_GRanges")
+WGBS_GRanges<- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
+                                     package = "deconvR"))
 WGBS_GRanges
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt",
-                                     package = "methylKit"), sample.id="test",
-                       assembly="hg38", treatment=1, context="CpG", mincov = 0))
+WGBS_data <- readRDS(system.file("extdata", "WGBS_methylkit.RDS",
+                                     package = "deconvR"))
+head(WGBS_data)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
 data("probe_ids")
-probe_ids
+head(probe_ids)
 
 ## ---- output.lines=10---------------------------------------------------------
 mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids, 
@@ -105,9 +102,9 @@ library(granulator)
 load_ABIS()
 
 #Read the bulk RNA-seq data
-bulk_RNA <- bulkRNAseq_ABIS[1:100,] %>% 
+bulk_RNA <- bulkRNAseq_ABIS[1:50,] %>% 
   as.data.frame() %>% 
-  mutate(IDs = rownames(bulkRNAseq_ABIS[1:100,])) %>%
+  mutate(IDs = rownames(bulkRNAseq_ABIS[1:50,])) %>%
   select("IDs", everything())
 
 head(bulk_RNA[,1:5])

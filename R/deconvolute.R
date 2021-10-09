@@ -59,7 +59,7 @@ deconvolute <- function(reference,
     if (!model %in% c(
         "nnls", "qp", "svr", "rlm"
     )) {
-        stop("Please select one of the following model types: nnls,qp,svr and
+        stop("Please type one of the following model types: nnls,qp,svr or
              rlm.")
     } else {
         message("DECONVOLUTION WITH ", toupper(model))
@@ -89,19 +89,25 @@ deconvolute <- function(reference,
                 clean[[2]],
                 by = "IDs"
             ))[, -1]
-            # merge each sample to reference table
-            mix <- as.matrix(thedata[, 1])
-            ref <- as.matrix(thedata[, -1])
-            coefficients <- decoModel(model, ref, mix, colnum)
-            if (model == "svr") {
-                coefficients <- as.numeric(coefficients / sum(coefficients))
+            if (NROW(thedata) == 0) {
+                stop("The bulk data and the reference you have provided does not
+                     have any common probe ID. Thus, deconvolution is not
+                     possible. Please try to provide an appropirate atlas.")
             } else {
-                coefficients <- coefficients / sum(coefficients)
+                # merge each sample to reference table
+                mix <- as.matrix(thedata[, 1])
+                ref <- as.matrix(thedata[, -1])
+                coefficients <- decoModel(model, ref, mix, colnum)
+                if (model == "svr") {
+                    coefficients <- as.numeric(coefficients / sum(coefficients))
+                } else {
+                    coefficients <- coefficients / sum(coefficients)
+                }
+                return(list(
+                    findPartialRsquare(mix, (ref %*% coefficients), ref, vec),
+                    coefficients
+                ))
             }
-            return(list(
-                findPartialRsquare(mix, (ref %*% coefficients), ref, vec),
-                coefficients
-            ))
         }
 
         results <- data.frame(t(

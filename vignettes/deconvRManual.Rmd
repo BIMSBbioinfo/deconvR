@@ -351,14 +351,14 @@ or as **methylKit** object:
 ``` {r, message = FALSE, output.lines=10}
 WGBS_data <- readRDS(system.file("extdata", "WGBS_methylkit.RDS",
                                      package = "deconvR"))
-WGBS_data
+head(WGBS_data)
 ```
 
 `probe_id_locations` contains information needed to map cellular loci to probe IDs
 
 ``` {r, message = FALSE, output.lines=10}
 data("probe_ids")
-probe_ids
+head(probe_ids)
 ```
 
 Use `BSmeth2Probe` to map WGBS data to probe IDs.

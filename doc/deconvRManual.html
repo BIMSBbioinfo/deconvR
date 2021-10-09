@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2021-10-01" />
+<meta name="date" content="2021-10-09" />
 
 <title>deconvR : Simulation and Deconvolution of Omic Profiles</title>
 
@@ -255,10 +255,10 @@ function toggle_visibility(id1) {
 
 
 <h1 class="title toc-ignore">deconvR : Simulation and Deconvolution of Omic Profiles</h1>
-<p class="author-name">İrem B. Gündüz, Veronika Ebenal and Altuna Akalin</p>
-<h4 class="date">2021-10-01</h4>
+<p class="author-name">İrem B. Gündüz, Veronika Ebenal, Altuna Akalin</p>
+<h4 class="date">2021-10-09</h4>
 <h4 class="package">Package</h4>
-<p>deconvR 0.99.2</p>
+<p>deconvR 0.99.3</p>
 
 </div>
 
@@ -301,7 +301,7 @@ given reference atlas.</p>
 <pre class="r"><code>simulateCellMix(
   numberOfSamples,
   mixingVector=NULL,
-  reference = reference_atlas)</code></pre>
+  reference = HumanCellTypeMethAtlas)</code></pre>
 <p>The parameter <code>numberOfSamples</code> is a non-negative integer stating the number of
 simulated samples to be generated.</p>
 <p>The user may provide the <code>mixingVector</code> parameter to specify the desired origin
@@ -318,9 +318,7 @@ provided, random values of origin proportions will be used.</p>
 The first column should contain unique IDs (e.g. Illumina Probe IDs) which will
 also be used in the resulting bulk table. All subsequent columns are origins
 (e.g. cell types), and cells contain the corresponding value for this origin and
-ID (e.g. methylation value). If <code>reference</code> is not provided by the user, it will
-default to <code>reference_atlas_nodup.RDS</code> in the <code>inst</code> folder of the package (more
-information on this file can be found below).</p>
+ID (e.g. methylation value).</p>
 <p><code>simulateCellMix</code> returns a list containing two dataframes. The first dataframe
 contains the simulated samples. Its first column contains unique IDs (from
 <code>reference</code>) which can be used in deconvolution to match rows of the reference
@@ -338,15 +336,13 @@ these actual proportions to the proportions predicted by <code>deconvolute</code
 <p><code>deconvolute</code> deconvolutes bulk samples to their origin proportions using data
 from a reference atlas.</p>
 <pre class="r"><code>deconvolute(
-  reference = reference_atlas,vec = NULL, bulk,
+  reference = HumanCellTypeMethAtlas,vec = NULL, bulk,
   model= &quot;nnls&quot;)</code></pre>
 <p>The dataframe <code>reference</code> contains the signatures of different origins (e.g.
 cell types) used to train the model. The first column should contain unique IDs
 (e.g. Illumina Probe ID) to match rows of the reference to rows of the bulk. All
 subsequent columns are origins. Cells contain the corresponding value for this
-origin and ID (e.g. methylation value). If <code>reference</code> is not provided by the
-user, it will default to <code>reference_atlas_nodup.RDS</code> in the <code>inst</code> folder of the
-package (more information on this file can be found below).</p>
+origin and ID (e.g. methylation value).</p>
 <p>The user may provide a vector <code>vec</code> with which partial R-squared of the results
 will be calculated. The length must equal the number of rows of <code>reference</code> and
 <code>bulk</code> tables merged on the ID column (with NAs removed). More details on how
@@ -392,16 +388,13 @@ contain columns named “ID”, “CHR”, “Start”, “End”, and “Strand
 <strong>GRanges</strong> object, it should have locations (“seqnames”, “ranges”, “strand”),
 as well as metadata column “ID”. Start and end locations should be 1-based
 coordinates. Note that any row with NA values will not be used.</p>
-<p>The user may use the example dataframe <code>illumina_probes_hg38_GRanges.RDS</code> in the
-<code>inst</code> folder of the package (more information on this file can be found below).
-The <code>WGBS_data</code> parameter can be either a <strong>GRanges</strong> object or <strong>methylKit</strong>
-object (methylRaw, methylBase, methylRawDB, or methylBaseDB) of CpG locations
-and their methylation values.</p>
+<p>The user may use probe ids included within the package. The <code>WGBS_data</code>
+parameter can be either a <strong>GRanges</strong> object or <strong>methylKit</strong> object (methylRaw,
+methylBase, methylRawDB, or methylBaseDB) of CpG locations and their methylation
+values.</p>
 <p>This parameter must contain locations (“seqnames”, “ranges”, “strand”) and
 metadata column(s) of methylation values of sample(s) (i.e. one column per
-sample). These methylation values must be between 0 and 1. The user may use the
-example <strong>GRanges</strong> object <code>WGBS_GRanges.RDS</code> in the <code>inst</code> folder of the
-package (more information on this file can be found below).</p>
+sample). These methylation values must be between 0 and 1.</p>
 <p>The <code>cutoff</code> is the maximum distance (in number of base-pairs) to consider for
 probes which have not been exactly covered in the WGBS data. The default value
 is 10.</p>
@@ -439,8 +432,7 @@ the new samples will be incorporated. The first column contains unique IDs (e.g.
 CpG probe IDs) for each unit of the signature. Subsequent columns are groups
 (e.g. cell types), with column names as group names and each cell containing the
 value for this sample and unit (e.g. methylation value). The user may use the
-example dataframe <code>reference_atlas_nodup.RDS</code> in the <code>inst</code> folder of the
-package (more information on this file can be found below).</p>
+example dataframe <code>HumanCellTypeMethAtlas</code>.</p>
 <p>The <code>variation_cutoff</code> can be either a number between 0 to 1, or <code>NULL</code>. When
 multiple samples map to the same group in <code>sampleMeta</code>, units of the signature
 with variation across these samples greater than <code>variation_cutoff</code> will be
@@ -470,41 +462,16 @@ origins of circulating cell-free DNA in health and disease. Nature
 communications, 9(1), 1-12. <a href="https://doi.org/10.1038/s41467-018-07466-6" class="uri">https://doi.org/10.1038/s41467-018-07466-6</a></span> can be
 used as the reference atlas parameter for several functions in this package.
 This atlas was modified to remove duplicate CpG loci before being included in
-the package as the dataframe <code>reference_atlas_nodup.RDS</code>. The dataframe is
-composed of 25 human cell types and roughly 6000 CpG loci, identified by their
-Illumina Probe ID. For each cell type and CpG locus, a methylation value between
-0 and 1 is provided. This value represents the fraction of methylated bases of
-the CpG locus. The atlas therefore provides a unique methylation pattern for
-each cell type and can be directly used as <code>reference</code> in <code>deconvolute</code> and
-<code>simulateCellMix</code>, and <code>atlas</code> in <code>findSignatures</code>.</p>
+the package as the dataframe. The dataframe is composed of 25 human cell types
+and roughly 6000 CpG loci, identified by their Illumina Probe ID. For each cell
+type and CpG locus, a methylation value between 0 and 1 is provided. This value
+represents the fraction of methylated bases of the CpG locus. The atlas
+therefore provides a unique methylation pattern for each cell type and can be
+directly used as <code>reference</code> in <code>deconvolute</code> and <code>simulateCellMix</code>, and <code>atlas</code>
+in <code>findSignatures</code>.</p>
 </div>
-<div id="wgbs-data" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> WGBS Data</h2>
-<p>An example of WGBS data has been included as the <strong>GRanges</strong> object
-<code>WGBS_GRanges.RDS</code>. This object contains the methylation values of 11715 genomic
-loci (identified using the “seqnames”, “ranges”, and “strand” values) for a
-single example sample. It can be used directly as <code>WGBS_data</code> in <code>BSmeth2Probe</code>.</p>
-<pre class="r"><code>data(&quot;WGBS_GRanges&quot;)
-WGBS_GRanges</code></pre>
-<pre><code>## GRanges object with 11715 ranges and 1 metadata column:
-##           seqnames    ranges strand |   sample1
-##              &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;
-##       [1]     chr1     14699      + |  0.704868
-##       [2]     chr1    889817      - |  0.703633
-##       [3]     chr1   1056187      + |  0.654187
-##       [4]     chr1   1209792      - |  0.957525
-##       [5]     chr1   1387205      + |  0.246242
-##       ...      ...       ...    ... .       ...
-##   [11711]     chrY  11747665      - |  0.181530
-##   [11712]     chrY  20117736      - |  0.222147
-##   [11713]     chrY  26665807      + |  0.381329
-##   [11714]     chrY  56743155      + |  0.808415
-##   [11715]     chrY  56857691      - |  0.336375
-##   -------
-##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
-</div>
-<div id="illumina-hg38-probes" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Illumina hg38 Probes</h2>
+<div id="illumina-hg38-probes" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Illumina hg38 Probes</h2>
 <p>The <strong>GRanges</strong> object <code>illumina_probes_hg38_GRanges.RDS</code> contains the Illumina
 probe IDs of 400000 genomic loci (identified using the “seqnames”, “ranges”, and
 “strand” values). This object is based off of the Infinium MethylationEPIC v1.0
@@ -542,8 +509,8 @@ signature matrix) are compliant with the function requirements.Below is an
 example dataframe to illustrate the <code>atlas</code> format.</p>
 <pre class="r"><code>library(deconvR) 
 
-data(&quot;reference_atlas&quot;)
-head(reference_atlas)</code></pre>
+data(&quot;HumanCellTypeMethAtlas&quot;)
+head(HumanCellTypeMethAtlas)</code></pre>
 <pre><code>##          IDs Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
 ## 1 cg08169020         0.8866       0.2615          0.0149        0.0777
 ## 2 cg25913761         0.8363       0.2210          0.2816        0.4705
@@ -587,15 +554,15 @@ head(reference_atlas)</code></pre>
 ## 5   0.0508  0.0726   0.0759        0.0196
 ## 6   0.0055  0.0188   0.0090        0.0166</code></pre>
 <p>And below illustrates the <code>samples</code> format.</p>
-<pre class="r"><code>samples &lt;- simulateCellMix(3,reference = reference_atlas)[[1]]
+<pre class="r"><code>samples &lt;- simulateCellMix(3,reference = HumanCellTypeMethAtlas)[[1]]
 head(samples)</code></pre>
-<pre><code>##          IDs  Sample 1  Sample 2  Sample 3
-## 1 cg08169020 0.3459600 0.6177111 0.8222526
-## 2 cg25913761 0.4408274 0.5716266 0.7953530
-## 3 cg26955540 0.3120926 0.4459379 0.7202836
-## 4 cg25170017 0.4442429 0.7250075 0.8282265
-## 5 cg12827637 0.2587707 0.4524615 0.4844016
-## 6 cg19442545 0.1172705 0.1636186 0.1909285</code></pre>
+<pre><code>##          IDs   Sample 1   Sample 2  Sample 3
+## 1 cg08169020 0.14805520 0.03522829 0.2354094
+## 2 cg25913761 0.30156501 0.25131870 0.3809171
+## 3 cg26955540 0.18518039 0.13616960 0.2575938
+## 4 cg25170017 0.19727019 0.17991484 0.2928804
+## 5 cg12827637 0.13783546 0.09226159 0.1739105
+## 6 cg19442545 0.04545853 0.01797704 0.0722005</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the
 origins they should be mapped to when added to <code>atlas</code>.</p>
 <pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
@@ -608,7 +575,7 @@ head(sampleMeta)</code></pre>
 <p>Use <code>findSignatures</code> to extend the matrix.</p>
 <pre class="r"><code>extended_matrix &lt;- findSignatures(samples = samples, 
                                  sampleMeta = sampleMeta, 
-                                 atlas = reference_atlas)</code></pre>
+                                 atlas = HumanCellTypeMethAtlas)</code></pre>
 <pre><code>## CELL TYPES IN EXTENDED ATLAS: 
 ## new cell type 
 ## Monocytes_EPIC 
@@ -638,12 +605,12 @@ head(sampleMeta)</code></pre>
 ## Uterus_cervix</code></pre>
 <pre class="r"><code>head(extended_matrix)</code></pre>
 <pre><code>##           IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1: cg08169020     0.5953079         0.8866       0.2615          0.0149
-## 2: cg25913761     0.6026023         0.8363       0.2210          0.2816
-## 3: cg26955540     0.4927714         0.7658       0.0222          0.1492
-## 4: cg25170017     0.6658256         0.8861       0.5116          0.1021
-## 5: cg12827637     0.3985446         0.5212       0.3614          0.0227
-## 6: cg19442545     0.1572725         0.2013       0.1137          0.0608
+## 1: cg08169020    0.13956430         0.8866       0.2615          0.0149
+## 2: cg25913761    0.31126692         0.8363       0.2210          0.2816
+## 3: cg26955540    0.19298125         0.7658       0.0222          0.1492
+## 4: cg25170017    0.22335514         0.8861       0.5116          0.1021
+## 5: cg12827637    0.13466918         0.5212       0.3614          0.0227
+## 6: cg19442545    0.04521202         0.2013       0.1137          0.0608
 ##    NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1:        0.0777          0.0164           0.8680                  0.9509
 ## 2:        0.4705          0.3961           0.8293                  0.2385
@@ -683,52 +650,48 @@ head(sampleMeta)</code></pre>
 before being deconvoluted.The methylation data <code>WGBS_data</code> in <code>BSmeth2Probe</code> may
 be either a <strong>GRanges</strong> object or a <strong>methylKit</strong> object.</p>
 <p>Format of <code>WGBS_data</code> as <strong>GRanges</strong> object:</p>
-<pre class="r"><code>data(&quot;WGBS_GRanges&quot;)
+<pre class="r"><code>WGBS_GRanges&lt;- readRDS(system.file(&quot;extdata&quot;, &quot;WGBS_GRanges.RDS&quot;,
+                                     package = &quot;deconvR&quot;))
 WGBS_GRanges</code></pre>
-<pre><code>## GRanges object with 11715 ranges and 1 metadata column:
+<pre><code>## GRanges object with 10000 ranges and 1 metadata column:
 ##           seqnames    ranges strand |   sample1
 ##              &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;
-##       [1]     chr1     14699      + |  0.704868
-##       [2]     chr1    889817      - |  0.703633
-##       [3]     chr1   1056187      + |  0.654187
-##       [4]     chr1   1209792      - |  0.957525
-##       [5]     chr1   1387205      + |  0.246242
+##       [1]     chr1     47176      + |  1.000000
+##       [2]     chr1     47177      - |  0.615385
+##       [3]     chr1     47205      + |  0.384615
+##       [4]     chr1     47206      - |  0.846154
+##       [5]     chr1     47362      + |  0.714286
 ##       ...      ...       ...    ... .       ...
-##   [11711]     chrY  11747665      - |  0.181530
-##   [11712]     chrY  20117736      - |  0.222147
-##   [11713]     chrY  26665807      + |  0.381329
-##   [11714]     chrY  56743155      + |  0.808415
-##   [11715]     chrY  56857691      - |  0.336375
+##    [9996]     chr1   1830387      - |  0.923077
+##    [9997]     chr1   1830407      - |  0.928571
+##    [9998]     chr1   1830411      - |  1.000000
+##    [9999]     chr1   1830419      - |  1.000000
+##   [10000]     chr1   1830452      - |  0.909091
 ##   -------
-##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
+##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
 <p>or as <strong>methylKit</strong> object:</p>
-<pre class="r"><code>head(methylKit::methRead(system.file(&quot;extdata&quot;, &quot;test1.myCpG.txt&quot;,
-                                     package = &quot;methylKit&quot;), sample.id=&quot;test&quot;,
-                       assembly=&quot;hg38&quot;, treatment=1, context=&quot;CpG&quot;, mincov = 0))</code></pre>
-<pre><code>##     chr   start     end strand coverage numCs numTs
-## 1 chr21 9764513 9764513      -       12     0    12
-## 2 chr21 9764539 9764539      -       12     3     9
-## 3 chr21 9820622 9820622      +       13     0    13
-## 4 chr21 9837545 9837545      +       11     0    11
-## 5 chr21 9849022 9849022      +      124    90    34
-## 6 chr21 9853296 9853296      +       17    10     7</code></pre>
+<pre class="r"><code>WGBS_data &lt;- readRDS(system.file(&quot;extdata&quot;, &quot;WGBS_methylkit.RDS&quot;,
+                                     package = &quot;deconvR&quot;))
+head(WGBS_data)</code></pre>
+<pre><code>##    chr start   end strand coverage numCs numTs
+## 1 chr1 47176 47176      +       11    11     0
+## 2 chr1 47177 47177      -       13     8     5
+## 3 chr1 47205 47205      +       13     5     8
+## 4 chr1 47206 47206      -       13    11     2
+## 5 chr1 47362 47362      +       14    10     4
+## 6 chr1 49271 49271      +       17    17     0</code></pre>
 <p><code>probe_id_locations</code> contains information needed to map cellular loci to probe IDs</p>
 <pre class="r"><code>data(&quot;probe_ids&quot;)
-probe_ids</code></pre>
-<pre><code>## GRanges object with 400000 ranges and 1 metadata column:
-##            seqnames              ranges strand |          ID
-##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
-##        [1]    chr19     5236005-5236006      + |  cg07881041
-##        [2]    chr20   63216298-63216299      + |  cg18478105
-##        [3]     chr1     6781065-6781066      + |  cg23229610
-##        [4]     chr2 197438742-197438743      - |  cg03513874
-##        [5]     chrX   24054523-24054524      + |  cg09835024
-##        ...      ...                 ...    ... .         ...
-##   [399996]    chr11   82404729-82404730      + |  cg26328447
-##   [399997]    chr20   59365905-59365906      - |  cg03022395
-##   [399998]    chr14   91272875-91272876      + |  cg04134173
-##   [399999]     chr2 160303369-160303370      + |  cg20857520
-##   [400000]    chr10 125124418-125124419      + |  cg24546616
+head(probe_ids)</code></pre>
+<pre><code>## GRanges object with 6 ranges and 1 metadata column:
+##       seqnames              ranges strand |          ID
+##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
+##   [1]    chr19     5236005-5236006      + |  cg07881041
+##   [2]    chr20   63216298-63216299      + |  cg18478105
+##   [3]     chr1     6781065-6781066      + |  cg23229610
+##   [4]     chr2 197438742-197438743      - |  cg03513874
+##   [5]     chrX   24054523-24054524      + |  cg09835024
+##   [6]    chr14   93114794-93114795      - |  cg05451842
 ##   -------
 ##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
 <p>Use <code>BSmeth2Probe</code> to map WGBS data to probe IDs.</p>
@@ -738,31 +701,31 @@ probe_ids</code></pre>
                                  cutoff = 100)
 head(mapped_WGBS_data)</code></pre>
 <pre><code>##          IDs   sample1
-## 1 cg00071556 0.6654359
-## 2 cg00087906 0.1207052
-## 3 cg00103299 0.5885840
-## 4 cg00119387 0.6025664
-## 5 cg00158539 0.8628122
-## 6 cg00176740 0.8877250</code></pre>
+## 1 cg00813378 0.1363636
+## 2 cg00942814 0.8333333
+## 3 cg01006034 0.9712510
+## 4 cg01729401 1.0000000
+## 5 cg01768082 0.7894737
+## 6 cg01802295 0.5333333</code></pre>
 <p>This mapped data can now be used in <code>deconvolute</code>. Here we will deconvolute it
 using the previously extended signature matrix as the reference atlas.</p>
 <pre class="r"><code>deconvolution &lt;- deconvolute(reference = extended_matrix, 
                              bulk = mapped_WGBS_data)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.4839  0.4839  0.4839  0.4839  0.4839  0.4839</code></pre>
+##       1       1       1       1       1       1</code></pre>
 <pre class="r"><code>deconvolution[[1]]</code></pre>
 <pre><code>##         new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
 ## sample1             0              0            0               0             0
 ##         CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors Adipocytes
-## sample1               0                0                       0          0
+## sample1               0                0               0.8981332          0
 ##         Cortical_neurons Hepatocytes Lung_cells Pancreatic_beta_cells
 ## sample1                0           0          0                     0
 ##         Pancreatic_acinar_cells Pancreatic_duct_cells
-## sample1                       0                     0
+## sample1                       0            0.07134082
 ##         Vascular_endothelial_cells Colon_epithelial_cells Left_atrium Bladder
 ## sample1                          0                      0           0       0
-##            Breast Head_and_neck_larynx Kidney  Prostate Thyroid Upper_GI
-## sample1 0.1880146                    0      0 0.8119854       0        0
+##         Breast Head_and_neck_larynx Kidney Prostate Thyroid Upper_GI
+## sample1      0           0.03052603      0        0       0        0
 ##         Uterus_cervix
 ## sample1             0</code></pre>
 </div>
@@ -777,9 +740,9 @@ only use small sample of data. Notice that we set an IDs column. In order to run
 load_ABIS()</code></pre>
 <pre><code>## [1] &quot;ABIS dataset was loaded successfully.&quot;</code></pre>
 <pre class="r"><code>#Read the bulk RNA-seq data
-bulk_RNA &lt;- bulkRNAseq_ABIS[1:100,] %&gt;% 
+bulk_RNA &lt;- bulkRNAseq_ABIS[1:50,] %&gt;% 
   as.data.frame() %&gt;% 
-  mutate(IDs = rownames(bulkRNAseq_ABIS[1:100,])) %&gt;%
+  mutate(IDs = rownames(bulkRNAseq_ABIS[1:50,])) %&gt;%
   select(&quot;IDs&quot;, everything())
 
 head(bulk_RNA[,1:5])</code></pre>
@@ -807,13 +770,13 @@ head(reference_RNA[1:5])</code></pre>
 <p>First, we will simulate the cell mixture using <code>simulateCellMix</code></p>
 <pre class="r"><code>samples &lt;- simulateCellMix(3,reference = reference_RNA)[[1]]
 head(samples)</code></pre>
-<pre><code>##       IDs   Sample 1  Sample 2   Sample 3
-## 1   S1PR3 16.9042003 15.303022  45.720735
-## 2   RXFP2  6.5587383  5.920822  17.877398
-## 3 ADAMTS5  0.9356136  0.844614   2.550237
-## 4  CLEC6A 12.3621577 11.159789  33.695996
-## 5   FXYD6 42.0190750 38.034232 114.167642
-## 6    NRG1 52.3631050 47.297391 142.457347</code></pre>
+<pre><code>##       IDs    Sample 1   Sample 2  Sample 3
+## 1   S1PR3 0.639796028  4.5273200 2.3723624
+## 2   RXFP2 0.243360289  1.6789600 0.8777639
+## 3 ADAMTS5 0.002614454  0.2282167 0.1054661
+## 4  CLEC6A 0.321615054  3.1609714 1.9780021
+## 5   FXYD6 2.586776656 11.3843164 6.5542125
+## 6    NRG1 1.787808836 13.9444602 8.0026046</code></pre>
 <p><code>sampleMeta</code> includes the information of where the origins they should be mapped
 to when added to <code>atlas</code> and also, all of the sample names in <code>samples</code>.</p>
 <pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
@@ -848,12 +811,12 @@ head(sampleMeta)</code></pre>
 ## Plasmablasts</code></pre>
 <pre class="r"><code>head(extended_matrix)</code></pre>
 <pre><code>##        IDs new_cell_type Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## 1:   S1PR3     25.975986   45.720735 0.2790023    0.1981103   0.3657506
-## 2:   RXFP2     10.118986   17.877398 0.0000000    0.0000000   0.0000000
-## 3: ADAMTS5      1.443488    2.550237 0.0000000    0.0000000   0.0000000
-## 4:  CLEC6A     19.072648   33.695996 0.0000000    0.0000000   0.0000000
-## 5:   FXYD6     64.740317  114.167642 0.4707691    0.1832934   0.2908456
-## 6:    NRG1     80.705947  142.457347 0.1949568    0.1527024   0.2790682
+## 1:   S1PR3     2.5131595   45.720735 0.2790023    0.1981103   0.3657506
+## 2:   RXFP2     0.9333614   17.877398 0.0000000    0.0000000   0.0000000
+## 3: ADAMTS5     0.1120991    2.550237 0.0000000    0.0000000   0.0000000
+## 4:  CLEC6A     1.8201962   33.695996 0.0000000    0.0000000   0.0000000
+## 5:   FXYD6     6.8417685  114.167642 0.4707691    0.1832934   0.2908456
+## 6:    NRG1     7.9116246  142.457347 0.1949568    0.1527024   0.2790682
 ##    T.CD8.Naive   B.Naive T.CD4.Memory      MAIT  T.gd.Vd2 Neutrophils.LD
 ## 1:   0.1930285 1.5953677    0.3397065 0.1636009 0.2488113      0.1423922
 ## 2:   0.0000000 0.2471771    0.0000000 0.0000000 0.0000000      0.0000000
@@ -880,37 +843,37 @@ samples to their origin proportions using a <strong>quadric programming</strong>
 <pre class="r"><code>deconv_RNA &lt;- deconvR::deconvolute(reference = reference_RNA,
                              bulk = bulk_RNA,model = &quot;qp&quot;)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.1519  0.3955  0.5334  0.4962  0.5817  0.7777</code></pre>
+##  0.2190  0.3287  0.5162  0.5047  0.6498  0.7602</code></pre>
 <p>Then we can access the deconvoluted proportions of bulk sample profiles.</p>
 <pre class="r"><code>head(deconv_RNA[[1]])</code></pre>
-<pre><code>##      Monocytes.C         NK T.CD8.Memory  T.CD4.Naive  T.CD8.Naive      B.Naive
-## CYFZ  0.07416583 0.00000000 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-## FY2H  0.22264048 0.00000000 1.313632e-15 1.695476e-16 2.308811e-15 0.000000e+00
-## FLWA  0.15221327 0.15391488 6.614370e-16 0.000000e+00 1.497368e-15 3.438768e-17
-## 453W  0.17154526 0.01919854 6.054096e-16 5.854938e-16 1.976175e-15 0.000000e+00
-## 684C  0.12357591 0.00000000 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
-## CZJE  0.14139769 0.08937166 6.151678e-16 0.000000e+00 9.300368e-16 0.000000e+00
-##      T.CD4.Memory         MAIT     T.gd.Vd2 Neutrophils.LD T.gd.non.Vd2
-## CYFZ 5.898052e-16 0.000000e+00 0.000000e+00      0.3259573 0.000000e+00
-## FY2H 0.000000e+00 7.003482e-16 4.507442e-16      0.2513557 1.191015e-16
-## FLWA 1.076157e-16 0.000000e+00 0.000000e+00      0.1976264 0.000000e+00
-## 453W 5.501729e-16 0.000000e+00 4.065209e-16      0.2730181 0.000000e+00
-## 684C 1.412092e-15 0.000000e+00 0.000000e+00      0.2063113 2.345557e-17
-## CZJE 3.787744e-16 0.000000e+00 0.000000e+00      0.3933722 6.308220e-17
-##      Basophils.LD Monocytes.NC.I     B.Memory         mDCs       pDCs
-## CYFZ 7.616545e-16      0.4918473 2.933647e-16 3.377447e-18 0.10802957
-## FY2H 0.000000e+00      0.0000000 0.000000e+00 0.000000e+00 0.52600378
-## FLWA 3.773419e-16      0.2282683 0.000000e+00 0.000000e+00 0.26797714
-## 453W 3.110657e-15      0.2234473 0.000000e+00 0.000000e+00 0.31279080
-## 684C 0.000000e+00      0.6701128 2.135170e-15 0.000000e+00 0.00000000
-## CZJE 5.105265e-16      0.3556935 7.442706e-17 0.000000e+00 0.02016491
-##      Plasmablasts
-## CYFZ 1.067149e-17
-## FY2H 3.087322e-16
-## FLWA 0.000000e+00
-## 453W 8.088753e-17
-## 684C 0.000000e+00
-## CZJE 2.453569e-18</code></pre>
+<pre><code>##      Monocytes.C           NK T.CD8.Memory  T.CD4.Naive  T.CD8.Naive
+## CYFZ  0.06348309 7.147599e-16 0.000000e+00 0.000000e+00 0.000000e+00
+## FY2H  0.12192004 0.000000e+00 0.000000e+00 2.242393e-15 3.335591e-15
+## FLWA  0.14104057 7.055411e-16 1.179500e-15 6.386099e-15 0.000000e+00
+## 453W  0.15737710 0.000000e+00 4.598167e-15 1.635336e-14 7.598590e-16
+## 684C  0.11535642 0.000000e+00 0.000000e+00 2.139016e-15 1.090887e-15
+## CZJE  0.12817739 0.000000e+00 6.059986e-15 2.404947e-15 0.000000e+00
+##           B.Naive T.CD4.Memory         MAIT     T.gd.Vd2 Neutrophils.LD
+## CYFZ 0.000000e+00 0.000000e+00 6.366268e-15 0.000000e+00      0.2687346
+## FY2H 2.734682e-17 0.000000e+00 0.000000e+00 0.000000e+00      0.3144954
+## FLWA 1.688036e-01 0.000000e+00 0.000000e+00 5.730223e-16      0.3559542
+## 453W 3.024458e-01 4.845950e-17 0.000000e+00 0.000000e+00      0.4653581
+## 684C 2.060142e-01 1.722048e-15 0.000000e+00 0.000000e+00      0.1898895
+## CZJE 4.075307e-02 0.000000e+00 0.000000e+00 1.984425e-15      0.2649981
+##      T.gd.non.Vd2 Basophils.LD Monocytes.NC.I    B.Memory        mDCs
+## CYFZ 5.104239e-15 2.465226e-16     0.12302750 0.00000e+00 0.012795335
+## FY2H 8.589163e-15 7.842739e-16     0.21114858 0.00000e+00 0.000000000
+## FLWA 6.538782e-15 7.249774e-16     0.05502392 0.00000e+00 0.000000000
+## 453W 0.000000e+00 0.000000e+00     0.03605163 0.00000e+00 0.000000000
+## 684C 0.000000e+00 8.896594e-16     0.12257615 7.61391e-16 0.007300725
+## CZJE 0.000000e+00 1.569145e-15     0.07846819 0.00000e+00 0.002757467
+##              pDCs Plasmablasts
+## CYFZ 4.803158e-01   0.05164364
+## FY2H 1.625745e-01   0.18986147
+## FLWA 2.401507e-17   0.27917772
+## 453W 0.000000e+00   0.03876731
+## 684C 2.078994e-01   0.15096372
+## CZJE 2.361915e-01   0.24865428</code></pre>
 </div>
 <div id="sessioninfo" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> sessionInfo</h1>
@@ -932,7 +895,7 @@ samples to their origin proportions using a <strong>quadric programming</strong>
 ## 
 ## other attached packages:
 ## [1] granulator_1.0.0  dplyr_1.0.7       doParallel_1.0.16 iterators_1.0.13 
-## [5] foreach_1.5.1     deconvR_0.99.2    data.table_1.14.0 knitr_1.36       
+## [5] foreach_1.5.1     deconvR_0.99.3    data.table_1.14.0 knitr_1.36       
 ## [9] BiocStyle_2.20.2 
 ## 
 ## loaded via a namespace (and not attached):
@@ -998,7 +961,7 @@ samples to their origin proportions using a <strong>quadric programming</strong>
 ## [119] Rsamtools_2.8.0             Deriv_4.1.3                
 ## [121] S4Vectors_0.30.0            GenomeInfoDbData_1.2.6     
 ## [123] quadprog_1.5-8              grid_4.1.0                 
-## [125] tidyr_1.1.3                 coda_0.19-4                
+## [125] tidyr_1.1.4                 coda_0.19-4                
 ## [127] class_7.3-19                minqa_1.2.4                
 ## [129] rmarkdown_2.11.2            MatrixGenerics_1.4.3       
 ## [131] bbmle_1.0.24                lubridate_1.7.10           
