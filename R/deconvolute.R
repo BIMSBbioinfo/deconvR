@@ -60,7 +60,7 @@ deconvolute <- function(reference,
         "nnls", "qp", "svr", "rlm"
     )) {
         stop("Please type one of the following model types: nnls,qp,svr or
-             rlm.")
+        rlm.")
     } else {
         message("DECONVOLUTION WITH ", toupper(model))
 
@@ -90,9 +90,9 @@ deconvolute <- function(reference,
                 by = "IDs"
             ))[, -1]
             if (NROW(thedata) == 0) {
-                stop("The bulk data and the reference you have provided does not
-                     have any common probe ID. Thus, deconvolution is not
-                     possible. Please try to provide an appropirate atlas.")
+                stop("The bulk data and the reference you have provided doesn't
+                have any common probe ID. Thus, deconvolution is not
+                possible. Please try to provide an appropirate atlas.")
             } else {
                 # merge each sample to reference table
                 mix <- as.matrix(thedata[, 1])
@@ -117,7 +117,8 @@ deconvolute <- function(reference,
             }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
         ), row.names = colnames(clean[[1]])[-1])
         colnames(results) <- colnames(clean[[2]])[-1]
-        message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
+        message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ",
+                toupper(model), ": ")
         print(summary(unlist(operation[[1]])))
 
         # results table will have coefficient predictions of each sample

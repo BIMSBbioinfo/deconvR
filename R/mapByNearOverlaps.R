@@ -23,8 +23,8 @@
 #' @keywords internal
 #' @return A dataframe containing all of the maped CpGs based on near overlaps
 #' @noRd
-mapByNearOverlaps <- function(WGBS_data, probe_id_locations, cutoff, multipleMapping,
-    overlaps_df) {
+mapByNearOverlaps <- function(WGBS_data, probe_id_locations, cutoff,
+                              multipleMapping,overlaps_df){
     # only need to do "nearlyOverlaps" if cutoff > 0
     nearolaps_df <- mergeByOverlaps(WGBS_data,
         probe_id_locations,

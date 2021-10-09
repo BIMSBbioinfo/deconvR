@@ -83,9 +83,9 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>deconvR : Simulation and Deconvolution of Omic Profiles</h1>
-                        <h4 class="author">İrem B. Gündüz, Veronika Ebenal, Altuna Akalin</h4>
+                        <h4 class="author">Irem B. Gunduz, Veronika Ebenal, Altuna Akalin</h4>
                         
-            <h4 class="date">2021-10-09</h4>
+            <h4 class="date">2021-10-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/BIMSBbioinfo/deconvR/blob/master/vignettes/deconvRManual.Rmd"><code>vignettes/deconvRManual.Rmd</code></a></small>
       <div class="hidden name"><code>deconvRManual.Rmd</code></div>
@@ -97,7 +97,8 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p><code>deconvR</code> is a collection of functions surrounding the deconvolution of bulk sample(s) with the use of a reference atlas of signature profiles and a user-selected model. The user may provide their own reference atlas, use the reference atlas provided in <code>inst</code>, or create/extend a new reference atlas using <code>findSignatures</code>. The user may provide their own bulk samples table, or use <code>simulateCellMix</code> to generate a simulated table of a desired number of samples, with either user-specified or random origin proportions. Alternatively, in the case of methylation profiles, <code>BSMeth2Probe</code> may be used to map WGBS methylation data (as a dataframe or <strong>GRanges</strong> object) to probe IDs, and the results of this mapping may be used as the bulk samples in the deconvolution. Finally, along with a reference atlas and table of bulk samples, <code>deconvolute</code> allows the user to specify their desired deconvolution model (non-negative least squares regression, support vector regression, quadratic programming, or robust linear regression), and returns a dataframe which contains predicted cell-type proportions of bulk methylation profiles, as well as partial R-squared values for each sample. The user may provide a vector with which partial R-squared of the results will be calculated. Otherwise, partial R-squared values will be calculated using the row means of the reference atlas.</p>
+<p>Recent studies associated the differences of cell-type proportions may be correlated to certain phenotypes, such as cancer. Therefore, the demand for the development of computational methods to predict cell type proportions increased. Hereby, we developed <code>deconvR</code>, a collection of functions designed for analyzing deconvolution of the bulk sample(s) using an atlas of reference omic signature profiles and a user-selected model. We wanted to give users an option to extend extend their reference atlas. Users can create new reference atlases using <code>findSignatures</code> extend their atlas by adding more cell types. Additionally, we included <code>BSMeth2Probe</code> to make mapping whole-genome bisulfite sequencing data to their probe IDs easier. So users can map WGBS methylation data (as in <strong>methylKit</strong> or <strong>GRanges</strong> object format) to probe IDs, and the results of this mapping can be used as the bulk samples in the deconvolution. We also included a comprehensive DNA methylation atlas of 25 different cell types to use in the main function <code>deconvolute</code>. <code>deconvolute</code> allows the user to specify their desired deconvolution model (non-negative least squares regression, support vector regression, quadratic programming, or robust linear regression), and returns a dataframe which contains predicted cell-type proportions of bulk methylation profiles, as well as partial R-squared values for each sample.</p>
+<p>As an another option, users can generate a simulated table of a desired number of samples, with either user-specified or random origin proportions using <code>simulateCellMix</code>. <code>simulateCellMix</code> returns a second data frame called <code>proportions</code>, which contains the actual cell-type proportions of the simulated sample. It can be used for testing the accuracy of the deconvolution by comparing these actual proportions to the proportions predicted by <code>deconvolute</code>.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -109,101 +110,30 @@
 
 <span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"deconvR"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="functions" class="section level1">
+<div id="data" class="section level1">
 <h1 class="hasAnchor">
-<a href="#functions" class="anchor"></a>Functions</h1>
-<div id="simulatecellmix" class="section level2">
+<a href="#data" class="anchor"></a>Data</h1>
+<div id="comprehensive-human-methylome-reference-atlas" class="section level2">
 <h2 class="hasAnchor">
-<a href="#simulatecellmix" class="anchor"></a>simulateCellMix</h2>
-<p><code>simulateCellMix</code> generates a dataframe of simulated samples convoluted using a given reference atlas.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span>
-  <span class="va">numberOfSamples</span>,
-  mixingVector<span class="op">=</span><span class="cn">NULL</span>,
-  reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span></code></pre></div>
-<p>The parameter <code>numberOfSamples</code> is a non-negative integer stating the number of simulated samples to be generated.</p>
-<p>The user may provide the <code>mixingVector</code> parameter to specify the desired origin proportions of the simulated sample(s).If <code>numberOfSamples</code> is 1, <code>mixingVector</code> is a vector of length equal to the number of cell types of <code>reference</code>. Each value in the vector is the proportion of the sample which will originate from the corresponding cell type. Otherwise, <code>mixingVector</code> is a dataframe with rows for origins (e.g. cell types), which must equal the origins contained in <code>reference</code>, and columns for samples, which must equal the number of samples designated in <code>numberOfSamples</code>. Cells contain the proportion of the sample which will originate from the corresponding origin. If this parameter is not provided, random values of origin proportions will be used.</p>
-<p>The dataframe <code>reference</code> contains the signatures to be used in the simulation. The first column should contain unique IDs (e.g. Illumina Probe IDs) which will also be used in the resulting bulk table. All subsequent columns are origins (e.g. cell types), and cells contain the corresponding value for this origin and ID (e.g. methylation value).</p>
-<p><code>simulateCellMix</code> returns a list containing two dataframes. The first dataframe contains the simulated samples. Its first column contains unique IDs (from <code>reference</code>) which can be used in deconvolution to match rows of the reference to rows of the bulk samples. All subsequent columns are origins (e.g. cell types). Each cell contains the corresponding value for the origin and ID (e.g. methylation value). The second dataframe contains the origin proportions of the generated samples. Columns are origins, rows are samples, and each cell contains the proportion of this sample originating from this origin. The first dataframe may be directly used as the bulk parameter in <code>deconvolute</code>. If so, the second dataframe can be used for testing the accuracy of the deconvolution by comparing these actual proportions to the proportions predicted by <code>deconvolute</code>.</p>
-</div>
-<div id="deconvolute" class="section level2">
-<h2 class="hasAnchor">
-<a href="#deconvolute" class="anchor"></a>deconvolute</h2>
-<p><code>deconvolute</code> deconvolutes bulk samples to their origin proportions using data from a reference atlas.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>
-  reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span>,vec <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">bulk</span>,
-  model<span class="op">=</span> <span class="st">"nnls"</span><span class="op">)</span></code></pre></div>
-<p>The dataframe <code>reference</code> contains the signatures of different origins (e.g. cell types) used to train the model. The first column should contain unique IDs (e.g. Illumina Probe ID) to match rows of the reference to rows of the bulk. All subsequent columns are origins. Cells contain the corresponding value for this origin and ID (e.g. methylation value).</p>
-<p>The user may provide a vector <code>vec</code> with which partial R-squared of the results will be calculated. The length must equal the number of rows of <code>reference</code> and <code>bulk</code> tables merged on the ID column (with NAs removed). More details on how this vector is used can be seen below. Defaults to row means of <code>reference</code>.</p>
-<p>The dataframe <code>bulk</code> contains signatures of different bulk profiles to which the model is applied. The first column contains unique IDs (e.g. Illumina Probe ID). These IDs do not need to exactly match the IDs in the reference, but there should be a significant overlap. The rest of columns are samples, with sample names given as column titles. Cells contain the corresponding value for this origin and ID (e.g. methylation value). The user may use <code>simulateCellMix</code> to create this dataframe.</p>
-<p>The parameter <code>model</code> specifies which model the user wishes to use to perform the deconvolution. The four choices are “nnls” (non-negative least squares), “svr” (support vector regression), “qp” (quadratic programming), or “rlm” (robust linear regression). Details on these models are given below. If not provided, this parameter defaults to “nnls”.</p>
-<p><code>deconvolute</code> returns a list of two items. The first item is a dataframe which contains predicted origin proportions of the samples in <code>bulk</code>. The columns are labeled according to the origin labels given in <code>reference</code>. The rows are labeled according to the sample names given in <code>bulk</code>. Each cell contains a value between 0 and 1, which is the proportion of the sample predicted to be from the origin.</p>
-<p>The second item is a list of partial R-squared values of the results (one value per sample). The partial R-squared of each sample is calculated as the proportion of the variance not explained by the reduced model <span class="math display">\[predicted \sim
-vec\]</span> that is explained by the full model <span class="math display">\[predicted \sim observed+vec\]</span>, where <span class="math display">\[predicted\]</span> values are those resulting from the coefficients predicted by <code>deconvolute</code>, <span class="math display">\[observed\]</span> values are those present in <code>bulk</code>, and <span class="math display">\[vec\]</span> values are provided in the parameter <code>vec</code> (with default values as the row means of <code>reference</code>).</p>
-</div>
-<div id="bsmeth2probe" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bsmeth2probe" class="anchor"></a>BSmeth2Probe</h2>
-<p><code>BSmeth2Probe</code> maps WGBS methylation data to Illumina Probe IDs.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/BSmeth2Probe.html">BSmeth2Probe</a></span><span class="op">(</span>
-  <span class="va">probe_id_locations</span>, 
-  <span class="va">WGBS_data</span>, 
-  cutoff <span class="op">=</span> <span class="fl">10</span>, 
-  multipleMapping <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>The <code>probe_id_locations</code> parameter can be either a dataframe or <strong>GRanges</strong> object containing probe IDs and their locations. If it’s a dataframe, it must contain columns named “ID”, “CHR”, “Start”, “End”, and “Strand”. If it’s a <strong>GRanges</strong> object, it should have locations (“seqnames”, “ranges”, “strand”), as well as metadata column “ID”. Start and end locations should be 1-based coordinates. Note that any row with NA values will not be used.</p>
-<p>The user may use probe ids included within the package. The <code>WGBS_data</code> parameter can be either a <strong>GRanges</strong> object or <strong>methylKit</strong> object (methylRaw, methylBase, methylRawDB, or methylBaseDB) of CpG locations and their methylation values.</p>
-<p>This parameter must contain locations (“seqnames”, “ranges”, “strand”) and metadata column(s) of methylation values of sample(s) (i.e. one column per sample). These methylation values must be between 0 and 1.</p>
-<p>The <code>cutoff</code> is the maximum distance (in number of base-pairs) to consider for probes which have not been exactly covered in the WGBS data. The default value is 10.</p>
-<p>The logical <code>multipleMapping</code> can be used when searching for matches for probes not directly covered in WGBS data (i.e. when <code>cutoff</code> &gt; 0). When <code>TRUE</code>, WGBS CpGs which have already been exactly mapped to another probe will still be considered. When <code>FALSE</code>, only CpGs which have not been exactly matched will be considered. The default value is <code>FALSE</code>.</p>
-<p><code>BSmeth2Probe</code> returns a dataframe the with first column “IDs” for CpG IDs, and then 1 or more columns for the sample(s) from <code>WGBS_data</code>. Each cell contains the methylation value which has been mapped to the CpG location of the sample.</p>
-</div>
-<div id="findsignatures" class="section level2">
-<h2 class="hasAnchor">
-<a href="#findsignatures" class="anchor"></a>findSignatures</h2>
-<p><code>findSignatures</code> either constructs a new signature matrix or extends an existing signature matrix.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/findSignatures.html">findSignatures</a></span><span class="op">(</span><span class="va">samples</span>, 
-               <span class="va">sampleMeta</span>, 
-               atlas <span class="op">=</span> <span class="cn">NULL</span>, 
-               variation_cutoff <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
-<p>The dataframe <code>samples</code> contains the samples will be used for creating or extending the signature matrix. The first column contains the unique IDs of the units of the signature (e.g. CpG probe IDs). The rest of the columns are samples, with column names as sample accession IDs (which should also be found in <code>sampleMeta</code>), and each cell containing the value for this sample and unit (e.g. methylation value).</p>
-<p>The <code>sampleMeta</code> dataframe maps sample accession IDs to the group it should be categorized as in the signature matrix (e.g. cell type). The first column contains unique accession IDs, and the second column contains group names. It’s not necessary that every accession ID here is also contained in <code>samples</code>, but every accession ID in samples should also be found here.</p>
-<p>If <code>atlas</code> is not provided, a new reference atlas (i.e. signature matrix) will be constructed. Otherwise, the <code>atlas</code> dataframe is the reference atlas to which the new samples will be incorporated. The first column contains unique IDs (e.g. CpG probe IDs) for each unit of the signature. Subsequent columns are groups (e.g. cell types), with column names as group names and each cell containing the value for this sample and unit (e.g. methylation value). The user may use the example dataframe <code>HumanCellTypeMethAtlas</code>.</p>
-<p>The <code>variation_cutoff</code> can be either a number between 0 to 1, or <code>NULL</code>. When multiple samples map to the same group in <code>sampleMeta</code>, units of the signature with variation across these samples greater than <code>variation_cutoff</code> will be ignored. When <code>NULL</code> (the default value), there is no cutoff.</p>
-<p>If <code>atlas</code> has been provided, <code>findSignatures</code> returns a dataframe containing all groups of <code>atlas</code>, as well as groups to which the accession IDs in <code>samples</code> are mapped to in <code>sampleMeta</code>. In cases where any accession ID(s) in <code>samples</code> are contained in a group already contained in <code>atlas</code>, the values will be pooled from both dataframes to create a new signature. If <code>atlas</code> has not been provided, the returned dataframe contains only the groups to which the accession ids in <code>samples</code> have been mapped to in <code>sampleMeta</code>. The returned dataframe has the first column “IDs” which contains the unique IDs (e.g. CpG probe IDs) for each unit of the signature. Subsequent columns are groups (e.g. cell types), with column names as group names. Each cell contains the value for this group and unit (e.g. methylation value), which has been calculated by pooling the values of all samples in samples` mapped to this group (as well as the values in atlas for this group, if present).</p>
-</div>
-</div>
-<div id="example-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#example-data" class="anchor"></a>Example data</h1>
-<div id="reference-atlas" class="section level2">
-<h2 class="hasAnchor">
-<a href="#reference-atlas" class="anchor"></a>Reference Atlas</h2>
+<a href="#comprehensive-human-methylome-reference-atlas" class="anchor"></a>Comprehensive Human Methylome Reference Atlas</h2>
 <p>The comprehensive human methylome reference atlas created by Moss et al. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> can be used as the reference atlas parameter for several functions in this package. This atlas was modified to remove duplicate CpG loci before being included in the package as the dataframe. The dataframe is composed of 25 human cell types and roughly 6000 CpG loci, identified by their Illumina Probe ID. For each cell type and CpG locus, a methylation value between 0 and 1 is provided. This value represents the fraction of methylated bases of the CpG locus. The atlas therefore provides a unique methylation pattern for each cell type and can be directly used as <code>reference</code> in <code>deconvolute</code> and <code>simulateCellMix</code>, and <code>atlas</code> in <code>findSignatures</code>.</p>
 </div>
-<div id="illumina-hg38-probes" class="section level2">
+<div id="illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38" class="section level2">
 <h2 class="hasAnchor">
-<a href="#illumina-hg38-probes" class="anchor"></a>Illumina hg38 Probes</h2>
-<p>The <strong>GRanges</strong> object <code>illumina_probes_hg38_GRanges.RDS</code> contains the Illumina probe IDs of 400000 genomic loci (identified using the “seqnames”, “ranges”, and “strand” values). This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data. Unnecessary columns were removed and rows were truncated to reduce file size before converting the file to a <strong>GRanges</strong> object. It can be used directly as <code>probe_id_locations</code> in <code>BSmeth2Probe</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<a href="#illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38" class="anchor"></a>Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)</h2>
+<p>The <strong>GRanges</strong> object <code>probe_ids</code> contains the Illumina probe IDs of 400000 genomic loci (identified using the “seqnames”, “ranges”, and “strand” values). This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data. Unnecessary columns were removed and rows were truncated to reduce file size before converting the file to a <strong>GRanges</strong> object. It can be used directly as <code>probe_id_locations</code> in <code>BSmeth2Probe</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"probe_ids"</span><span class="op">)</span>
-<span class="va">probe_ids</span></code></pre></div>
-<pre><code>## GRanges object with 400000 ranges and 1 metadata column:
-##            seqnames              ranges strand |          ID
-##               &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
-##        [1]    chr19     5236005-5236006      + |  cg07881041
-##        [2]    chr20   63216298-63216299      + |  cg18478105
-##        [3]     chr1     6781065-6781066      + |  cg23229610
-##        [4]     chr2 197438742-197438743      - |  cg03513874
-##        [5]     chrX   24054523-24054524      + |  cg09835024
-##        ...      ...                 ...    ... .         ...
-##   [399996]    chr11   82404729-82404730      + |  cg26328447
-##   [399997]    chr20   59365905-59365906      - |  cg03022395
-##   [399998]    chr14   91272875-91272876      + |  cg04134173
-##   [399999]     chr2 160303369-160303370      + |  cg20857520
-##   [400000]    chr10 125124418-125124419      + |  cg24546616
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probe_ids</span><span class="op">)</span></code></pre></div>
+<pre><code>## GRanges object with 6 ranges and 1 metadata column:
+##       seqnames              ranges strand |          ID
+##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
+##   [1]    chr19     5236005-5236006      + |  cg07881041
+##   [2]    chr20   63216298-63216299      + |  cg18478105
+##   [3]     chr1     6781065-6781066      + |  cg23229610
+##   [4]     chr2 197438742-197438743      - |  cg03513874
+##   [5]     chrX   24054523-24054524      + |  cg09835024
+##   [6]    chr14   93114794-93114795      - |  cg05451842
 ##   -------
 ##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
@@ -215,7 +145,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 <h2 class="hasAnchor">
 <a href="#expanding-reference-atlas" class="anchor"></a>Expanding Reference Atlas</h2>
 <p>One may wish to extend their signature matrix to incorporate new data. This can be done using the <code>findSignatures</code> function. First, ensure that <code>atlas</code> (the signature matrix to be extended) and <code>samples</code> (the new data to be added to the signature matrix) are compliant with the function requirements.Below is an example dataframe to illustrate the <code>atlas</code> format.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/BIMSBbioinfo/deconvR">deconvR</a></span><span class="op">)</span> 
 
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"HumanCellTypeMethAtlas"</span><span class="op">)</span>
@@ -263,18 +193,18 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## 5   0.0508  0.0726   0.0759        0.0196
 ## 6   0.0055  0.0188   0.0090        0.0166</code></pre>
 <p>And below illustrates the <code>samples</code> format.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<pre><code>##          IDs   Sample 1   Sample 2  Sample 3
-## 1 cg08169020 0.61913183 0.03369043 0.1682585
-## 2 cg25913761 0.22489063 0.25760845 0.3296360
-## 3 cg26955540 0.09322624 0.15166219 0.2102397
-## 4 cg25170017 0.70784771 0.07899197 0.1997601
-## 5 cg12827637 0.38775328 0.03994096 0.1464344
-## 6 cg19442545 0.13150063 0.02687185 0.0571980</code></pre>
+<pre><code>##          IDs   Sample 1  Sample 2 Sample 3
+## 1 cg08169020 0.14288743 0.2314889   0.8680
+## 2 cg25913761 0.29903646 0.2916819   0.8293
+## 3 cg26955540 0.18129705 0.1349983   0.7915
+## 4 cg25170017 0.19830698 0.3730969   0.7042
+## 5 cg12827637 0.13214152 0.1967800   0.5368
+## 6 cg19442545 0.05358808 0.0800625   0.1952</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the origins they should be mapped to when added to <code>atlas</code>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
                          <span class="st">"Biosample_term_name"</span> <span class="op">=</span> <span class="st">"new cell type"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sampleMeta</span><span class="op">)</span></code></pre></div>
@@ -283,7 +213,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## 2:             Sample 2       new cell type
 ## 3:             Sample 3       new cell type</code></pre>
 <p>Use <code>findSignatures</code> to extend the matrix.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">extended_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findSignatures.html">findSignatures</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">samples</span>, 
                                  sampleMeta <span class="op">=</span> <span class="va">sampleMeta</span>, 
                                  atlas <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span></code></pre></div>
@@ -314,15 +244,15 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## Thyroid 
 ## Upper_GI 
 ## Uterus_cervix</code></pre>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##           IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1: cg08169020    0.27369358         0.8866       0.2615          0.0149
-## 2: cg25913761    0.27071169         0.8363       0.2210          0.2816
-## 3: cg26955540    0.15170937         0.7658       0.0222          0.1492
-## 4: cg25170017    0.32886660         0.8861       0.5116          0.1021
-## 5: cg12827637    0.19137620         0.5212       0.3614          0.0227
-## 6: cg19442545    0.07185682         0.2013       0.1137          0.0608
+## 1: cg08169020     0.4141254         0.8866       0.2615          0.0149
+## 2: cg25913761     0.4733395         0.8363       0.2210          0.2816
+## 3: cg26955540     0.3692651         0.7658       0.0222          0.1492
+## 4: cg25170017     0.4252013         0.8861       0.5116          0.1021
+## 5: cg12827637     0.2885738         0.5212       0.3614          0.0227
+## 6: cg19442545     0.1096169         0.2013       0.1137          0.0608
 ##    NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1:        0.0777          0.0164           0.8680                  0.9509
 ## 2:        0.4705          0.3961           0.8293                  0.2385
@@ -360,7 +290,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## 6: 0.0309   0.0055  0.0188   0.0090        0.0166</code></pre>
 <p>WGBS methylation data first needs to be mapped to probes using <code>BSmeth2Probe</code> before being deconvoluted.The methylation data <code>WGBS_data</code> in <code>BSmeth2Probe</code> may be either a <strong>GRanges</strong> object or a <strong>methylKit</strong> object.</p>
 <p>Format of <code>WGBS_data</code> as <strong>GRanges</strong> object:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">WGBS_GRanges</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"WGBS_GRanges.RDS"</span>,
                                      package <span class="op">=</span> <span class="st">"deconvR"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">WGBS_GRanges</span></code></pre></div>
@@ -381,7 +311,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ##   -------
 ##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
 <p>or as <strong>methylKit</strong> object:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">WGBS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"WGBS_methylkit.RDS"</span>,
                                      package <span class="op">=</span> <span class="st">"deconvR"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">WGBS_data</span><span class="op">)</span></code></pre></div>
@@ -393,7 +323,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## 5 chr1 47362 47362      +       14    10     4
 ## 6 chr1 49271 49271      +       17    17     0</code></pre>
 <p><code>probe_id_locations</code> contains information needed to map cellular loci to probe IDs</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"probe_ids"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probe_ids</span><span class="op">)</span></code></pre></div>
 <pre><code>## GRanges object with 6 ranges and 1 metadata column:
@@ -408,39 +338,39 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ##   -------
 ##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
 <p>Use <code>BSmeth2Probe</code> to map WGBS data to probe IDs.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mapped_WGBS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BSmeth2Probe.html">BSmeth2Probe</a></span><span class="op">(</span>probe_id_locations <span class="op">=</span> <span class="va">probe_ids</span>, 
                                  WGBS_data <span class="op">=</span> <span class="va">WGBS_GRanges</span>,
                                  multipleMapping <span class="op">=</span> <span class="cn">TRUE</span>,
-                                 cutoff <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>
+                                 cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mapped_WGBS_data</span><span class="op">)</span></code></pre></div>
 <pre><code>##          IDs   sample1
-## 1 cg00813378 0.1363636
-## 2 cg00942814 0.8333333
-## 3 cg01006034 0.9712510
-## 4 cg01729401 1.0000000
-## 5 cg01768082 0.7894737
-## 6 cg01802295 0.5333333</code></pre>
+## 1 cg00942814 0.8333333
+## 2 cg01006034 1.0000000
+## 3 cg01729401 1.0000000
+## 4 cg01768082 0.7894737
+## 5 cg01802295 0.5333333
+## 6 cg01922485 0.9000000</code></pre>
 <p>This mapped data can now be used in <code>deconvolute</code>. Here we will deconvolute it using the previously extended signature matrix as the reference atlas.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">deconvolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">extended_matrix</span>, 
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">deconvolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span>, 
                              bulk <span class="op">=</span> <span class="va">mapped_WGBS_data</span><span class="op">)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##       1       1       1       1       1       1</code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">deconvolution</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
-<pre><code>##         new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
-## sample1             0              0            0               0             0
+<pre><code>##         Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
+## sample1              0            0               0             0
 ##         CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors Adipocytes
-## sample1               0                0               0.8981332          0
+## sample1               0                0               0.9430274          0
 ##         Cortical_neurons Hepatocytes Lung_cells Pancreatic_beta_cells
 ## sample1                0           0          0                     0
 ##         Pancreatic_acinar_cells Pancreatic_duct_cells
-## sample1                       0            0.07134082
+## sample1                       0            0.05697258
 ##         Vascular_endothelial_cells Colon_epithelial_cells Left_atrium Bladder
 ## sample1                          0                      0           0       0
 ##         Breast Head_and_neck_larynx Kidney Prostate Thyroid Upper_GI
-## sample1      0           0.03052603      0        0       0        0
+## sample1      0                    0      0        0       0        0
 ##         Uterus_cervix
 ## sample1             0</code></pre>
 </div>
@@ -449,12 +379,12 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 <h1 class="hasAnchor">
 <a href="#example-workflow-for-rna-sequencing-data" class="anchor"></a>Example Workflow For RNA Sequencing Data</h1>
 <p>Here, we will use RNA-seq example data from the <strong>granulator</strong> package. We will only use small sample of data. Notice that we set an IDs column. In order to run <code>deconvR</code> functions, you have to set the <code>Gene names</code> colname as <code>IDs</code>.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/xanibas/granulator">granulator</a></span><span class="op">)</span>
 <span class="co">#To load the data from granulator package</span>
 <span class="fu"><a href="https://rdrr.io/pkg/granulator/man/load_ABIS.html">load_ABIS</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "ABIS dataset was loaded successfully."</code></pre>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#Read the bulk RNA-seq data</span>
 <span class="va">bulk_RNA</span> <span class="op">&lt;-</span> <span class="va">bulkRNAseq_ABIS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>,<span class="op">]</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -469,7 +399,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## CLEC6A   CLEC6A  4.786615  9.357342  6.1288175  8.606988
 ## FXYD6     FXYD6 19.881627 29.860584 20.3102595 26.095918
 ## NRG1       NRG1 20.896435  5.769681 21.5369025  9.638740</code></pre>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#Read the reference RNAseq data</span>
 <span class="va">reference_RNA</span> <span class="op">&lt;-</span> <span class="va">sigMatrix_ABIS_S0</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -485,18 +415,18 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## FXYD6     FXYD6  114.167642 0.4707691    0.1832934   0.2908456
 ## NRG1       NRG1  142.457347 0.1949568    0.1527024   0.2790682</code></pre>
 <p>First, we will simulate the cell mixture using <code>simulateCellMix</code></p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">reference_RNA</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<pre><code>##       IDs   Sample 1   Sample 2    Sample 3
-## 1   S1PR3  5.3977457  2.8407409 0.891656227
-## 2   RXFP2  2.1274805  1.1210058 0.305055175
-## 3 ADAMTS5  0.2819046  0.1376991 0.004638832
-## 4  CLEC6A  5.1506823  3.1918265 0.371208106
-## 5   FXYD6 16.3713988  9.7679431 3.847867104
-## 6    NRG1 20.0265628 12.0560672 3.079525152</code></pre>
+<pre><code>##       IDs   Sample 1  Sample 2   Sample 3
+## 1   S1PR3 0.83559561 1.4441070 0.79175722
+## 2   RXFP2 0.23542641 0.5091714 0.34627475
+## 3 ADAMTS5 0.02331187 0.0683928 0.03313215
+## 4  CLEC6A 0.51175105 1.2877573 1.98409100
+## 5   FXYD6 2.01582227 4.2011002 5.13626351
+## 6    NRG1 2.37621980 5.0144474 6.39924699</code></pre>
 <p><code>sampleMeta</code> includes the information of where the origins they should be mapped to when added to <code>atlas</code> and also, all of the sample names in <code>samples</code>.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
                          <span class="st">"Biosample_term_name"</span> <span class="op">=</span> <span class="st">"new cell type"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sampleMeta</span><span class="op">)</span></code></pre></div>
@@ -505,7 +435,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## 2:             Sample 2       new cell type
 ## 3:             Sample 3       new cell type</code></pre>
 <p>We will use <code>findSignatures</code> to extend the matrix.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">extended_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findSignatures.html">findSignatures</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">samples</span>, 
                                   sampleMeta <span class="op">=</span> <span class="va">sampleMeta</span>, 
                                   atlas <span class="op">=</span> <span class="va">reference_RNA</span><span class="op">)</span></code></pre></div>
@@ -528,15 +458,15 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## mDCs 
 ## pDCs 
 ## Plasmablasts</code></pre>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##        IDs new_cell_type Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## 1:   S1PR3     3.0433809   45.720735 0.2790023    0.1981103   0.3657506
-## 2:   RXFP2     1.1845138   17.877398 0.0000000    0.0000000   0.0000000
-## 3: ADAMTS5     0.1414142    2.550237 0.0000000    0.0000000   0.0000000
-## 4:  CLEC6A     2.9045723   33.695996 0.0000000    0.0000000   0.0000000
-## 5:   FXYD6     9.9957364  114.167642 0.4707691    0.1832934   0.2908456
-## 6:    NRG1    11.7207184  142.457347 0.1949568    0.1527024   0.2790682
+## 1:   S1PR3    1.02381996   45.720735 0.2790023    0.1981103   0.3657506
+## 2:   RXFP2    0.36362420   17.877398 0.0000000    0.0000000   0.0000000
+## 3: ADAMTS5    0.04161227    2.550237 0.0000000    0.0000000   0.0000000
+## 4:  CLEC6A    1.26119978   33.695996 0.0000000    0.0000000   0.0000000
+## 5:   FXYD6    3.78439533  114.167642 0.4707691    0.1832934   0.2908456
+## 6:    NRG1    4.59663808  142.457347 0.1949568    0.1527024   0.2790682
 ##    T.CD8.Naive   B.Naive T.CD4.Memory      MAIT  T.gd.Vd2 Neutrophils.LD
 ## 1:   0.1930285 1.5953677    0.3397065 0.1636009 0.2488113      0.1423922
 ## 2:   0.0000000 0.2471771    0.0000000 0.0000000 0.0000000      0.0000000
@@ -559,13 +489,13 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## 5:   2.32727493
 ## 6:   6.59586777</code></pre>
 <p>Then we will use <code>deconvolute</code> to deconvolute cell type proportions of the bulk samples to their origin proportions using a <strong>quadric programming</strong> model.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">deconv_RNA</span> <span class="op">&lt;-</span> <span class="fu">deconvR</span><span class="fu">::</span><span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">reference_RNA</span>,
                              bulk <span class="op">=</span> <span class="va">bulk_RNA</span>,model <span class="op">=</span> <span class="st">"qp"</span><span class="op">)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  0.2190  0.3287  0.5162  0.5047  0.6498  0.7602</code></pre>
 <p>Then we can access the deconvoluted proportions of bulk sample profiles.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">deconv_RNA</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <pre><code>##      Monocytes.C           NK T.CD8.Memory  T.CD4.Naive  T.CD8.Naive
 ## CYFZ  0.06348309 7.147599e-16 0.000000e+00 0.000000e+00 0.000000e+00
@@ -599,7 +529,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 <div id="sessioninfo" class="section level1">
 <h1 class="hasAnchor">
 <a href="#sessioninfo" class="anchor"></a>sessionInfo</h1>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## R version 4.1.0 (2021-05-18)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -685,7 +615,7 @@ vec\]</span> that is explained by the full model <span class="math display">\[pr
 ## [121] munsell_0.5.0               ggplotify_0.1.0            
 ## [123] BiasedUrn_1.07              bslib_0.3.0                
 ## [125] quadprog_1.5-8</code></pre>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="footnotes">

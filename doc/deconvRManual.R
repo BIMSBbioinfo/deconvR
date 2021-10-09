@@ -20,34 +20,9 @@ doParallel::registerDoParallel(cl)
 #  
 #  BiocManager::install("deconvR")
 
-## ----eval=FALSE---------------------------------------------------------------
-#  simulateCellMix(
-#    numberOfSamples,
-#    mixingVector=NULL,
-#    reference = HumanCellTypeMethAtlas)
-
-## ----eval=FALSE---------------------------------------------------------------
-#  deconvolute(
-#    reference = HumanCellTypeMethAtlas,vec = NULL, bulk,
-#    model= "nnls")
-#  
-
-## ----eval=FALSE---------------------------------------------------------------
-#  BSmeth2Probe(
-#    probe_id_locations,
-#    WGBS_data,
-#    cutoff = 10,
-#    multipleMapping = FALSE)
-
-## ----eval=FALSE---------------------------------------------------------------
-#  findSignatures(samples,
-#                 sampleMeta,
-#                 atlas = NULL,
-#                 variation_cutoff = NULL)
-
 ## ---- message = FALSE, output.lines=10----------------------------------------
 data("probe_ids")
-probe_ids
+head(probe_ids)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
 library(deconvR) 
@@ -88,11 +63,11 @@ head(probe_ids)
 mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids, 
                                  WGBS_data = WGBS_GRanges,
                                  multipleMapping = TRUE,
-                                 cutoff = 100)
+                                 cutoff = 10)
 head(mapped_WGBS_data)
 
 ## -----------------------------------------------------------------------------
-deconvolution <- deconvolute(reference = extended_matrix, 
+deconvolution <- deconvolute(reference = HumanCellTypeMethAtlas, 
                              bulk = mapped_WGBS_data)
 deconvolution[[1]]
 

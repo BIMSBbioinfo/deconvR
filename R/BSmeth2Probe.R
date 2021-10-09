@@ -66,7 +66,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         "methylBaseDB", "methylBase"
     ))) {
         stop("WGBS_data must be either GRanges object or, a methylKit object,
-            such as methylBase, methylRawList, methylBaseDB")
+        such as methylBase, methylRawList, methylBaseDB")
     }
 
     if (is.data.frame(probe_id_locations)) {
@@ -76,7 +76,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         if (any(is.null(c("seqnames", "end", "start", "strand", "id") %in%
             names(probe_id_locations)))) {
             stop("probe_id_locations must contain columns named ID, Seqnames,
-                 Start, End, and Strand.")
+            Start, End, and Strand.")
         }
         if (anyNA(probe_id_locations)) {
             message("Dropping row containing NA: " +
@@ -116,7 +116,7 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
         if ((any(as.data.frame(elementMetadata(WGBS_data)) < 0)) ||
             (any(as.data.frame(elementMetadata(WGBS_data)) > 1))) {
             stop("The metadata columns of WGBS_data must contain methylation
-                values of sample(s) between 0 and 1")
+            values of sample(s) between 0 and 1")
         }
     }
 
@@ -126,8 +126,8 @@ BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
     )
     if (nrow(allresults) == 0) {
         message("BSmeth2Probe couldn't find any match between the probe IDs and
-            WGBS data you have provided. Please make sure that you're using an
-            appropriate probe ID locations with your WGBS data.")
+        WGBS data you have provided. Please make sure that you're using an
+        appropriate probe ID locations with your WGBS data.")
     }
     return(allresults)
 }

@@ -1,7 +1,7 @@
 ---
 title: "deconvR : Simulation and Deconvolution of Omic Profiles"
 author: 
-  - name: İrem B. Gündüz, Veronika Ebenal, Altuna Akalin
+  - name: Irem B. Gunduz, Veronika Ebenal, Altuna Akalin
 output: 
   BiocStyle::html_document:
     self_contained: yes
@@ -36,24 +36,32 @@ doParallel::registerDoParallel(cl)
 
 # Introduction
 
-`deconvR` is a collection of functions surrounding the deconvolution of bulk
-sample(s) with the use of a reference atlas of signature profiles and a
-user-selected model. The user may provide their own reference atlas, use the
-reference atlas provided in `inst`, or create/extend a new reference atlas using
-`findSignatures`. The user may provide their own bulk samples table, or use
-`simulateCellMix` to generate a simulated table of a desired number of samples,
-with either user-specified or random origin proportions. Alternatively, in the
-case of methylation profiles, `BSMeth2Probe` may be used to map WGBS methylation
-data (as a dataframe or **GRanges** object) to probe IDs, and the results of
-this mapping may be used as the bulk samples in the deconvolution. Finally,
-along with a reference atlas and table of bulk samples, `deconvolute` allows the
-user to specify their desired deconvolution model (non-negative least squares
-regression, support vector regression, quadratic programming, or robust linear
-regression), and returns a dataframe which contains predicted cell-type
-proportions of bulk methylation profiles, as well as  partial R-squared values
-for each sample. The user may provide a vector with which partial R-squared of
-the results will be calculated. Otherwise, partial R-squared values will be
-calculated using the row means of the reference atlas.
+Recent studies associated the differences of cell-type proportions may be
+correlated to certain phenotypes, such as cancer. Therefore, the demand for the
+development of computational methods to predict cell type proportions increased.
+Hereby, we developed `deconvR`, a collection of functions designed for analyzing
+deconvolution of the bulk sample(s) using an atlas of reference omic signature
+profiles and a user-selected model. We wanted to give users an option to extend
+extend their reference atlas. Users can create new reference atlases using
+`findSignatures` extend their atlas by adding more cell types. Additionally, we
+included `BSMeth2Probe` to make mapping whole-genome bisulfite sequencing data
+to their probe IDs easier. So users can map WGBS methylation data (as in
+**methylKit** or **GRanges** object format) to probe IDs, and the results of
+this mapping can be used as the bulk samples in the deconvolution. We also
+included a comprehensive DNA methylation atlas of 25 different cell types to use
+in the main function `deconvolute`. `deconvolute` allows the user to specify
+their desired deconvolution model (non-negative least squares regression,
+support vector regression, quadratic programming, or robust linear regression),
+and returns a dataframe which contains predicted cell-type proportions of bulk
+methylation profiles, as well as  partial R-squared values for each sample.
+
+As an another option, users can generate a simulated table of a desired number
+of samples, with either user-specified or random origin proportions using
+`simulateCellMix`. `simulateCellMix` returns a second data frame called
+`proportions`, which contains the actual cell-type proportions of the simulated
+sample. It can be used for testing the accuracy of the deconvolution by
+comparing these actual proportions to the proportions predicted by
+`deconvolute`.
 
 # Installation
 
@@ -66,203 +74,9 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("deconvR")
 ```
 
-# Functions
+# Data
 
-## simulateCellMix
-
-`simulateCellMix` generates a dataframe of simulated samples convoluted using a
-given reference atlas.
-
-``` {r eval=FALSE}
-simulateCellMix(
-  numberOfSamples,
-  mixingVector=NULL,
-  reference = HumanCellTypeMethAtlas)
-```
-
-The parameter `numberOfSamples` is a non-negative integer stating the number of
-simulated samples to be generated.
-
-The user may provide the `mixingVector` parameter to specify the desired origin
-proportions of the simulated sample(s).If `numberOfSamples` is 1, `mixingVector`
-is a vector of length equal to the number of cell types of `reference`. Each
-value in the vector is the proportion of the sample which will originate from
-the corresponding cell type. Otherwise, `mixingVector` is a  dataframe with rows
-for origins (e.g. cell types), which must equal the origins contained in
-`reference`, and columns for samples, which must equal the number of samples
-designated in `numberOfSamples`. Cells contain the proportion of the sample
-which will originate from the corresponding origin. If this parameter is not
-provided, random values of origin proportions will be used.
-
-The dataframe `reference` contains the signatures to be used in the simulation.
-The first column should contain unique IDs (e.g. Illumina Probe IDs) which will
-also be used in the resulting bulk table. All subsequent columns are origins
-(e.g. cell types), and cells contain the corresponding value for this origin and
-ID (e.g. methylation value). 
-
-`simulateCellMix` returns a list containing two dataframes. The first dataframe
-contains the simulated samples. Its first column contains unique IDs (from
-`reference`) which can be used in deconvolution to match rows of the reference
-to rows of the bulk samples. All subsequent columns are origins (e.g. cell
-types). Each cell contains the corresponding value for the origin and ID  (e.g.
-methylation value). The second dataframe contains the origin proportions of the
-generated samples. Columns are origins, rows are samples, and each cell contains
-the proportion of this sample originating from this origin. The first dataframe
-may be directly used as the bulk parameter in `deconvolute`. If so, the second
-dataframe can be used for testing the accuracy of the deconvolution by comparing
-these actual proportions to the proportions predicted by `deconvolute`.
-
-
-## deconvolute
-
-`deconvolute` deconvolutes bulk samples to their origin proportions using data
-from a reference atlas.
-
-``` {r eval=FALSE}
-deconvolute(
-  reference = HumanCellTypeMethAtlas,vec = NULL, bulk,
-  model= "nnls")
-
-```
-
-The dataframe `reference` contains the signatures of different origins (e.g.
-cell types) used to train the model. The first column should contain unique IDs
-(e.g. Illumina Probe ID) to match rows of the reference to rows of the bulk. All
-subsequent columns are origins. Cells contain the corresponding value for this
-origin and ID (e.g. methylation value). 
-
-The user may provide a vector `vec` with which partial R-squared of the results
-will be calculated. The length must equal the number of rows of `reference` and
-`bulk` tables merged on the ID column (with NAs removed). More details on how
-this vector is used can be seen below. Defaults to row means of `reference`.
-
-The dataframe `bulk` contains signatures of different bulk profiles to which the
-model is applied. The first column contains unique IDs (e.g. Illumina Probe ID).
-These IDs do not need to exactly match the IDs in the reference,  but there
-should be a significant overlap. The rest of columns are samples, with sample
-names given as column titles. Cells contain the corresponding value for this
-origin and ID (e.g. methylation value). The user may use `simulateCellMix` to
-create this dataframe.
-
-The parameter `model` specifies which model the user wishes to use to perform
-the deconvolution. The four choices are "nnls" (non-negative least squares),
-"svr" (support vector regression), "qp" (quadratic programming), or "rlm"
-(robust linear regression). Details on these models are given below. If not
-provided, this parameter defaults to "nnls".
-
-`deconvolute` returns a list of two items. The first item is a dataframe which
-contains predicted origin proportions of the samples in `bulk`. The columns are
-labeled according to the origin labels given in `reference`. The rows are
-labeled according to the sample names given in `bulk`. Each cell contains a
-value between 0 and 1, which is the proportion of the sample predicted to be
-from the origin.
-
-The second item is a list of partial R-squared values of the results (one value
-per sample). The partial R-squared of each sample is calculated as the
-proportion of the variance not explained by the reduced model $$predicted \sim
-vec$$ that is explained by the full model $$predicted \sim observed+vec$$, where
-$$predicted$$
-values are those resulting from the coefficients predicted by `deconvolute`,
-$$observed$$ values are those present in `bulk`, and $$vec$$ values are provided
-in the parameter `vec` (with default values as the row means of `reference`).
-
-## BSmeth2Probe
-
-`BSmeth2Probe` maps WGBS methylation data to Illumina Probe IDs.
-
-``` {r eval=FALSE}
-BSmeth2Probe(
-  probe_id_locations, 
-  WGBS_data, 
-  cutoff = 10, 
-  multipleMapping = FALSE)
-```
-
-The `probe_id_locations` parameter can be either a dataframe or **GRanges**
-object containing probe IDs and their locations. If it's a dataframe, it must
-contain columns named "ID", "CHR", "Start", "End", and "Strand". If it's a
-**GRanges** object, it should have locations ("seqnames", "ranges", "strand"),
-as well as metadata column "ID". Start and end locations should be 1-based
-coordinates. Note that any row with NA values will not be used.
-
-The user may use probe ids included within the package. The `WGBS_data`
-parameter can be either a **GRanges** object or **methylKit** object (methylRaw,
-methylBase, methylRawDB, or methylBaseDB) of CpG locations and their methylation
-values.
- 
-This parameter must contain locations ("seqnames", "ranges", "strand") and
-metadata column(s) of methylation values of sample(s) (i.e. one column per
-sample). These methylation values must be between 0 and 1. 
-
-The `cutoff` is the maximum distance (in number of base-pairs) to consider for
-probes which have not been exactly covered in the WGBS data. The default value
-is 10.
-
-The logical `multipleMapping` can be used when searching for matches for probes
-not directly covered in WGBS data (i.e. when `cutoff` > 0). When `TRUE`, WGBS
-CpGs which have already been exactly mapped to another probe will still be
-considered. When `FALSE`, only CpGs which have not been exactly matched will be
-considered. The default value is `FALSE`.
-
-`BSmeth2Probe` returns a dataframe the with first column "IDs" for CpG IDs, and
-then 1 or more columns for the sample(s) from `WGBS_data`. Each cell contains
-the methylation value which has been mapped to the CpG location of the sample.
-
-## findSignatures
-
-`findSignatures` either constructs a new signature matrix or extends an existing 
-signature matrix.
-
-``` {r eval=FALSE}
-findSignatures(samples, 
-               sampleMeta, 
-               atlas = NULL, 
-               variation_cutoff = NULL)
-```
-
-The dataframe `samples` contains the samples will be used for creating or
-extending the signature matrix. The first column contains the unique IDs of the
-units of the signature (e.g. CpG probe IDs). The rest of the columns are
-samples, with column names as sample accession IDs (which should also be found
-in `sampleMeta`), and each cell containing the value for this sample and unit
-(e.g. methylation value).
-
-The `sampleMeta` dataframe maps sample accession IDs to the group it should be
-categorized as in the signature matrix (e.g. cell type). The first column
-contains unique accession IDs, and the second column contains group names. It's
-not necessary that every accession ID here is also contained in `samples`, but
-every accession ID in samples should also be found here.
-
-If `atlas` is not provided, a new reference atlas (i.e. signature matrix) will
-be constructed. Otherwise, the `atlas` dataframe is the reference atlas to which
-the new samples will be incorporated. The first column contains unique IDs (e.g.
-CpG probe IDs) for each unit of the signature. Subsequent columns are groups
-(e.g. cell types), with column names as group names and each cell containing the
-value for this sample and unit (e.g. methylation value). The user may use the
-example dataframe `HumanCellTypeMethAtlas`.
-
-The `variation_cutoff` can be either a number between 0 to 1, or `NULL`. When
-multiple samples map to the same group in `sampleMeta`, units of the signature
-with variation across these samples greater than `variation_cutoff` will be
-ignored. When `NULL` (the default value), there is no cutoff.
- 
-If `atlas` has been provided, `findSignatures` returns a dataframe containing
-all groups of `atlas`, as well as groups to which the accession IDs in `samples`
-are mapped to in `sampleMeta`. In cases where any accession ID(s) in `samples`
-are contained in a group already contained in `atlas`, the values will be pooled
-from both dataframes to create a new signature. If `atlas` has not been
-provided, the returned dataframe contains only the groups to which the accession
-ids in `samples` have been mapped to in `sampleMeta`. The returned dataframe has
-the first column "IDs" which contains the unique IDs (e.g. CpG probe IDs) for
-each unit of the signature. Subsequent columns are groups (e.g. cell types),
-with column names as group names. Each cell contains the value for this group
-and unit (e.g. methylation value), which has been calculated by pooling the
-values of all samples in samples` mapped to this group (as well as the values in
-atlas for this group, if present).
-
-# Example data
-
-## Reference Atlas
+## Comprehensive Human Methylome Reference Atlas
 
 The comprehensive human methylome reference atlas created by Moss et al. ^[Moss,
 J. et al.  (2018). Comprehensive human cell-type methylation atlas reveals
@@ -278,18 +92,18 @@ therefore provides a unique methylation pattern for each cell type and can be
 directly used as `reference` in `deconvolute` and `simulateCellMix`, and `atlas`
 in `findSignatures`.
 
-## Illumina hg38 Probes
+## Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)
 
-The **GRanges** object `illumina_probes_hg38_GRanges.RDS` contains the Illumina
-probe IDs of 400000 genomic loci (identified using the "seqnames", "ranges", and
-"strand" values). This object is based off of the Infinium MethylationEPIC v1.0
-B5 Manifest data. Unnecessary columns were removed and rows were truncated to
-reduce file size before converting the file to a **GRanges** object. It can be
-used directly as `probe_id_locations` in `BSmeth2Probe`.
+The **GRanges** object `probe_ids` contains the Illumina probe IDs of 400000
+genomic loci (identified using the "seqnames", "ranges", and "strand" values).
+This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data.
+Unnecessary columns were removed and rows were truncated to reduce file size
+before converting the file to a **GRanges** object. It can be used directly as
+`probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
 data("probe_ids")
-probe_ids
+head(probe_ids)
 ```
 
 # Example Workflow For Whole Genome Bisulfate Sequencing Data
@@ -367,7 +181,7 @@ Use `BSmeth2Probe` to map WGBS data to probe IDs.
 mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids, 
                                  WGBS_data = WGBS_GRanges,
                                  multipleMapping = TRUE,
-                                 cutoff = 100)
+                                 cutoff = 10)
 head(mapped_WGBS_data)
 ```
 
@@ -375,7 +189,7 @@ This mapped data can now be used in `deconvolute`. Here we will deconvolute it
 using the previously extended signature matrix as the reference atlas.
 
 ``` {r}
-deconvolution <- deconvolute(reference = extended_matrix, 
+deconvolution <- deconvolute(reference = HumanCellTypeMethAtlas, 
                              bulk = mapped_WGBS_data)
 deconvolution[[1]]
 ```
@@ -418,7 +232,6 @@ samples <- simulateCellMix(3,reference = reference_RNA)[[1]]
 head(samples)
 ```
 
-
 `sampleMeta` includes the information of where the origins they should be mapped
 to when added to `atlas` and also, all of the sample names in `samples`.
 
@@ -436,6 +249,7 @@ extended_matrix <- findSignatures(samples = samples,
                                   atlas = reference_RNA)
 head(extended_matrix)
 ```
+
 Then we will use `deconvolute` to deconvolute cell type proportions of the bulk
 samples to their origin proportions using a **quadric programming** model. 
 
@@ -443,6 +257,7 @@ samples to their origin proportions using a **quadric programming** model.
 deconv_RNA <- deconvR::deconvolute(reference = reference_RNA,
                              bulk = bulk_RNA,model = "qp")
 ```
+
 Then we can access the deconvoluted proportions of bulk sample profiles.
 
 ```{r }
