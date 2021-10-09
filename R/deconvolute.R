@@ -56,58 +56,65 @@
 
 deconvolute <- function(reference,
     vec = NULL, bulk, model = "nnls") {
-    message("DECONVOLUTION WITH ", toupper(model))
+    if (!model %in% c(
+        "nnls", "qp", "svr", "rlm"
+    )) {
+        stop("Please select one of the following model types: nnls,qp,svr and
+             rlm.")
+    } else {
+        message("DECONVOLUTION WITH ", toupper(model))
 
-    comb <- function(x, ...) {
-        lapply(seq_along(x), function(i) {
-            c(x[[i]], lapply(
-                list(...),
-                function(y) y[[i]]
-            ))
-        })
-    }
-    ## get rid of rows in both tables with na values
-    clean <- lapply(list(bulk, reference), na.omit)
-    colnum <- ncol(clean[[2]][, -1])
-    # save internal functions & variables within foreach,use parallelization
-    h <- NULL
-    findPartialRsquare <- getFromNamespace("findPartialRsquare", "deconvR")
-    decoModel <- getFromNamespace("decoModel", "deconvR")
-    operation <- foreach(
-        h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
-        .combine = "comb", .multicombine = TRUE,
-        .export = c("findPartialRsquare", "decoModel"),
-        .init = list(c(), list())
-    ) %dopar% {
-        thedata <- na.omit(merge(dplyr::select(clean[[1]], 1, h),
-            clean[[2]],
-            by = "IDs"
-        ))[, -1]
-        # merge each sample to reference table
-        mix <- as.matrix(thedata[, 1])
-        ref <- as.matrix(thedata[, -1])
-        coefficients <- decoModel(model, ref, mix, colnum)
-        if (model == "svr") {
-            coefficients <- as.numeric(coefficients / sum(coefficients))
-        } else {
-            coefficients <- coefficients / sum(coefficients)
+        comb <- function(x, ...) {
+            lapply(seq_along(x), function(i) {
+                c(x[[i]], lapply(
+                    list(...),
+                    function(y) y[[i]]
+                ))
+            })
         }
-        return(list(
-            findPartialRsquare(mix, (ref %*% coefficients), ref, vec),
-            coefficients
-        ))
+        ## get rid of rows in both tables with na values
+        clean <- lapply(list(bulk, reference), na.omit)
+        colnum <- ncol(clean[[2]][, -1])
+        # save internal functions & variables within foreach,use parallelization
+        h <- NULL
+        findPartialRsquare <- getFromNamespace("findPartialRsquare", "deconvR")
+        decoModel <- getFromNamespace("decoModel", "deconvR")
+        operation <- foreach(
+            h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
+            .combine = "comb", .multicombine = TRUE,
+            .export = c("findPartialRsquare", "decoModel"),
+            .init = list(c(), list())
+        ) %dopar% {
+            thedata <- na.omit(merge(dplyr::select(clean[[1]], 1, h),
+                clean[[2]],
+                by = "IDs"
+            ))[, -1]
+            # merge each sample to reference table
+            mix <- as.matrix(thedata[, 1])
+            ref <- as.matrix(thedata[, -1])
+            coefficients <- decoModel(model, ref, mix, colnum)
+            if (model == "svr") {
+                coefficients <- as.numeric(coefficients / sum(coefficients))
+            } else {
+                coefficients <- coefficients / sum(coefficients)
+            }
+            return(list(
+                findPartialRsquare(mix, (ref %*% coefficients), ref, vec),
+                coefficients
+            ))
+        }
+
+        results <- data.frame(t(
+            vapply(seq_along(operation[[2]]), function(i) {
+                res <- unlist(operation[[2]][[i]])
+                return(res)
+            }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
+        ), row.names = colnames(clean[[1]])[-1])
+        colnames(results) <- colnames(clean[[2]])[-1]
+        message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
+        print(summary(unlist(operation[[1]])))
+
+        # results table will have coefficient predictions of each sample
+        return(list(results, operation[[1]]))
     }
-
-    results <- data.frame(t(
-        vapply(seq_along(operation[[2]]), function(i) {
-            res <- unlist(operation[[2]][[i]])
-            return(res)
-        }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
-    ), row.names = colnames(clean[[1]])[-1])
-    colnames(results) <- colnames(clean[[2]])[-1]
-    message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ", toupper(model), ": ")
-    print(summary(unlist(operation[[1]])))
-
-    # results table will have coefficient predictions of each sample
-    return(list(results, operation[[1]]))
 }
