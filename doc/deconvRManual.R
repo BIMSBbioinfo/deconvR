@@ -46,14 +46,15 @@ extended_matrix <- findSignatures(samples = samples,
 head(extended_matrix)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-WGBS_GRanges<- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
+load(system.file("extdata", "WGBS_GRanges.rda",
                                      package = "deconvR"))
-WGBS_GRanges
+head(WGBS_GRanges)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-WGBS_data <- readRDS(system.file("extdata", "WGBS_methylkit.RDS",
-                                     package = "deconvR"))
-head(WGBS_data)
+head(methylKit::methRead(system.file("extdata", "test1.myCpG.txt", 
+                                     package = "methylKit"), 
+                         sample.id="test", assembly="hg18", 
+                         treatment=1, context="CpG", mincov = 0))
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
 data("IlluminaMethEpicB5ProbeIDs")

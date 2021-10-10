@@ -197,12 +197,12 @@
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
 <pre><code>##          IDs   Sample 1   Sample 2   Sample 3
-## 1 cg08169020 0.03038299 0.17287140 0.02250137
-## 2 cg25913761 0.23503449 0.32248157 0.22884004
-## 3 cg26955540 0.03313734 0.17551743 0.06331857
-## 4 cg25170017 0.17205900 0.28089832 0.08937754
-## 5 cg12827637 0.03243948 0.15581264 0.05619990
-## 6 cg19442545 0.12437752 0.09047682 0.01870270</code></pre>
+## 1 cg08169020 0.02444327 0.05628511 0.19661127
+## 2 cg25913761 0.22868670 0.24073363 0.30572668
+## 3 cg26955540 0.03204915 0.12357053 0.17515827
+## 4 cg25170017 0.08364335 0.12156877 0.26174374
+## 5 cg12827637 0.03529598 0.07877202 0.14003576
+## 6 cg19442545 0.07014925 0.03214579 0.06025286</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the origins they should be mapped to when added to <code>atlas</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
@@ -247,12 +247,12 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##           IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1: cg08169020    0.07525192         0.8866       0.2615          0.0149
-## 2: cg25913761    0.26211870         0.8363       0.2210          0.2816
-## 3: cg26955540    0.09065778         0.7658       0.0222          0.1492
-## 4: cg25170017    0.18077829         0.8861       0.5116          0.1021
-## 5: cg12827637    0.08148401         0.5212       0.3614          0.0227
-## 6: cg19442545    0.07785235         0.2013       0.1137          0.0608
+## 1: cg08169020    0.09244655         0.8866       0.2615          0.0149
+## 2: cg25913761    0.25838233         0.8363       0.2210          0.2816
+## 3: cg26955540    0.11025932         0.7658       0.0222          0.1492
+## 4: cg25170017    0.15565195         0.8861       0.5116          0.1021
+## 5: cg12827637    0.08470126         0.5212       0.3614          0.0227
+## 6: cg19442545    0.05418264         0.2013       0.1137          0.0608
 ##    NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1:        0.0777          0.0164           0.8680                  0.9509
 ## 2:        0.4705          0.3961           0.8293                  0.2385
@@ -291,37 +291,33 @@
 <p>WGBS methylation data first needs to be mapped to probes using <code>BSmeth2Probe</code> before being deconvoluted.The methylation data <code>WGBS_data</code> in <code>BSmeth2Probe</code> may be either a <strong>GRanges</strong> object or a <strong>methylKit</strong> object.</p>
 <p>Format of <code>WGBS_data</code> as <strong>GRanges</strong> object:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">WGBS_GRanges</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"WGBS_GRanges.RDS"</span>,
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"WGBS_GRanges.rda"</span>,
                                      package <span class="op">=</span> <span class="st">"deconvR"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">WGBS_GRanges</span></code></pre></div>
-<pre><code>## GRanges object with 10000 ranges and 1 metadata column:
-##           seqnames    ranges strand |   sample1
-##              &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;
-##       [1]     chr1     47176      + |  1.000000
-##       [2]     chr1     47177      - |  0.615385
-##       [3]     chr1     47205      + |  0.384615
-##       [4]     chr1     47206      - |  0.846154
-##       [5]     chr1     47362      + |  0.714286
-##       ...      ...       ...    ... .       ...
-##    [9996]     chr1   1830387      - |  0.923077
-##    [9997]     chr1   1830407      - |  0.928571
-##    [9998]     chr1   1830411      - |  1.000000
-##    [9999]     chr1   1830419      - |  1.000000
-##   [10000]     chr1   1830452      - |  0.909091
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">WGBS_GRanges</span><span class="op">)</span></code></pre></div>
+<pre><code>## GRanges object with 6 ranges and 1 metadata column:
+##       seqnames    ranges strand |   sample1
+##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;
+##   [1]     chr1     47176      + |  0.833333
+##   [2]     chr1     47177      - |  0.818182
+##   [3]     chr1     47205      + |  0.681818
+##   [4]     chr1     47206      - |  0.583333
+##   [5]     chr1     47362      + |  0.416667
+##   [6]     chr1     49271      + |  0.733333
 ##   -------
 ##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
 <p>or as <strong>methylKit</strong> object:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">WGBS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"WGBS_methylkit.RDS"</span>,
-                                     package <span class="op">=</span> <span class="st">"deconvR"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">WGBS_data</span><span class="op">)</span></code></pre></div>
-<pre><code>##    chr start   end strand coverage numCs numTs
-## 1 chr1 47176 47176      +       11    11     0
-## 2 chr1 47177 47177      -       13     8     5
-## 3 chr1 47205 47205      +       13     5     8
-## 4 chr1 47206 47206      -       13    11     2
-## 5 chr1 47362 47362      +       14    10     4
-## 6 chr1 49271 49271      +       17    17     0</code></pre>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu">methylKit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/methylKit/man/methRead-methods.html">methRead</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"test1.myCpG.txt"</span>, 
+                                     package <span class="op">=</span> <span class="st">"methylKit"</span><span class="op">)</span>, 
+                         sample.id<span class="op">=</span><span class="st">"test"</span>, assembly<span class="op">=</span><span class="st">"hg18"</span>, 
+                         treatment<span class="op">=</span><span class="fl">1</span>, context<span class="op">=</span><span class="st">"CpG"</span>, mincov <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>##     chr   start     end strand coverage numCs numTs
+## 1 chr21 9764513 9764513      -       12     0    12
+## 2 chr21 9764539 9764539      -       12     3     9
+## 3 chr21 9820622 9820622      +       13     0    13
+## 4 chr21 9837545 9837545      +       11     0    11
+## 5 chr21 9849022 9849022      +      124    90    34
+## 6 chr21 9853296 9853296      +       17    10     7</code></pre>
 <p><code>probe_id_locations</code> contains information needed to map cellular loci to probe IDs</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"IlluminaMethEpicB5ProbeIDs"</span><span class="op">)</span>
@@ -345,32 +341,32 @@
                                  cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mapped_WGBS_data</span><span class="op">)</span></code></pre></div>
 <pre><code>##          IDs   sample1
-## 1 cg00942814 0.8333333
-## 2 cg01006034 1.0000000
-## 3 cg01729401 1.0000000
-## 4 cg01768082 0.7894737
-## 5 cg01802295 0.5333333
-## 6 cg01922485 0.9000000</code></pre>
+## 1 cg00305774 1.0000000
+## 2 cg00546078 0.8181818
+## 3 cg00546307 0.5454545
+## 4 cg00546971 0.5000000
+## 5 cg00774867 0.8461538
+## 6 cg00830435 0.9166667</code></pre>
 <p>This mapped data can now be used in <code>deconvolute</code>. Here we will deconvolute it using the previously extended signature matrix as the reference atlas.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">deconvolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span>, 
                              bulk <span class="op">=</span> <span class="va">mapped_WGBS_data</span><span class="op">)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##       1       1       1       1       1       1</code></pre>
+##  0.9963  0.9963  0.9963  0.9963  0.9963  0.9963</code></pre>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">deconvolution</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
 <pre><code>##         Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
 ## sample1              0            0               0             0
 ##         CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors Adipocytes
-## sample1               0                0               0.9430274          0
+## sample1               0                0                       0  0.5011789
 ##         Cortical_neurons Hepatocytes Lung_cells Pancreatic_beta_cells
-## sample1                0           0          0                     0
+## sample1        0.2917357           0          0                     0
 ##         Pancreatic_acinar_cells Pancreatic_duct_cells
-## sample1                       0            0.05697258
+## sample1                       0                     0
 ##         Vascular_endothelial_cells Colon_epithelial_cells Left_atrium Bladder
-## sample1                          0                      0           0       0
+## sample1                          0            0.001012524           0       0
 ##         Breast Head_and_neck_larynx Kidney Prostate Thyroid Upper_GI
-## sample1      0                    0      0        0       0        0
+## sample1      0            0.2060729      0        0       0        0
 ##         Uterus_cervix
 ## sample1             0</code></pre>
 </div>
@@ -418,13 +414,13 @@
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">reference_RNA</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<pre><code>##       IDs   Sample 1   Sample 2   Sample 3
-## 1   S1PR3  6.9940023 0.61598689 1.24682499
-## 2   RXFP2  2.6982700 0.09082579 0.61847075
-## 3 ADAMTS5  0.3776809 0.00000000 0.04545073
-## 4  CLEC6A  5.0550218 0.00000000 3.05197475
-## 5   FXYD6 17.5926316 2.32727493 8.04962096
-## 6    NRG1 21.6224681 6.59586777 8.74987420</code></pre>
+<pre><code>##       IDs   Sample 1   Sample 2  Sample 3
+## 1   S1PR3  7.7830316 0.24669188 1.2517129
+## 2   RXFP2  3.0799547 0.08058265 0.2263911
+## 3 ADAMTS5  0.4337583 0.00000000 0.0000000
+## 4  CLEC6A  7.5722262 0.00000000 0.5260847
+## 5   FXYD6 22.7029258 0.26822325 2.4349456
+## 6    NRG1 28.4447318 0.50180980 3.4777186</code></pre>
 <p><code>sampleMeta</code> includes the information of where the origins they should be mapped to when added to <code>atlas</code> and also, all of the sample names in <code>samples</code>.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
@@ -461,12 +457,12 @@
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##        IDs new_cell_type Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## 1:   S1PR3     2.9522714   45.720735 0.2790023    0.1981103   0.3657506
-## 2:   RXFP2     1.1358555   17.877398 0.0000000    0.0000000   0.0000000
-## 3: ADAMTS5     0.1410439    2.550237 0.0000000    0.0000000   0.0000000
-## 4:  CLEC6A     2.7023322   33.695996 0.0000000    0.0000000   0.0000000
-## 5:   FXYD6     9.3231758  114.167642 0.4707691    0.1832934   0.2908456
-## 6:    NRG1    12.3227367  142.457347 0.1949568    0.1527024   0.2790682
+## 1:   S1PR3     3.0938121   45.720735 0.2790023    0.1981103   0.3657506
+## 2:   RXFP2     1.1289761   17.877398 0.0000000    0.0000000   0.0000000
+## 3: ADAMTS5     0.1445861    2.550237 0.0000000    0.0000000   0.0000000
+## 4:  CLEC6A     2.6994369   33.695996 0.0000000    0.0000000   0.0000000
+## 5:   FXYD6     8.4686982  114.167642 0.4707691    0.1832934   0.2908456
+## 6:    NRG1    10.8080867  142.457347 0.1949568    0.1527024   0.2790682
 ##    T.CD8.Naive   B.Naive T.CD4.Memory      MAIT  T.gd.Vd2 Neutrophils.LD
 ## 1:   0.1930285 1.5953677    0.3397065 0.1636009 0.2488113      0.1423922
 ## 2:   0.0000000 0.2471771    0.0000000 0.0000000 0.0000000      0.0000000
