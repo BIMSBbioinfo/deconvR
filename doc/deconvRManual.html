@@ -319,14 +319,14 @@ in <code>findSignatures</code>.</p>
 </div>
 <div id="illumina-infinium-methylationepic-v1.0-b5-manifest-probes-hg38" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)</h2>
-<p>The <strong>GRanges</strong> object <code>probe_ids</code> contains the Illumina probe IDs of 400000
+<p>The <strong>GRanges</strong> object <code>IlluminaMethEpicB5ProbeIDs</code> contains the Illumina probe IDs of 400000
 genomic loci (identified using the “seqnames”, “ranges”, and “strand” values).
 This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data.
 Unnecessary columns were removed and rows were truncated to reduce file size
 before converting the file to a <strong>GRanges</strong> object. It can be used directly as
 <code>probe_id_locations</code> in <code>BSmeth2Probe</code>.</p>
-<pre class="r"><code>data(&quot;probe_ids&quot;)
-head(probe_ids)</code></pre>
+<pre class="r"><code>data(&quot;IlluminaMethEpicB5ProbeIDs&quot;)
+head(IlluminaMethEpicB5ProbeIDs)</code></pre>
 <pre><code>## GRanges object with 6 ranges and 1 metadata column:
 ##       seqnames              ranges strand |          ID
 ##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
@@ -398,13 +398,13 @@ head(HumanCellTypeMethAtlas)</code></pre>
 <p>And below illustrates the <code>samples</code> format.</p>
 <pre class="r"><code>samples &lt;- simulateCellMix(3,reference = HumanCellTypeMethAtlas)[[1]]
 head(samples)</code></pre>
-<pre><code>##          IDs   Sample 1   Sample 2 Sample 3
-## 1 cg08169020 0.13610456 0.24000112   0.0701
-## 2 cg25913761 0.25347147 0.30410675   0.1680
-## 3 cg26955540 0.15311572 0.19643620   0.1298
-## 4 cg25170017 0.20537801 0.29773283   0.0924
-## 5 cg12827637 0.14174186 0.17371590   0.0759
-## 6 cg19442545 0.04254041 0.06505157   0.0090</code></pre>
+<pre><code>##          IDs  Sample 1   Sample 2   Sample 3
+## 1 cg08169020 0.6013989 0.16979507 0.14230903
+## 2 cg25913761 0.6405694 0.27908527 0.29938163
+## 3 cg26955540 0.5492893 0.18489143 0.21019453
+## 4 cg25170017 0.5513039 0.22275910 0.19453195
+## 5 cg12827637 0.3750172 0.12914539 0.13397338
+## 6 cg19442545 0.1831166 0.05345676 0.04391675</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the
 origins they should be mapped to when added to <code>atlas</code>.</p>
 <pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
@@ -447,12 +447,12 @@ head(sampleMeta)</code></pre>
 ## Uterus_cervix</code></pre>
 <pre class="r"><code>head(extended_matrix)</code></pre>
 <pre><code>##           IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1: cg08169020     0.1487352         0.8866       0.2615          0.0149
-## 2: cg25913761     0.2418594         0.8363       0.2210          0.2816
-## 3: cg26955540     0.1597840         0.7658       0.0222          0.1492
-## 4: cg25170017     0.1985036         0.8861       0.5116          0.1021
-## 5: cg12827637     0.1304526         0.5212       0.3614          0.0227
-## 6: cg19442545     0.0388640         0.2013       0.1137          0.0608
+## 1: cg08169020    0.30450098         0.8866       0.2615          0.0149
+## 2: cg25913761    0.40634543         0.8363       0.2210          0.2816
+## 3: cg26955540    0.31479177         0.7658       0.0222          0.1492
+## 4: cg25170017    0.32286499         0.8861       0.5116          0.1021
+## 5: cg12827637    0.21271200         0.5212       0.3614          0.0227
+## 6: cg19442545    0.09349671         0.2013       0.1137          0.0608
 ##    NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1:        0.0777          0.0164           0.8680                  0.9509
 ## 2:        0.4705          0.3961           0.8293                  0.2385
@@ -523,8 +523,8 @@ head(WGBS_data)</code></pre>
 ## 5 chr1 47362 47362      +       14    10     4
 ## 6 chr1 49271 49271      +       17    17     0</code></pre>
 <p><code>probe_id_locations</code> contains information needed to map cellular loci to probe IDs</p>
-<pre class="r"><code>data(&quot;probe_ids&quot;)
-head(probe_ids)</code></pre>
+<pre class="r"><code>data(&quot;IlluminaMethEpicB5ProbeIDs&quot;)
+head(IlluminaMethEpicB5ProbeIDs)</code></pre>
 <pre><code>## GRanges object with 6 ranges and 1 metadata column:
 ##       seqnames              ranges strand |          ID
 ##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
@@ -537,7 +537,7 @@ head(probe_ids)</code></pre>
 ##   -------
 ##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
 <p>Use <code>BSmeth2Probe</code> to map WGBS data to probe IDs.</p>
-<pre class="r"><code>mapped_WGBS_data &lt;- BSmeth2Probe(probe_id_locations = probe_ids, 
+<pre class="r"><code>mapped_WGBS_data &lt;- BSmeth2Probe(probe_id_locations = IlluminaMethEpicB5ProbeIDs, 
                                  WGBS_data = WGBS_GRanges,
                                  multipleMapping = TRUE,
                                  cutoff = 10)
@@ -612,13 +612,13 @@ head(reference_RNA[1:5])</code></pre>
 <p>First, we will simulate the cell mixture using <code>simulateCellMix</code></p>
 <pre class="r"><code>samples &lt;- simulateCellMix(3,reference = reference_RNA)[[1]]
 head(samples)</code></pre>
-<pre><code>##       IDs   Sample 1   Sample 2  Sample 3
-## 1   S1PR3  5.2341806 1.79901622 0.3397065
-## 2   RXFP2  2.0941750 0.46779798 0.0000000
-## 3 ADAMTS5  0.2765114 0.03546736 0.0000000
-## 4  CLEC6A  5.3819722 2.60809257 0.0000000
-## 5   FXYD6 16.5579927 6.83188289 0.6351566
-## 6    NRG1 20.2152147 8.97294599 0.4943492</code></pre>
+<pre><code>##       IDs  Sample 1  Sample 2  Sample 3
+## 1   S1PR3 0.2649942 1.4229997 0.4157509
+## 2   RXFP2 0.0000000 0.4922872 0.1690165
+## 3 ADAMTS5 0.0000000 0.0548872 0.0000000
+## 4  CLEC6A 0.0000000 1.4679790 0.2444675
+## 5   FXYD6 0.5398890 4.7658271 1.4940824
+## 6    NRG1 0.4298605 5.7536939 1.5290436</code></pre>
 <p><code>sampleMeta</code> includes the information of where the origins they should be mapped
 to when added to <code>atlas</code> and also, all of the sample names in <code>samples</code>.</p>
 <pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
@@ -653,12 +653,12 @@ head(sampleMeta)</code></pre>
 ## Plasmablasts</code></pre>
 <pre class="r"><code>head(extended_matrix)</code></pre>
 <pre><code>##        IDs new_cell_type Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## 1:   S1PR3     2.4576344   45.720735 0.2790023    0.1981103   0.3657506
-## 2:   RXFP2     0.8539910   17.877398 0.0000000    0.0000000   0.0000000
-## 3: ADAMTS5     0.1039929    2.550237 0.0000000    0.0000000   0.0000000
-## 4:  CLEC6A     2.6633549   33.695996 0.0000000    0.0000000   0.0000000
-## 5:   FXYD6     8.0083441  114.167642 0.4707691    0.1832934   0.2908456
-## 6:    NRG1     9.8941700  142.457347 0.1949568    0.1527024   0.2790682
+## 1:   S1PR3    0.70124827   45.720735 0.2790023    0.1981103   0.3657506
+## 2:   RXFP2    0.22043458   17.877398 0.0000000    0.0000000   0.0000000
+## 3: ADAMTS5    0.01829573    2.550237 0.0000000    0.0000000   0.0000000
+## 4:  CLEC6A    0.57081548   33.695996 0.0000000    0.0000000   0.0000000
+## 5:   FXYD6    2.26659947  114.167642 0.4707691    0.1832934   0.2908456
+## 6:    NRG1    2.57086600  142.457347 0.1949568    0.1527024   0.2790682
 ##    T.CD8.Naive   B.Naive T.CD4.Memory      MAIT  T.gd.Vd2 Neutrophils.LD
 ## 1:   0.1930285 1.5953677    0.3397065 0.1636009 0.2488113      0.1423922
 ## 2:   0.0000000 0.2471771    0.0000000 0.0000000 0.0000000      0.0000000

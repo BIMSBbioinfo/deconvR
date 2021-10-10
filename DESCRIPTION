@@ -18,15 +18,14 @@ Authors@R:
            role = c("aut"),
            email = "aakalin@gmail.com",
            comment = c(ORCID = "0000-0002-0468-0117")))
-Description: This package designed for analyzing deconvolution of the bulk 
-      sample(s) using an atlas of reference signature profiles and a selected
-      model (non-negative least squares support vector,quadratic programming, or 
-      robust linear). Users are given option to create or extend a reference 
-      atlas and, also simulate a bulk signature profile of a given size containing
-      signatures of cell types. Additionally, methylation data can be used to map
-      WGBS methylation data to probe IDs using BSmeth2Probe function. Users can 
-      also convert any methylKit objects (except for methylDiff) to GRanges with
-      convertMe function.
+Description: This package provides a collection of functions designed for 
+      analyzing deconvolution of the bulk sample(s) using an atlas of reference 
+      omic signature profiles and a user-selected model. Users are given the 
+      option to create or extend a reference atlas and,also simulate the desired
+      size of the bulk signature profile of the reference cell types.The package
+      includes the cell-type-specific methylation atlas and, Illumina Epic B5 
+      probe ids that can be used in deconvolution. Additionally,we included 
+      BSmeth2Probe, to make mapping WGBS data to their probe IDs easier.
 License: Artistic-2.0
 URL: https://github.com/BIMSBbioinfo/deconvR
 BugReports: https://support.bioconductor.org/t/deconvR

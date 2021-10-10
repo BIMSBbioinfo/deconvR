@@ -46,16 +46,17 @@ is taken.
 A function to map WGBS methylation data to Illumina Probe IDs
 }
 \examples{
-data("probe_ids")
+data("IlluminaMethEpicB5ProbeIDs")
 WGBS_GRanges <- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
     package = "deconvR"
 ))
 meth_probres <- BSmeth2Probe(
-    probe_id_locations = probe_ids,
+    probe_id_locations = IlluminaMethEpicB5ProbeIDs,
     WGBS_data = WGBS_GRanges
 )
 methp_cut <- BSmeth2Probe(
-    probe_id_locations = probe_ids, WGBS_data = WGBS_GRanges[5:1000],
+    probe_id_locations = IlluminaMethEpicB5ProbeIDs, 
+    WGBS_data = WGBS_GRanges[5:1000],
     cutoff = 2
 )
 }

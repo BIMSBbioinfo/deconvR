@@ -94,7 +94,7 @@ in `findSignatures`.
 
 ## Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)
 
-The **GRanges** object `probe_ids` contains the Illumina probe IDs of 400000
+The **GRanges** object `IlluminaMethEpicB5ProbeIDs` contains the Illumina probe IDs of 400000
 genomic loci (identified using the "seqnames", "ranges", and "strand" values).
 This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data.
 Unnecessary columns were removed and rows were truncated to reduce file size
@@ -102,8 +102,8 @@ before converting the file to a **GRanges** object. It can be used directly as
 `probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
-data("probe_ids")
-head(probe_ids)
+data("IlluminaMethEpicB5ProbeIDs")
+head(IlluminaMethEpicB5ProbeIDs)
 ```
 
 # Example Workflow For Whole Genome Bisulfate Sequencing Data
@@ -171,14 +171,14 @@ head(WGBS_data)
 `probe_id_locations` contains information needed to map cellular loci to probe IDs
 
 ``` {r, message = FALSE, output.lines=10}
-data("probe_ids")
-head(probe_ids)
+data("IlluminaMethEpicB5ProbeIDs")
+head(IlluminaMethEpicB5ProbeIDs)
 ```
 
 Use `BSmeth2Probe` to map WGBS data to probe IDs.
 
 ``` {r, output.lines=10}
-mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids, 
+mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = IlluminaMethEpicB5ProbeIDs, 
                                  WGBS_data = WGBS_GRanges,
                                  multipleMapping = TRUE,
                                  cutoff = 10)

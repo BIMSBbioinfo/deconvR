@@ -21,8 +21,8 @@ doParallel::registerDoParallel(cl)
 #  BiocManager::install("deconvR")
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-data("probe_ids")
-head(probe_ids)
+data("IlluminaMethEpicB5ProbeIDs")
+head(IlluminaMethEpicB5ProbeIDs)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
 library(deconvR) 
@@ -56,11 +56,11 @@ WGBS_data <- readRDS(system.file("extdata", "WGBS_methylkit.RDS",
 head(WGBS_data)
 
 ## ---- message = FALSE, output.lines=10----------------------------------------
-data("probe_ids")
-head(probe_ids)
+data("IlluminaMethEpicB5ProbeIDs")
+head(IlluminaMethEpicB5ProbeIDs)
 
 ## ---- output.lines=10---------------------------------------------------------
-mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = probe_ids, 
+mapped_WGBS_data <- BSmeth2Probe(probe_id_locations = IlluminaMethEpicB5ProbeIDs, 
                                  WGBS_data = WGBS_GRanges,
                                  multipleMapping = TRUE,
                                  cutoff = 10)

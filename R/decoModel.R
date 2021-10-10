@@ -14,7 +14,7 @@
 #' @noRd
 decoModel <- function(model, ref, mix, colnum) {
     if (model == "nnls") { # non negative least squares
-        coefficients <- (nnls(data.matrix(ref), mix))$x
+        coefficients <- (nnls::nnls(data.matrix(ref), mix))$x
     } else if (model == "svr") { # support vector regression
         model <- best.tune("svm",
             train.x = mix ~ ref, kernel = "linear",

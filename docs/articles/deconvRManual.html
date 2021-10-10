@@ -121,10 +121,10 @@
 <div id="illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38" class="section level2">
 <h2 class="hasAnchor">
 <a href="#illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38" class="anchor"></a>Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)</h2>
-<p>The <strong>GRanges</strong> object <code>probe_ids</code> contains the Illumina probe IDs of 400000 genomic loci (identified using the “seqnames”, “ranges”, and “strand” values). This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data. Unnecessary columns were removed and rows were truncated to reduce file size before converting the file to a <strong>GRanges</strong> object. It can be used directly as <code>probe_id_locations</code> in <code>BSmeth2Probe</code>.</p>
+<p>The <strong>GRanges</strong> object <code>IlluminaMethEpicB5ProbeIDs</code> contains the Illumina probe IDs of 400000 genomic loci (identified using the “seqnames”, “ranges”, and “strand” values). This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data. Unnecessary columns were removed and rows were truncated to reduce file size before converting the file to a <strong>GRanges</strong> object. It can be used directly as <code>probe_id_locations</code> in <code>BSmeth2Probe</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"probe_ids"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probe_ids</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"IlluminaMethEpicB5ProbeIDs"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">IlluminaMethEpicB5ProbeIDs</span><span class="op">)</span></code></pre></div>
 <pre><code>## GRanges object with 6 ranges and 1 metadata column:
 ##       seqnames              ranges strand |          ID
 ##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
@@ -196,13 +196,13 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<pre><code>##          IDs   Sample 1  Sample 2 Sample 3
-## 1 cg08169020 0.14288743 0.2314889   0.8680
-## 2 cg25913761 0.29903646 0.2916819   0.8293
-## 3 cg26955540 0.18129705 0.1349983   0.7915
-## 4 cg25170017 0.19830698 0.3730969   0.7042
-## 5 cg12827637 0.13214152 0.1967800   0.5368
-## 6 cg19442545 0.05358808 0.0800625   0.1952</code></pre>
+<pre><code>##          IDs   Sample 1   Sample 2   Sample 3
+## 1 cg08169020 0.14256120 0.04612245 0.18748660
+## 2 cg25913761 0.24618195 0.23004912 0.29269233
+## 3 cg26955540 0.13234077 0.12971041 0.18668717
+## 4 cg25170017 0.19040744 0.09535522 0.27463709
+## 5 cg12827637 0.09750061 0.04665229 0.15203677
+## 6 cg19442545 0.05845026 0.04079288 0.06545571</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the origins they should be mapped to when added to <code>atlas</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
@@ -247,12 +247,12 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##           IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1: cg08169020     0.4141254         0.8866       0.2615          0.0149
-## 2: cg25913761     0.4733395         0.8363       0.2210          0.2816
-## 3: cg26955540     0.3692651         0.7658       0.0222          0.1492
-## 4: cg25170017     0.4252013         0.8861       0.5116          0.1021
-## 5: cg12827637     0.2885738         0.5212       0.3614          0.0227
-## 6: cg19442545     0.1096169         0.2013       0.1137          0.0608
+## 1: cg08169020    0.12539008         0.8866       0.2615          0.0149
+## 2: cg25913761    0.25630780         0.8363       0.2210          0.2816
+## 3: cg26955540    0.14957945         0.7658       0.0222          0.1492
+## 4: cg25170017    0.18679992         0.8861       0.5116          0.1021
+## 5: cg12827637    0.09872989         0.5212       0.3614          0.0227
+## 6: cg19442545    0.05489962         0.2013       0.1137          0.0608
 ##    NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1:        0.0777          0.0164           0.8680                  0.9509
 ## 2:        0.4705          0.3961           0.8293                  0.2385
@@ -324,8 +324,8 @@
 ## 6 chr1 49271 49271      +       17    17     0</code></pre>
 <p><code>probe_id_locations</code> contains information needed to map cellular loci to probe IDs</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"probe_ids"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">probe_ids</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"IlluminaMethEpicB5ProbeIDs"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">IlluminaMethEpicB5ProbeIDs</span><span class="op">)</span></code></pre></div>
 <pre><code>## GRanges object with 6 ranges and 1 metadata column:
 ##       seqnames              ranges strand |          ID
 ##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
@@ -339,7 +339,7 @@
 ##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
 <p>Use <code>BSmeth2Probe</code> to map WGBS data to probe IDs.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mapped_WGBS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BSmeth2Probe.html">BSmeth2Probe</a></span><span class="op">(</span>probe_id_locations <span class="op">=</span> <span class="va">probe_ids</span>, 
+<code class="sourceCode R"><span class="va">mapped_WGBS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BSmeth2Probe.html">BSmeth2Probe</a></span><span class="op">(</span>probe_id_locations <span class="op">=</span> <span class="va">IlluminaMethEpicB5ProbeIDs</span>, 
                                  WGBS_data <span class="op">=</span> <span class="va">WGBS_GRanges</span>,
                                  multipleMapping <span class="op">=</span> <span class="cn">TRUE</span>,
                                  cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
@@ -418,13 +418,13 @@
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">reference_RNA</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<pre><code>##       IDs   Sample 1  Sample 2   Sample 3
-## 1   S1PR3 0.83559561 1.4441070 0.79175722
-## 2   RXFP2 0.23542641 0.5091714 0.34627475
-## 3 ADAMTS5 0.02331187 0.0683928 0.03313215
-## 4  CLEC6A 0.51175105 1.2877573 1.98409100
-## 5   FXYD6 2.01582227 4.2011002 5.13626351
-## 6    NRG1 2.37621980 5.0144474 6.39924699</code></pre>
+<pre><code>##       IDs   Sample 1    Sample 2  Sample 3
+## 1   S1PR3  4.0422857 0.241802834 0.9188496
+## 2   RXFP2  1.5301592 0.009496614 0.1523436
+## 3 ADAMTS5  0.1998335 0.000000000 0.0000000
+## 4  CLEC6A  3.0572103 0.000000000 0.3372815
+## 5   FXYD6 10.9668956 0.407465000 1.7636963
+## 6    NRG1 12.8290704 0.826390510 2.4212775</code></pre>
 <p><code>sampleMeta</code> includes the information of where the origins they should be mapped to when added to <code>atlas</code> and also, all of the sample names in <code>samples</code>.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
@@ -461,12 +461,12 @@
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##        IDs new_cell_type Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## 1:   S1PR3    1.02381996   45.720735 0.2790023    0.1981103   0.3657506
-## 2:   RXFP2    0.36362420   17.877398 0.0000000    0.0000000   0.0000000
-## 3: ADAMTS5    0.04161227    2.550237 0.0000000    0.0000000   0.0000000
-## 4:  CLEC6A    1.26119978   33.695996 0.0000000    0.0000000   0.0000000
-## 5:   FXYD6    3.78439533  114.167642 0.4707691    0.1832934   0.2908456
-## 6:    NRG1    4.59663808  142.457347 0.1949568    0.1527024   0.2790682
+## 1:   S1PR3    1.73431274   45.720735 0.2790023    0.1981103   0.3657506
+## 2:   RXFP2    0.56399982   17.877398 0.0000000    0.0000000   0.0000000
+## 3: ADAMTS5    0.06661118    2.550237 0.0000000    0.0000000   0.0000000
+## 4:  CLEC6A    1.13149728   33.695996 0.0000000    0.0000000   0.0000000
+## 5:   FXYD6    4.37935229  114.167642 0.4707691    0.1832934   0.2908456
+## 6:    NRG1    5.35891280  142.457347 0.1949568    0.1527024   0.2790682
 ##    T.CD8.Naive   B.Naive T.CD4.Memory      MAIT  T.gd.Vd2 Neutrophils.LD
 ## 1:   0.1930285 1.5953677    0.3397065 0.1636009 0.2488113      0.1423922
 ## 2:   0.0000000 0.2471771    0.0000000 0.0000000 0.0000000      0.0000000

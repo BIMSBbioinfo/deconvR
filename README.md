@@ -13,15 +13,19 @@
 
 <img src="deconvR_logo.png" align="left" alt="logo" width="300" style = "border: none; float: center ;">
 
-The **deconvR** package designed for analyzing deconvolution of the bulk
-sample(s) using an atlas of reference signature profiles and a
-user-selected model (non-negative least squares regression, support
-vector regression, quadratic programming, or robust linear regression).
-Users can upload or expand their own reference atlases using the
-`findSignatures` function, or they can choose to use the reference atlas
-provided in the package. `simulateCellMix` function included to simulate
-a bulk signature profile of a given size. Additionnaly, `BSmeth2Probe`
-function can be used to map methylation data to probe IDs.
+The **deconvR** package provides a collection of functions designed for
+analyzing deconvolution of the bulk sample(s) using an atlas of
+reference signature profiles and a user-selected model (non-negative
+least squares,quadratic programming, support vector regression, or
+robust linear regression). Users can directly use their reference atlas
+or, create an expended version of their reference atlas using
+`findSignatures`. Additionnaly, they can also use the reference atlas
+provided within the package, which contains cell-type specific
+methylation values. Another option is to simulate bulk signatures of
+bulk samples using `simulateCellMix`. And finally, we included
+`BSmeth2Probe` function along with the
+`Illumina Methylation EPIC B5 Manifest` probe IDs, to be used to map
+methylation data to respective probe IDs.
 
 ## Insallation
 
