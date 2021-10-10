@@ -26,9 +26,7 @@
 #' @keywords mapping
 #' @examples
 #' data("IlluminaMethEpicB5ProbeIDs")
-#' WGBS_GRanges <- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
-#'     package = "deconvR"
-#' ))
+#' load(system.file("extdata", "WGBS_GRanges.rda", package = "deconvR"))
 #' meth_probres <- BSmeth2Probe(
 #'     probe_id_locations = IlluminaMethEpicB5ProbeIDs,
 #'     WGBS_data = WGBS_GRanges

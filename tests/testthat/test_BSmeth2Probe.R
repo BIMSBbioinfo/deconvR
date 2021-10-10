@@ -1,7 +1,7 @@
 library(deconvR)
 
 test_that("BSmeth2Probe", {
-    WGBS_GRanges <- readRDS(system.file("extdata", "WGBS_GRanges.RDS",
+    load(system.file("extdata", "WGBS_GRanges.rda",
         package = "deconvR"
     ))
     data("IlluminaMethEpicB5ProbeIDs")
@@ -48,7 +48,7 @@ test_that("BSmeth2Probe", {
         WGBS_data = WGBS_GRanges,
         cutoff = 0
     )))
-    expect_lt(NROW(results), NROW(BSmeth2Probe(
+    expect_equal(NROW(results), NROW(BSmeth2Probe(
         probe_id_locations = IlluminaMethEpicB5ProbeIDs,
         WGBS_data = WGBS_GRanges,
         multipleMapping = TRUE
