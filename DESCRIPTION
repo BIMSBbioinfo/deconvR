@@ -53,6 +53,7 @@ Imports:
     nnls (>= 1.4),
     rsq (>= 2.2),
     MASS,
+    utils,
     dplyr (>= 1.0.7),
     tidyr (>= 1.1.3),
     assertthat
