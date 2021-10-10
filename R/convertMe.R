@@ -1,5 +1,5 @@
-#' @title A function to calculate the percent of methylation and convert 
-#' methylkit objects to GRanges objects. Note that it does not support 
+#' @title A function to calculate the percent of methylation and convert
+#' methylkit objects to GRanges objects. Note that it does not support
 #' methylDiff objects.
 #' @param WGBS_data WGBS data in one of the following methylKit objects:
 #' methylRawList, methylRaw, methylRawListDB,methylBaseDB, methylBase.

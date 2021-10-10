@@ -55,7 +55,7 @@ meth_probres <- BSmeth2Probe(
     WGBS_data = WGBS_GRanges
 )
 methp_cut <- BSmeth2Probe(
-    probe_id_locations = IlluminaMethEpicB5ProbeIDs, 
+    probe_id_locations = IlluminaMethEpicB5ProbeIDs,
     WGBS_data = WGBS_GRanges[5:1000],
     cutoff = 2
 )

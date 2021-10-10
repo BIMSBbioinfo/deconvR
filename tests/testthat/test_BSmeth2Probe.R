@@ -5,7 +5,7 @@ test_that("BSmeth2Probe", {
         package = "deconvR"
     ))
     data("IlluminaMethEpicB5ProbeIDs")
-    IlluminaMethEpicB5ProbeIDs_df <- 
+    IlluminaMethEpicB5ProbeIDs_df <-
         GenomicRanges::as.data.frame(IlluminaMethEpicB5ProbeIDs)
 
     results <- BSmeth2Probe(

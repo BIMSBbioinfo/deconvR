@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">deconvR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.4</span>
       </span>
     </div>
 
@@ -96,9 +96,9 @@
 <!-- badges: end -->
 <p><img src="deconvR_logo.png" align="left" alt="logo" width="300" style="border: none; float: center ;"></p>
 <p>The <strong>deconvR</strong> package provides a collection of functions designed for analyzing deconvolution of the bulk sample(s) using an atlas of reference signature profiles and a user-selected model (non-negative least squares,quadratic programming, support vector regression, or robust linear regression). Users can directly use their reference atlas or, create an expended version of their reference atlas using <code>findSignatures</code>. Additionnaly, they can also use the reference atlas provided within the package, which contains cell-type specific methylation values. Another option is to simulate bulk signatures of bulk samples using <code>simulateCellMix</code>. And finally, we included <code>BSmeth2Probe</code> function along with the <code>Illumina Methylation EPIC B5 Manifest</code> probe IDs, to be used to map methylation data to respective probe IDs.</p>
-<div id="insallation" class="section level2">
+<div id="installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#insallation" class="anchor"></a>Insallation</h2>
+<a href="#installation" class="anchor"></a>Installation</h2>
 <p>The deconvR package can be installed from Bioconductor:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>

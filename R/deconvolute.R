@@ -117,8 +117,10 @@ deconvolute <- function(reference,
             }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
         ), row.names = colnames(clean[[1]])[-1])
         colnames(results) <- colnames(clean[[2]])[-1]
-        message("SUMMARY OF PARTIAL R-SQUARED VALUES FOR ",
-                toupper(model), ": ")
+        message(
+            "SUMMARY OF PARTIAL R-SQUARED VALUES FOR ",
+            toupper(model), ": "
+        )
         print(summary(unlist(operation[[1]])))
 
         # results table will have coefficient predictions of each sample

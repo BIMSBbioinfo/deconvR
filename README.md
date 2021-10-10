@@ -27,7 +27,7 @@ bulk samples using `simulateCellMix`. And finally, we included
 `Illumina Methylation EPIC B5 Manifest` probe IDs, to be used to map
 methylation data to respective probe IDs.
 
-## Insallation
+## Installation
 
 The deconvR package can be installed from Bioconductor:
 
