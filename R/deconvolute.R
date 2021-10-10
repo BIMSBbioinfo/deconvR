@@ -45,9 +45,9 @@
 #'     reference = HumanCellTypeMethAtlas,
 #'     bulk = bulk_data, model = "qp"
 #' )
-#' @return A list, first is a dataframe which contains predicted cell-type
-#' proportions of bulk sample profiles in "bulk", second is a list of
-#' partial-rsq values of results, one value per sample.
+#' @return A list, first is a dataframe called proportions which contains 
+#' predicted cell-type proportions of bulk sample profiles in "bulk", second is 
+#' called rsq,containing partial-rsq values of results, one value per sample.
 #' @references Moss, J. et al.  (2018). Comprehensive human cell-type
 #' methylation atlas reveals origins of circulating cell-free DNA in health
 #' and disease. Nature communications, 9(1), 1-12.
@@ -124,6 +124,6 @@ deconvolute <- function(reference,
         print(summary(unlist(operation[[1]])))
 
         # results table will have coefficient predictions of each sample
-        return(list(results, operation[[1]]))
+        return(list(proportions = results, rsq = unlist(operation[[1]])))
     }
 }

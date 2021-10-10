@@ -398,13 +398,13 @@ head(HumanCellTypeMethAtlas)</code></pre>
 <p>And below illustrates the <code>samples</code> format.</p>
 <pre class="r"><code>samples &lt;- simulateCellMix(3,reference = HumanCellTypeMethAtlas)[[1]]
 head(samples)</code></pre>
-<pre><code>##          IDs   Sample 1   Sample 2  Sample 3
-## 1 cg08169020 0.24707805 0.01628058 0.4314371
-## 2 cg25913761 0.37955401 0.30252674 0.5417533
-## 3 cg26955540 0.28112842 0.11185159 0.4622668
-## 4 cg25170017 0.28249195 0.23369139 0.5966407
-## 5 cg12827637 0.18380096 0.10560767 0.3238988
-## 6 cg19442545 0.08798903 0.03275236 0.1048361</code></pre>
+<pre><code>##          IDs   Sample 1   Sample 2   Sample 3
+## 1 cg08169020 0.06195503 0.14852003 0.15437434
+## 2 cg25913761 0.24599463 0.30537168 0.32487678
+## 3 cg26955540 0.15221221 0.19136498 0.24070731
+## 4 cg25170017 0.17063384 0.22005924 0.19133892
+## 5 cg12827637 0.10883133 0.14309046 0.13168796
+## 6 cg19442545 0.03726106 0.05039216 0.05001671</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the
 origins they should be mapped to when added to <code>atlas</code>.</p>
 <pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
@@ -447,12 +447,12 @@ head(sampleMeta)</code></pre>
 ## Uterus_cervix</code></pre>
 <pre class="r"><code>head(extended_matrix)</code></pre>
 <pre><code>##           IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1: cg08169020    0.23159858         0.8866       0.2615          0.0149
-## 2: cg25913761    0.40794468         0.8363       0.2210          0.2816
-## 3: cg26955540    0.28508228         0.7658       0.0222          0.1492
-## 4: cg25170017    0.37094134         0.8861       0.5116          0.1021
-## 5: cg12827637    0.20443582         0.5212       0.3614          0.0227
-## 6: cg19442545    0.07519249         0.2013       0.1137          0.0608
+## 1: cg08169020    0.12161647         0.8866       0.2615          0.0149
+## 2: cg25913761    0.29208103         0.8363       0.2210          0.2816
+## 3: cg26955540    0.19476150         0.7658       0.0222          0.1492
+## 4: cg25170017    0.19401067         0.8861       0.5116          0.1021
+## 5: cg12827637    0.12786992         0.5212       0.3614          0.0227
+## 6: cg19442545    0.04588998         0.2013       0.1137          0.0608
 ##    NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1:        0.0777          0.0164           0.8680                  0.9509
 ## 2:        0.4705          0.3961           0.8293                  0.2385
@@ -551,7 +551,7 @@ using the previously extended signature matrix as the reference atlas.</p>
                              bulk = mapped_WGBS_data)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  0.9963  0.9963  0.9963  0.9963  0.9963  0.9963</code></pre>
-<pre class="r"><code>deconvolution[[1]]</code></pre>
+<pre class="r"><code>deconvolution$proportions</code></pre>
 <pre><code>##         Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
 ## sample1              0            0               0             0
 ##         CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors Adipocytes
@@ -608,13 +608,13 @@ head(reference_RNA[1:5])</code></pre>
 <p>First, we will simulate the cell mixture using <code>simulateCellMix</code></p>
 <pre class="r"><code>samples &lt;- simulateCellMix(3,reference = reference_RNA)[[1]]
 head(samples)</code></pre>
-<pre><code>##       IDs  Sample 1   Sample 2    Sample 3
-## 1   S1PR3 2.5227572 10.1601102 0.616532058
-## 2   RXFP2 0.9156423  3.9051787 0.210921930
-## 3 ADAMTS5 0.1156505  0.5506217 0.008264579
-## 4  CLEC6A 1.8045361  7.4854002 0.696272600
-## 5   FXYD6 6.9105953 25.5384939 2.776470976
-## 6    NRG1 8.1942678 32.6702996 2.409051658</code></pre>
+<pre><code>##       IDs  Sample 1  Sample 2    Sample 3
+## 1   S1PR3 0.2488113 0.8864454 0.592763920
+## 2   RXFP2 0.0000000 0.1247903 0.134681085
+## 3 ADAMTS5 0.0000000 0.0000000 0.001155719
+## 4  CLEC6A 0.0000000 0.3535077 0.194787550
+## 5   FXYD6 0.5243060 1.8295323 1.817473934
+## 6    NRG1 0.0000000 2.3697252 2.053205816</code></pre>
 <p><code>sampleMeta</code> includes the information of where the origins they should be mapped
 to when added to <code>atlas</code> and also, all of the sample names in <code>samples</code>.</p>
 <pre class="r"><code>sampleMeta &lt;- data.table(&quot;Experiment_accession&quot; = colnames(samples)[-1],
@@ -649,12 +649,12 @@ head(sampleMeta)</code></pre>
 ## Plasmablasts</code></pre>
 <pre class="r"><code>head(extended_matrix)</code></pre>
 <pre><code>##        IDs new_cell_type Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## 1:   S1PR3     4.4331331   45.720735 0.2790023    0.1981103   0.3657506
-## 2:   RXFP2     1.6772477   17.877398 0.0000000    0.0000000   0.0000000
-## 3: ADAMTS5     0.2248456    2.550237 0.0000000    0.0000000   0.0000000
-## 4:  CLEC6A     3.3287363   33.695996 0.0000000    0.0000000   0.0000000
-## 5:   FXYD6    11.7418534  114.167642 0.4707691    0.1832934   0.2908456
-## 6:    NRG1    14.4245397  142.457347 0.1949568    0.1527024   0.2790682
+## 1:   S1PR3  0.5760068583   45.720735 0.2790023    0.1981103   0.3657506
+## 2:   RXFP2  0.0864904585   17.877398 0.0000000    0.0000000   0.0000000
+## 3: ADAMTS5  0.0003852397    2.550237 0.0000000    0.0000000   0.0000000
+## 4:  CLEC6A  0.1827650876   33.695996 0.0000000    0.0000000   0.0000000
+## 5:   FXYD6  1.3904374196  114.167642 0.4707691    0.1832934   0.2908456
+## 6:    NRG1  1.4743103405  142.457347 0.1949568    0.1527024   0.2790682
 ##    T.CD8.Naive   B.Naive T.CD4.Memory      MAIT  T.gd.Vd2 Neutrophils.LD
 ## 1:   0.1930285 1.5953677    0.3397065 0.1636009 0.2488113      0.1423922
 ## 2:   0.0000000 0.2471771    0.0000000 0.0000000 0.0000000      0.0000000
@@ -683,7 +683,7 @@ samples to their origin proportions using a <strong>quadric programming</strong>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  0.2190  0.3287  0.5162  0.5047  0.6498  0.7602</code></pre>
 <p>Then we can access the deconvoluted proportions of bulk sample profiles.</p>
-<pre class="r"><code>head(deconv_RNA[[1]])</code></pre>
+<pre class="r"><code>head(deconv_RNA$proportions)</code></pre>
 <pre><code>##      Monocytes.C           NK T.CD8.Memory  T.CD4.Naive  T.CD8.Naive
 ## CYFZ  0.06348309 7.147599e-16 0.000000e+00 0.000000e+00 0.000000e+00
 ## FY2H  0.12192004 0.000000e+00 0.000000e+00 2.242393e-15 3.335591e-15

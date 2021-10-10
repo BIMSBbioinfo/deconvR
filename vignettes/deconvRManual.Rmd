@@ -192,7 +192,7 @@ using the previously extended signature matrix as the reference atlas.
 ``` {r}
 deconvolution <- deconvolute(reference = HumanCellTypeMethAtlas, 
                              bulk = mapped_WGBS_data)
-deconvolution[[1]]
+deconvolution$proportions
 ```
 
 # Example Workflow For RNA Sequencing Data
@@ -262,7 +262,7 @@ deconv_RNA <- deconvR::deconvolute(reference = reference_RNA,
 Then we can access the deconvoluted proportions of bulk sample profiles.
 
 ```{r }
-head(deconv_RNA[[1]])
+head(deconv_RNA$proportions)
 ```
 
 # sessionInfo

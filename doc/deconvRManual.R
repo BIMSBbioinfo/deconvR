@@ -70,7 +70,7 @@ head(mapped_WGBS_data)
 ## -----------------------------------------------------------------------------
 deconvolution <- deconvolute(reference = HumanCellTypeMethAtlas, 
                              bulk = mapped_WGBS_data)
-deconvolution[[1]]
+deconvolution$proportions
 
 ## -----------------------------------------------------------------------------
 library(granulator)
@@ -114,7 +114,7 @@ deconv_RNA <- deconvR::deconvolute(reference = reference_RNA,
                              bulk = bulk_RNA,model = "qp")
 
 ## -----------------------------------------------------------------------------
-head(deconv_RNA[[1]])
+head(deconv_RNA$proportions)
 
 ## -----------------------------------------------------------------------------
 sessionInfo()
