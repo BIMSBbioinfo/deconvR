@@ -45,8 +45,8 @@
 #'     reference = HumanCellTypeMethAtlas,
 #'     bulk = bulk_data, model = "qp"
 #' )
-#' @return A list, first is a dataframe called proportions which contains 
-#' predicted cell-type proportions of bulk sample profiles in "bulk", second is 
+#' @return A list, first is a dataframe called proportions which contains
+#' predicted cell-type proportions of bulk sample profiles in "bulk", second is
 #' called rsq,containing partial-rsq values of results, one value per sample.
 #' @references Moss, J. et al.  (2018). Comprehensive human cell-type
 #' methylation atlas reveals origins of circulating cell-free DNA in health

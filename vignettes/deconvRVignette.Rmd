@@ -1,6 +1,6 @@
 ---
 title: "deconvR : Simulation and Deconvolution of Omic Profiles"
-author: 
+authors: 
   - name: Irem B. Gunduz, Veronika Ebenal, Altuna Akalin
 output: 
   BiocStyle::html_document:
@@ -12,7 +12,7 @@ output:
 date: "`r Sys.Date()`"
 package: "`r pkg_ver('deconvR')`"
 vignette: >
-  %\VignetteIndexEntry{deconvRManual}
+  %\VignetteIndexEntry{deconvRVignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 ---
@@ -90,7 +90,15 @@ type and CpG locus, a methylation value between 0 and 1 is provided. This value
 represents the fraction of methylated bases of the CpG locus. The atlas
 therefore provides a unique methylation pattern for each cell type and can be
 directly used as `reference` in `deconvolute` and `simulateCellMix`, and `atlas`
-in `findSignatures`.
+in `findSignatures`. Below is an example dataframe to illustrate the `atlas`
+format.
+
+``` {r, message = FALSE, output.lines=10}
+library(deconvR) 
+
+data("HumanCellTypeMethAtlas")
+head(HumanCellTypeMethAtlas[,1:5])
+```
 
 ## Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)
 
@@ -110,20 +118,14 @@ head(IlluminaMethEpicB5ProbeIDs)
 
 ## Expanding Reference Atlas
 
-One may wish to extend their signature matrix to incorporate new data. This can
-be done using the `findSignatures` function. First, ensure that `atlas` (the
-signature matrix to be extended) and `samples` (the new data to be added to the
-signature matrix) are compliant with the function requirements.Below is an
-example dataframe to illustrate the `atlas` format.
-
-``` {r, message = FALSE, output.lines=10}
-library(deconvR) 
-
-data("HumanCellTypeMethAtlas")
-head(HumanCellTypeMethAtlas)
-```
-
-And below illustrates the `samples` format.
+As mentioned in the introduction section, users can extend their reference atlas
+to incorporate new data. Or may combine different reference atlases to construct
+a more comprehensive one.  This can be done using the `findSignatures` function.
+In this example, since we don't have any additional reference atlas, we will add
+simulated data as a new cell type to reference atlas for example purposes.
+First, ensure that `atlas` (the signature matrix to be extended) and `samples`
+(the new data to be added to the signature matrix) are compliant with the
+function requirements. Below illustrates the `samples` format.
 
 ``` {r, message = FALSE, output.lines=10}
 samples <- simulateCellMix(3,reference = HumanCellTypeMethAtlas)[[1]]
@@ -149,8 +151,8 @@ head(extended_matrix)
 ```
 
 WGBS methylation data first needs to be mapped to probes using `BSmeth2Probe`
-before being deconvoluted.The methylation data `WGBS_data` in `BSmeth2Probe` may
-be either a **GRanges** object or a **methylKit** object.
+before being deconvoluted. The methylation data `WGBS_data` in `BSmeth2Probe`
+may be either a **GRanges** object or a **methylKit** object.
 
 Format of `WGBS_data` as **GRanges** object:
 
@@ -201,6 +203,11 @@ Here, we will use RNA-seq example data from the **granulator** package. We will
 only use small sample of data. Notice that we set an IDs column. In order to run
 `deconvR` functions, you have to set the `Gene names` colname as `IDs`.
 
+* Note: It is possible to use `simulateCellMix` to simulate bulk RNA-seq data
+and, it is also possible to use `findSignatures` to extend RNA-seq reference
+atlas. In this example, we won't extend the reference atlas or use a simulated
+data.
+
 ``` {r }
 library(granulator)
 #To load the data from granulator package
@@ -226,32 +233,7 @@ reference_RNA <- sigMatrix_ABIS_S0 %>%
 head(reference_RNA[1:5])
 ```
 
-First, we will simulate the cell mixture using `simulateCellMix`
-
-``` {r, message = FALSE, output.lines=10}
-samples <- simulateCellMix(3,reference = reference_RNA)[[1]]
-head(samples)
-```
-
-`sampleMeta` includes the information of where the origins they should be mapped
-to when added to `atlas` and also, all of the sample names in `samples`.
-
-``` {r, message = FALSE, output.lines=10}
-sampleMeta <- data.table("Experiment_accession" = colnames(samples)[-1],
-                         "Biosample_term_name" = "new cell type")
-head(sampleMeta)
-```
-
-We will use `findSignatures` to extend the matrix.
-
-``` {r, output.lines=10}
-extended_matrix <- findSignatures(samples = samples, 
-                                  sampleMeta = sampleMeta, 
-                                  atlas = reference_RNA)
-head(extended_matrix)
-```
-
-Then we will use `deconvolute` to deconvolute cell type proportions of the bulk
+We will use `deconvolute` to deconvolute cell type proportions of the bulk
 samples to their origin proportions using a **quadric programming** model. 
 
 ``` {r}

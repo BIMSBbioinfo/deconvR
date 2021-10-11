@@ -39,3 +39,4 @@ deconvR.Rproj
 # vignettes/
 *.build.timestamp
 /doc/
+inst/doc
