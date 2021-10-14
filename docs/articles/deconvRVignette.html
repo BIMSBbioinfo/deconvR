@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">deconvR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.7</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>deconvR : Simulation and Deconvolution of Omic Profiles</h1>
             
-            <h4 class="date">2021-10-14</h4>
+            <h4 class="date">2021-10-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/BIMSBbioinfo/deconvR/blob/master/vignettes/deconvRVignette.Rmd"><code>vignettes/deconvRVignette.Rmd</code></a></small>
       <div class="hidden name"><code>deconvRVignette.Rmd</code></div>
@@ -160,12 +160,12 @@
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">$</span><span class="va">simulated</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
 <pre><code>##          IDs   Sample 1   Sample 2   Sample 3
-## 1 cg08169020 0.28455373 0.05554267 0.23230736
-## 2 cg25913761 0.34292340 0.18271645 0.37401862
-## 3 cg26955540 0.23116956 0.11421067 0.27078964
-## 4 cg25170017 0.33573947 0.07280407 0.26552819
-## 5 cg12827637 0.20239716 0.05790099 0.17250629
-## 6 cg19442545 0.07590488 0.01374422 0.06770905</code></pre>
+## 1 cg08169020 0.03039701 0.18808900 0.42370730
+## 2 cg25913761 0.22172938 0.23201654 0.45742530
+## 3 cg26955540 0.08706252 0.11252731 0.40523692
+## 4 cg25170017 0.06319530 0.27495857 0.43613315
+## 5 cg12827637 0.04253534 0.14569156 0.26874915
+## 6 cg19442545 0.03247924 0.06072013 0.09228069</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the origins they should be mapped to when added to <code>atlas</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
@@ -210,12 +210,12 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##          IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1 cg08169020    0.19080126         0.8866       0.2615          0.0149
-## 2 cg25913761    0.29988616         0.8363       0.2210          0.2816
-## 3 cg26955540    0.20538996         0.7658       0.0222          0.1492
-## 4 cg25170017    0.22469058         0.8861       0.5116          0.1021
-## 5 cg12827637    0.14426815         0.5212       0.3614          0.0227
-## 6 cg19442545    0.05245272         0.2013       0.1137          0.0608
+## 1 cg08169020    0.21406444         0.8866       0.2615          0.0149
+## 2 cg25913761    0.30372374         0.8363       0.2210          0.2816
+## 3 cg26955540    0.20160891         0.7658       0.0222          0.1492
+## 4 cg25170017    0.25809567         0.8861       0.5116          0.1021
+## 5 cg12827637    0.15232535         0.5212       0.3614          0.0227
+## 6 cg19442545    0.06182669         0.2013       0.1137          0.0608
 ##   NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1        0.0777          0.0164           0.8680                  0.9509
 ## 2        0.4705          0.3961           0.8293                  0.2385
@@ -436,7 +436,7 @@
 ## 
 ## other attached packages:
 ## [1] granulator_1.0.0  dplyr_1.0.7       doParallel_1.0.16 iterators_1.0.13 
-## [5] foreach_1.5.1     deconvR_0.99.6    data.table_1.14.2 knitr_1.36       
+## [5] foreach_1.5.1     deconvR_0.99.7    data.table_1.14.2 knitr_1.36       
 ## [9] BiocStyle_2.20.2 
 ## 
 ## loaded via a namespace (and not attached):
