@@ -18,8 +18,9 @@
 #' @importFrom stats na.omit
 #' @examples
 #' data("HumanCellTypeMethAtlas")
-#' exampleSamples <- simulateCellMix(1, 
-#' reference = HumanCellTypeMethAtlas)$simulated
+#' exampleSamples <- simulateCellMix(1,
+#'     reference = HumanCellTypeMethAtlas
+#' )$simulated
 #' exampleMeta <- data.table(
 #'     "Experiment_accession" = "example_sample",
 #'     "Biosample_term_name" = "example_cell_type"
