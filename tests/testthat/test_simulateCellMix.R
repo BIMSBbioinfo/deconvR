@@ -3,25 +3,25 @@ library(deconvR)
 test_that("simulateCellMix", {
     data("HumanCellTypeMethAtlas")
     expect_equal(
-        dim(simulateCellMix(1, reference = HumanCellTypeMethAtlas)[[1]]),
+        dim(simulateCellMix(1, reference = HumanCellTypeMethAtlas)$simulated),
         c(dim(HumanCellTypeMethAtlas[, -1])[1], 1 + 1)
     )
     expect_equal(
-        simulateCellMix(1, reference = HumanCellTypeMethAtlas)[[1]][, 1],
+        simulateCellMix(1, reference = HumanCellTypeMethAtlas)$simulated[, 1],
         HumanCellTypeMethAtlas[, 1]
     )
     expect_equal(
         dim(simulateCellMix(
             numberOfSamples = 50,
             reference = HumanCellTypeMethAtlas
-        )[[1]]),
+        )$simulated),
         c(dim(HumanCellTypeMethAtlas[, -1])[1], 50 + 1)
     )
     expect_equal(
         simulateCellMix(
             numberOfSamples = 50,
             reference = HumanCellTypeMethAtlas
-        )[[1]][, 1],
+        )$simulated[, 1],
         HumanCellTypeMethAtlas[, 1]
     )
     expect_equal(sum(simulateCellMix(5,
@@ -48,14 +48,14 @@ test_that("simulateCellMix", {
         )[[2]]),
         colnames(simulateCellMix(5,
             reference = HumanCellTypeMethAtlas
-        )[[1]])[-1]
+        )$simulated)[-1]
     )
     expect_error(simulateCellMix(0,
         reference = HumanCellTypeMethAtlas
-    )[[1]])
+    )$simulated)
     expect_error(simulateCellMix(-1,
         reference = HumanCellTypeMethAtlas
-    )[[1]])
+    )$simulated)
 
     expect_equal(length(simulateCellMix(1,
         reference = HumanCellTypeMethAtlas, c(
@@ -69,7 +69,7 @@ test_that("simulateCellMix", {
             0, 0, 0, 0.1, 0, 0, 0, 0, 0.05, 0.05,
             0, 0, 0, 0
         )
-    )[[1]]), c(
+    )$simulated), c(
         nrow(HumanCellTypeMethAtlas),
         1 + 1
     ))

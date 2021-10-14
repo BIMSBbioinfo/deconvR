@@ -26,13 +26,13 @@
 #'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 #'     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 #' ), reference = HumanCellTypeMethAtlas)
-#' @return A list containing two data frames. First: A dataframe which contains
-#' mixed cell-type origin simulated samples. The first column contains a
-#' unique ID (used from reference) which can be used in deconvolution to match
+#' @return A list containing two data frames. simulated: A dataframe which
+#' contains mixed cell-type origin simulated samples. The first column contains
+#' a unique ID (used from reference) which can be used in deconvolution to match
 #' rows of the reference to rows of the bulk.All subsequent columns are cell
 #' types. Rows are units of signature (e.g. CpGs). Each cell contains the
 #' value for the cell type and unit (e.g. methylation value at this CpG)
-#' Second: A dataframe with the cell proportions of the generated samples.
+#' proportions: A dataframe with the cell proportions of the generated samples.
 #' Each row is a sample. Columns are cell types.
 #' @references Moss, J. et al.  (2018). Comprehensive human cell-type
 #' methylation atlas reveals origins of circulating cell-free DNA in health
@@ -139,5 +139,8 @@ simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
             stop("mixingVector must be either data frame or numeric vector")
         }
     }
-    return(list(simulatedMixtureTable, proportionsTable))
+    return(list(
+        simulated = simulatedMixtureTable,
+        proportions = proportionsTable
+    ))
 }

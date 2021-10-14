@@ -34,7 +34,8 @@ A function to construct a signature matrix
 }
 \examples{
 data("HumanCellTypeMethAtlas")
-exampleSamples <- simulateCellMix(1, reference = HumanCellTypeMethAtlas)[[1]]
+exampleSamples <- simulateCellMix(1, 
+reference = HumanCellTypeMethAtlas)$simulated
 exampleMeta <- data.table(
     "Experiment_accession" = "example_sample",
     "Biosample_term_name" = "example_cell_type"

@@ -75,7 +75,7 @@ samples using given reference atlas." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">deconvR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.6</span>
       </span>
     </div>
 
@@ -170,13 +170,13 @@ type and signature unit (e.g. methylation value at this CpG).</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list containing two data frames. First: A dataframe which contains
-mixed cell-type origin simulated samples. The first column contains a
-unique ID (used from reference) which can be used in deconvolution to match
+    <p>A list containing two data frames. simulated: A dataframe which
+contains mixed cell-type origin simulated samples. The first column contains
+a unique ID (used from reference) which can be used in deconvolution to match
 rows of the reference to rows of the bulk.All subsequent columns are cell
 types. Rows are units of signature (e.g. CpGs). Each cell contains the
 value for the cell type and unit (e.g. methylation value at this CpG)
-Second: A dataframe with the cell proportions of the generated samples.
+proportions: A dataframe with the cell proportions of the generated samples.
 Each row is a sample. Columns are cell types.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 

@@ -27,13 +27,13 @@ Rows are units of the signature. Each cell contains the value for the cell
 type and signature unit (e.g. methylation value at this CpG).}
 }
 \value{
-A list containing two data frames. First: A dataframe which contains
-mixed cell-type origin simulated samples. The first column contains a
-unique ID (used from reference) which can be used in deconvolution to match
+A list containing two data frames. simulated: A dataframe which
+contains mixed cell-type origin simulated samples. The first column contains
+a unique ID (used from reference) which can be used in deconvolution to match
 rows of the reference to rows of the bulk.All subsequent columns are cell
 types. Rows are units of signature (e.g. CpGs). Each cell contains the
 value for the cell type and unit (e.g. methylation value at this CpG)
-Second: A dataframe with the cell proportions of the generated samples.
+proportions: A dataframe with the cell proportions of the generated samples.
 Each row is a sample. Columns are cell types.
 }
 \description{

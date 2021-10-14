@@ -18,7 +18,8 @@
 #' @importFrom stats na.omit
 #' @examples
 #' data("HumanCellTypeMethAtlas")
-#' exampleSamples <- simulateCellMix(1, reference = HumanCellTypeMethAtlas)[[1]]
+#' exampleSamples <- simulateCellMix(1, 
+#' reference = HumanCellTypeMethAtlas)$simulated
 #' exampleMeta <- data.table(
 #'     "Experiment_accession" = "example_sample",
 #'     "Biosample_term_name" = "example_cell_type"
@@ -126,5 +127,5 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
             cat(tissue, "\n")
         }
     }
-    return(extendedAtlas)
+    return(as.data.frame(extendedAtlas))
 }

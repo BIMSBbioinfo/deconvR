@@ -102,12 +102,12 @@ head(HumanCellTypeMethAtlas[,1:5])
 
 ## Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)
 
-The **GRanges** object `IlluminaMethEpicB5ProbeIDs` contains the Illumina probe IDs of 400000
-genomic loci (identified using the "seqnames", "ranges", and "strand" values).
-This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data.
-Unnecessary columns were removed and rows were truncated to reduce file size
-before converting the file to a **GRanges** object. It can be used directly as
-`probe_id_locations` in `BSmeth2Probe`.
+The **GRanges** object `IlluminaMethEpicB5ProbeIDs` contains the Illumina probe
+IDs of 400000 genomic loci (identified using the "seqnames", "ranges", and
+"strand" values). This object is based off of the Infinium MethylationEPIC v1.0
+B5 Manifest data. Unnecessary columns were removed and rows were truncated to
+reduce file size before converting the file to a **GRanges** object. It can be
+used directly as `probe_id_locations` in `BSmeth2Probe`.
 
 ``` {r, message = FALSE, output.lines=10}
 data("IlluminaMethEpicB5ProbeIDs")
@@ -128,7 +128,7 @@ First, ensure that `atlas` (the signature matrix to be extended) and `samples`
 function requirements. Below illustrates the `samples` format.
 
 ``` {r, message = FALSE, output.lines=10}
-samples <- simulateCellMix(3,reference = HumanCellTypeMethAtlas)[[1]]
+samples <- simulateCellMix(3,reference = HumanCellTypeMethAtlas)$simulated
 head(samples)
 ```
 
