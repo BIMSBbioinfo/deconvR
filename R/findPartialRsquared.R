@@ -21,7 +21,7 @@
 #' @return a partial Rsuare value obtained from the result of the model
 #' @keywords internal
 #' @noRd
-findPartialRsquare <- function(observed, predicted, ref, vec) {
+findPartialRsquared <- function(observed, predicted, ref, vec) {
     ## vector defaults to row means of reference
     if (is.null(vec)) {
         vec <- rowMeans(ref)

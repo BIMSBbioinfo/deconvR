@@ -77,7 +77,7 @@ deconvolute <- function(reference,
         colnum <- ncol(clean[[2]][, -1])
         # save internal functions & variables within foreach,use parallelization
         h <- NULL
-        findPartialRsquare <- getFromNamespace("findPartialRsquare", "deconvR")
+        findPartialRsquared <- getFromNamespace("findPartialRsquared", "deconvR")
         decoModel <- getFromNamespace("decoModel", "deconvR")
         operation <- foreach(
             h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
