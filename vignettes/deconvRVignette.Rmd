@@ -42,7 +42,7 @@ development of computational methods to predict cell type proportions increased.
 Hereby, we developed `deconvR`, a collection of functions designed for analyzing
 deconvolution of the bulk sample(s) using an atlas of reference omic signature
 profiles and a user-selected model. We wanted to give users an option to extend
-extend their reference atlas. Users can create new reference atlases using
+their reference atlas. Users can create new reference atlases using
 `findSignatures` extend their atlas by adding more cell types. Additionally, we
 included `BSMeth2Probe` to make mapping whole-genome bisulfite sequencing data
 to their probe IDs easier. So users can map WGBS methylation data (as in
