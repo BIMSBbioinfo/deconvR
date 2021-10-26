@@ -82,7 +82,7 @@ deconvolute <- function(reference,
         operation <- foreach(
             h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
             .combine = "comb", .multicombine = TRUE,
-            .export = c("findPartialRsquare", "decoModel"),
+            .export = c("findPartialRsquared", "decoModel"),
             .init = list(c(), list())
         ) %dopar% {
             thedata <- na.omit(merge(dplyr::select(clean[[1]], 1, h),
