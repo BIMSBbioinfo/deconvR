@@ -1,12 +1,18 @@
 #' @title A function to deconvolute of bulk samples to their origin proportions
 #' using data from reference atlas (e.g. methylation signatures)
 #' Results of model are returned in dataframe "results".
-#' Summary of partial R-squared values of model (min, median, mean, max...) are
+#' Summary of partial R-squared values of model (min, median, mean, max) are
 #' printed upon completion.
 #' @importFrom foreach %dopar% foreach
 #' @importFrom stats  na.omit
 #' @importFrom dplyr select
 #' @importFrom utils getFromNamespace
+#' @details deconvolute checks if deconvolution brings advantages on top of
+#' the basic bimodal profiles through partial R-squares. The reference matrix 
+#' usually follows a bimodal distribution in the case of methylation,and taking
+#' the average of  the rows of methylation matrix might give a pretty similar 
+#' profile to the bulk methylation profile you are trying to deconvolute.If the
+#' deconvolution is advantageous, partial R-squared is expect to be high.
 #' @param reference A dataframe containing signatures of different cell types
 #' (e.g. methylation signature) used to train the model. The first column
 #' should contain a unique ID (e.g. target ID) to match rows of the reference

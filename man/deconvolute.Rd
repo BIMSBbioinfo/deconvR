@@ -5,7 +5,7 @@
 \title{A function to deconvolute of bulk samples to their origin proportions
 using data from reference atlas (e.g. methylation signatures)
 Results of model are returned in dataframe "results".
-Summary of partial R-squared values of model (min, median, mean, max...) are
+Summary of partial R-squared values of model (min, median, mean, max) are
 printed upon completion.}
 \usage{
 deconvolute(reference, vec = NULL, bulk, model = "nnls")
@@ -47,8 +47,16 @@ called rsq,containing partial-rsq values of results, one value per sample.
 A function to deconvolute of bulk samples to their origin proportions
 using data from reference atlas (e.g. methylation signatures)
 Results of model are returned in dataframe "results".
-Summary of partial R-squared values of model (min, median, mean, max...) are
+Summary of partial R-squared values of model (min, median, mean, max) are
 printed upon completion.
+}
+\details{
+deconvolute checks if deconvolution brings advantages on top of
+the basic bimodal profiles through partial R-squares. The reference matrix
+usually follows a bimodal distribution in the case of methylation,and taking
+the average of  the rows of methylation matrix might give a pretty similar
+profile to the bulk methylation profile you are trying to deconvolute.If the
+deconvolution is advantageous, partial R-squared is expect to be high.
 }
 \examples{
 data("HumanCellTypeMethAtlas")
