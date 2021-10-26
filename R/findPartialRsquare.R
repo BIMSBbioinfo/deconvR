@@ -35,7 +35,7 @@ findPartialRsquare <- function(observed, predicted, ref, vec) {
         )
     }
     # calculate partial r-squared
-    rsq_partial <- rsq.partial(
+    rsq_partial <- rsq::rsq.partial(
         lm(predicted ~ observed + vec),
         lm(predicted ~ vec)
     )$partial.rsq
