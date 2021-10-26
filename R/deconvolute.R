@@ -104,7 +104,7 @@ deconvolute <- function(reference,
                     coefficients <- coefficients / sum(coefficients)
                 }
                 return(list(
-                    findPartialRsquare(mix, (ref %*% coefficients), ref, vec),
+                    findPartialRsquared(mix, (ref %*% coefficients), ref, vec),
                     coefficients
                 ))
             }
