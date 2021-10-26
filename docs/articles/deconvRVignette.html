@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">deconvR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.9</span>
       </span>
     </div>
 
@@ -159,13 +159,13 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">$</span><span class="va">simulated</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<pre><code>##          IDs   Sample 1   Sample 2   Sample 3
-## 1 cg08169020 0.13548611 0.11899023 0.10485767
-## 2 cg25913761 0.28191800 0.29177314 0.30768360
-## 3 cg26955540 0.17153383 0.17707303 0.20136182
-## 4 cg25170017 0.21382757 0.19674033 0.18834170
-## 5 cg12827637 0.11925878 0.12111426 0.10353113
-## 6 cg19442545 0.04359756 0.04607229 0.04915623</code></pre>
+<pre><code>##          IDs  Sample 1 Sample 2   Sample 3
+## 1 cg08169020 0.1646650   0.0777 0.27556154
+## 2 cg25913761 0.2811552   0.4705 0.22163676
+## 3 cg26955540 0.1708602   0.4005 0.11142806
+## 4 cg25170017 0.2075760   0.4363 0.34063953
+## 5 cg12827637 0.1356538   0.2120 0.20072374
+## 6 cg19442545 0.0492845   0.0410 0.06794405</code></pre>
 <p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the origins they should be mapped to when added to <code>atlas</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
@@ -210,12 +210,12 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
 <pre><code>##          IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1 cg08169020    0.11977800         0.8866       0.2615          0.0149
-## 2 cg25913761    0.29379158         0.8363       0.2210          0.2816
-## 3 cg26955540    0.18332289         0.7658       0.0222          0.1492
-## 4 cg25170017    0.19963654         0.8861       0.5116          0.1021
-## 5 cg12827637    0.11463473         0.5212       0.3614          0.0227
-## 6 cg19442545    0.04627536         0.2013       0.1137          0.0608
+## 1 cg08169020    0.17264218         0.8866       0.2615          0.0149
+## 2 cg25913761    0.32443065         0.8363       0.2210          0.2816
+## 3 cg26955540    0.22759610         0.7658       0.0222          0.1492
+## 4 cg25170017    0.32817185         0.8861       0.5116          0.1021
+## 5 cg12827637    0.18279251         0.5212       0.3614          0.0227
+## 6 cg19442545    0.05274285         0.2013       0.1137          0.0608
 ##   NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
 ## 1        0.0777          0.0164           0.8680                  0.9509
 ## 2        0.4705          0.3961           0.8293                  0.2385
