@@ -14,7 +14,6 @@
 #' of the signature (e.g. CpG). Each cell contains the value for the cell type
 #' of this unit (e.g. methylation value of the CpG). If not given, defaults to
 #' a reference atlas which is included in this package.
-#' (see deconvR/inst/HumanCellTypeMethAtlas_nodup.RDS).
 #' This reference atlas comes from Moss et al. (2018)
 #' @param vec The user may provide a vector with which partial R-squared of the
 #' results will be calculated.

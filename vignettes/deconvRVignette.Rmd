@@ -63,6 +63,13 @@ sample. It can be used for testing the accuracy of the deconvolution by
 comparing these actual proportions to the proportions predicted by
 `deconvolute`.
 
+`deconvolute` returns partial R-squares, to check if deconvolution brings
+advantages on top of the basic bimodal profiles. The reference matrix usually
+follows a bimodal distribution in the case of methylation, and taking the
+average of  the rows of methylation matrix might give a pretty similar profile
+to the bulk methylation profile you are trying to deconvolute. If the
+deconvolution is advantageous, partial R-squared is expect to be high.
+
 # Installation
 
 The deconvR package can be installed from Bioconductor with:
