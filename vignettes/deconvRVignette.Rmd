@@ -206,53 +206,11 @@ deconvolution$proportions
 
 # Example Workflow For RNA Sequencing Data
 
-Here, we will use RNA-seq example data from the **granulator** package. We will
-only use small sample of data. Notice that we set an IDs column. In order to run
-`deconvR` functions, you have to set the `Gene names` colname as `IDs`.
+It is possible to use RNA-seq data for deconvolution via **deconvR** package.
+Beware that you have to set `IDs` column that contains `Gene names` to run
+**deconvR** functions. Therefore you can simulate bulk RNA-seq data via
+`simulateCellMix` and, extend RNA-seq reference atlas via `findSignatures`.
 
-* Note: It is possible to use `simulateCellMix` to simulate bulk RNA-seq data
-and, it is also possible to use `findSignatures` to extend RNA-seq reference
-atlas. In this example, we won't extend the reference atlas or use a simulated
-data.
-
-``` {r }
-library(granulator)
-#To load the data from granulator package
-load_ABIS()
-
-#Read the bulk RNA-seq data
-bulk_RNA <- bulkRNAseq_ABIS[1:50,] %>% 
-  as.data.frame() %>% 
-  mutate(IDs = rownames(bulkRNAseq_ABIS[1:50,])) %>%
-  select("IDs", everything())
-
-head(bulk_RNA[,1:5])
-```
-
-
-``` {r}
-#Read the reference RNAseq data
-reference_RNA <- sigMatrix_ABIS_S0 %>%
-  as.data.frame() %>% 
-  mutate(IDs = rownames(sigMatrix_ABIS_S0))%>%
-  select("IDs", everything())
-
-head(reference_RNA[1:5])
-```
-
-We will use `deconvolute` to deconvolute cell type proportions of the bulk
-samples to their origin proportions using a **quadric programming** model. 
-
-``` {r}
-deconv_RNA <- deconvR::deconvolute(reference = reference_RNA,
-                             bulk = bulk_RNA,model = "qp")
-```
-
-Then we can access the deconvoluted proportions of bulk sample profiles.
-
-```{r }
-head(deconv_RNA$proportions)
-```
 
 # sessionInfo
 
