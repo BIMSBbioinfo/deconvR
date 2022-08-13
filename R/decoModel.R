@@ -19,7 +19,7 @@ decoModel <- function(model, ref, mix, colnum) {
         model <- e1071::best.tune("svm",
             train.x = mix ~ ref, kernel = "linear",
             type = "nu-regression", scale = FALSE,
-            ranges = list(nu = seq(0.25, 0.5, 0.75))
+            ranges = list(nu = seq(0.25, 0.75, 0.5))
         )
         coefficients <- t(model$coefs) %*% model$SV
     } else if (model == "qp") { # quadratic programming
