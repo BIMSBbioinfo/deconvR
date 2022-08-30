@@ -23,9 +23,8 @@ or, create an expended version of their reference atlas using
 provided within the package, which contains cell-type specific
 methylation values. Another option is to simulate bulk signatures of
 bulk samples using `simulateCellMix`. And finally, we included
-`BSmeth2Probe` function along with the
-`Illumina Methylation EPIC B5 Manifest` probe IDs, to be used to map
-methylation data to respective probe IDs.
+`BSmeth2Probe` function along with the `Illumina Methylation EPIC B5 Manifest`
+probe IDs, to be used to map methylation data to respective probe IDs.
 
 ## Installation
 
