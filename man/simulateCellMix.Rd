@@ -45,8 +45,8 @@ data("HumanCellTypeMethAtlas")
 bulk_mix50 <- simulateCellMix(50, reference = HumanCellTypeMethAtlas)
 
 bulk_mixVec <- simulateCellMix(1, mixingVector = c(
-    0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 ), reference = HumanCellTypeMethAtlas)
 }
 \references{

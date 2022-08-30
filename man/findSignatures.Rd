@@ -35,19 +35,19 @@ A function to construct a signature matrix
 \examples{
 data("HumanCellTypeMethAtlas")
 exampleSamples <- simulateCellMix(1,
-    reference = HumanCellTypeMethAtlas
+  reference = HumanCellTypeMethAtlas
 )$simulated
 exampleMeta <- data.table(
-    "Experiment_accession" = "example_sample",
-    "Biosample_term_name" = "example_cell_type"
+  "Experiment_accession" = "example_sample",
+  "Biosample_term_name" = "example_cell_type"
 )
 colnames(exampleSamples)[-1] <- c("example_sample")
 signatures <- findSignatures(
-    samples = exampleSamples,
-    sampleMeta = exampleMeta
+  samples = exampleSamples,
+  sampleMeta = exampleMeta
 )
 signatures <- findSignatures(
-    samples = exampleSamples, sampleMeta = exampleMeta,
-    atlas = HumanCellTypeMethAtlas
+  samples = exampleSamples, sampleMeta = exampleMeta,
+  atlas = HumanCellTypeMethAtlas
 )
 }

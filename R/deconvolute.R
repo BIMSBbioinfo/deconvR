@@ -8,9 +8,9 @@
 #' @importFrom dplyr select
 #' @importFrom utils getFromNamespace
 #' @details deconvolute checks if deconvolution brings advantages on top of
-#' the basic bimodal profiles through partial R-squares. The reference matrix 
+#' the basic bimodal profiles through partial R-squares. The reference matrix
 #' usually follows a bimodal distribution in the case of methylation,and taking
-#' the average of  the rows of methylation matrix might give a pretty similar 
+#' the average of  the rows of methylation matrix might give a pretty similar
 #' profile to the bulk methylation profile you are trying to deconvolute.If the
 #' deconvolution is advantageous, partial R-squared is expect to be high.
 #' @param reference A dataframe containing signatures of different cell types
@@ -42,13 +42,13 @@
 #' bulk_data <- simulateCellMix(10, reference = HumanCellTypeMethAtlas)[[1]]
 #' # non-least negative square regression
 #' results_nnls <- deconvolute(
-#'     bulk = bulk_data,
-#'     reference = HumanCellTypeMethAtlas
+#'   bulk = bulk_data,
+#'   reference = HumanCellTypeMethAtlas
 #' )
 #' # Quadric programming
 #' results_qp <- deconvolute(
-#'     reference = HumanCellTypeMethAtlas,
-#'     bulk = bulk_data, model = "qp"
+#'   reference = HumanCellTypeMethAtlas,
+#'   bulk = bulk_data, model = "qp"
 #' )
 #' @return A list, first is a dataframe called proportions which contains
 #' predicted cell-type proportions of bulk sample profiles in "bulk", second is
@@ -60,75 +60,75 @@
 #' @export
 
 deconvolute <- function(reference,
-    vec = NULL, bulk, model = "nnls") {
-    if (!model %in% c(
-        "nnls", "qp", "svr", "rlm"
-    )) {
-        stop("Please type one of the following model types: nnls,qp,svr or
+                        vec = NULL, bulk, model = "nnls") {
+  if (!model %in% c(
+    "nnls", "qp", "svr", "rlm"
+  )) {
+    stop("Please type one of the following model types: nnls,qp,svr or
         rlm.")
-    } else {
-        message("DECONVOLUTION WITH ", toupper(model))
+  } else {
+    message("DECONVOLUTION WITH ", toupper(model))
 
-        comb <- function(x, ...) {
-            lapply(seq_along(x), function(i) {
-                c(x[[i]], lapply(
-                    list(...),
-                    function(y) y[[i]]
-                ))
-            })
-        }
-        ## get rid of rows in both tables with na values
-        clean <- lapply(list(bulk, reference), na.omit)
-        colnum <- ncol(clean[[2]][, -1])
-        # save internal functions & variables within foreach,use parallelization
-        h <- NULL
-        findPartialRsquared <- getFromNamespace("findPartialRsquared", "deconvR")
-        decoModel <- getFromNamespace("decoModel", "deconvR")
-        operation <- foreach(
-            h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
-            .combine = "comb", .multicombine = TRUE,
-            .export = c("findPartialRsquared", "decoModel"),
-            .init = list(c(), list())
-        ) %dopar% {
-            thedata <- na.omit(merge(dplyr::select(clean[[1]], 1, h),
-                clean[[2]],
-                by = "IDs"
-            ))[, -1]
-            if (NROW(thedata) == 0) {
-                stop("The bulk data and the reference you have provided doesn't
+    comb <- function(x, ...) {
+      lapply(seq_along(x), function(i) {
+        c(x[[i]], lapply(
+          list(...),
+          function(y) y[[i]]
+        ))
+      })
+    }
+    ## get rid of rows in both tables with na values
+    clean <- lapply(list(bulk, reference), na.omit)
+    colnum <- ncol(clean[[2]][, -1])
+    # save internal functions & variables within foreach,use parallelization
+    h <- NULL
+    findPartialRsquared <- getFromNamespace("findPartialRsquared", "deconvR")
+    decoModel <- getFromNamespace("decoModel", "deconvR")
+    operation <- foreach(
+      h = seq(2, ncol(clean[[1]])), .inorder = TRUE,
+      .combine = "comb", .multicombine = TRUE,
+      .export = c("findPartialRsquared", "decoModel"),
+      .init = list(c(), list())
+    ) %dopar% {
+      thedata <- na.omit(merge(dplyr::select(clean[[1]], 1, h),
+        clean[[2]],
+        by = "IDs"
+      ))[, -1]
+      if (NROW(thedata) == 0) {
+        stop("The bulk data and the reference you have provided doesn't
                 have any common probe ID. Thus, deconvolution is not
                 possible. Please try to provide an appropirate atlas.")
-            } else {
-                # merge each sample to reference table
-                mix <- as.matrix(thedata[, 1])
-                ref <- as.matrix(thedata[, -1])
-                coefficients <- decoModel(model, ref, mix, colnum)
-                if (model == "svr") {
-                    coefficients <- as.numeric(coefficients / sum(coefficients))
-                } else {
-                    coefficients <- coefficients / sum(coefficients)
-                }
-                return(list(
-                    findPartialRsquared(mix, (ref %*% coefficients), ref, vec),
-                    coefficients
-                ))
-            }
+      } else {
+        # merge each sample to reference table
+        mix <- as.matrix(thedata[, 1])
+        ref <- as.matrix(thedata[, -1])
+        coefficients <- decoModel(model, ref, mix, colnum)
+        if (model == "svr") {
+          coefficients <- as.numeric(coefficients / sum(coefficients))
+        } else {
+          coefficients <- coefficients / sum(coefficients)
         }
-
-        results <- data.frame(t(
-            vapply(seq_along(operation[[2]]), function(i) {
-                res <- unlist(operation[[2]][[i]])
-                return(res)
-            }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
-        ), row.names = colnames(clean[[1]])[-1])
-        colnames(results) <- colnames(clean[[2]])[-1]
-        message(
-            "SUMMARY OF PARTIAL R-SQUARED VALUES FOR ",
-            toupper(model), ": "
-        )
-        print(summary(unlist(operation[[1]])))
-
-        # results table will have coefficient predictions of each sample
-        return(list(proportions = results, rsq = unlist(operation[[1]])))
+        return(list(
+          findPartialRsquared(mix, (ref %*% coefficients), ref, vec),
+          coefficients
+        ))
+      }
     }
+
+    results <- data.frame(t(
+      vapply(seq_along(operation[[2]]), function(i) {
+        res <- unlist(operation[[2]][[i]])
+        return(res)
+      }, FUN.VALUE = numeric(NCOL(clean[[2]]) - 1))
+    ), row.names = colnames(clean[[1]])[-1])
+    colnames(results) <- colnames(clean[[2]])[-1]
+    message(
+      "SUMMARY OF PARTIAL R-SQUARED VALUES FOR ",
+      toupper(model), ": "
+    )
+    print(summary(unlist(operation[[1]])))
+
+    # results table will have coefficient predictions of each sample
+    return(list(proportions = results, rsq = unlist(operation[[1]])))
+  }
 }
