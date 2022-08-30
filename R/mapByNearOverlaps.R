@@ -24,48 +24,48 @@
 #' @return A dataframe containing all of the maped CpGs based on near overlaps
 #' @noRd
 mapByNearOverlaps <- function(WGBS_data, probe_id_locations, cutoff,
-    multipleMapping, overlaps_df) {
-    # only need to do "nearlyOverlaps" if cutoff > 0
-    nearolaps_df <- mergeByOverlaps(WGBS_data,
-        probe_id_locations,
-        maxgap = cutoff
+                              multipleMapping, overlaps_df) {
+  # only need to do "nearlyOverlaps" if cutoff > 0
+  nearolaps_df <- mergeByOverlaps(WGBS_data,
+    probe_id_locations,
+    maxgap = cutoff
+  )
+  ## same mapping as first time, but now with cutoff gap allowed
+  nearolaps_df <- subset(
+    nearolaps_df,
+    !(nearolaps_df$ID %in% overlaps_df$ID)
+  )
+  ## discard probes already mapped in first round
+  if (nrow(nearolaps_df) == 0) {
+    nearolaps_df$distance <- numeric()
+  }
+  if (nrow(nearolaps_df) > 0) {
+    nearolaps_df <- cbind(nearolaps_df,
+      distance = distance(
+        nearolaps_df$WGBS_data,
+        nearolaps_df$probe_id_locations
+      )
     )
-    ## same mapping as first time, but now with cutoff gap allowed
-    nearolaps_df <- subset(
-        nearolaps_df,
-        !(nearolaps_df$ID %in% overlaps_df$ID)
-    )
-    ## discard probes already mapped in first round
-    if (nrow(nearolaps_df) == 0) {
-        nearolaps_df$distance <- numeric()
+    ## the distance of the gap between probe and WGBS data location
+    nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
+    # the duplicate with the largest gap is deleted
+    if (!multipleMapping) {
+      if (nrow(overlaps_df) > 0) {
+        ## remove where CpG already mapped in first round
+        ## if multipleMapping  has been set to false
+        nearolaps_df <- subset(nearolaps_df, !(is.element(
+          transpose(as.data.frame(
+            nearolaps_df$WGBS_data
+          )),
+          transpose(as.data.frame(
+            overlaps_df$WGBS_data
+          ))
+        )))
+      }
+      nearolaps_df <-
+        nearolaps_df[!duplicated(nearolaps_df$WGBS_data), ]
     }
-    if (nrow(nearolaps_df) > 0) {
-        nearolaps_df <- cbind(nearolaps_df,
-            distance = distance(
-                nearolaps_df$WGBS_data,
-                nearolaps_df$probe_id_locations
-            )
-        )
-        ## the distance of the gap between probe and WGBS data location
-        nearolaps_df <- nearolaps_df[order(nearolaps_df$distance), ]
-        # the duplicate with the largest gap is deleted
-        if (!multipleMapping) {
-            if (nrow(overlaps_df) > 0) {
-                ## remove where CpG already mapped in first round
-                ## if multipleMapping  has been set to false
-                nearolaps_df <- subset(nearolaps_df, !(is.element(
-                    transpose(as.data.frame(
-                        nearolaps_df$WGBS_data
-                    )),
-                    transpose(as.data.frame(
-                        overlaps_df$WGBS_data
-                    ))
-                )))
-            }
-            nearolaps_df <-
-                nearolaps_df[!duplicated(nearolaps_df$WGBS_data), ]
-        }
-    }
-    allresults <- rbind(overlaps_df, nearolaps_df)
-    ## combine all of the mapping into one dataframe
+  }
+  allresults <- rbind(overlaps_df, nearolaps_df)
+  ## combine all of the mapping into one dataframe
 }
