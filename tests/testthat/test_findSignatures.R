@@ -117,7 +117,7 @@ test_that("findSignatures", {
     samples = exampleSamples,
     sampleMeta = exampleMeta,
     atlas = HumanCellTypeMethAtlas,
-    IDs = "CpGs", K = 100, tissueSpecCpGs = T
+    IDs = "CpGs", K = 100, tissueSpecCpGs = TRUE
   )
   expect_equal(names(signatures)[1], "example_cell_type")
   expect_lte(NROW(signatures), NCOL(HumanCellTypeMethAtlas))

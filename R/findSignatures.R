@@ -37,7 +37,7 @@
 #'   samples = exampleSamples,
 #'   sampleMeta = exampleMeta,
 #'   atlas = HumanCellTypeMethAtlas,
-#'   IDs = "CpGs"
+#'   IDs = "CpGs",tissueSpecCpGs =  FALSE
 #' )
 #' signatures <- findSignatures(
 #'   samples = exampleSamples,
