@@ -91,7 +91,7 @@ signatures <- findSignatures(
   samples = exampleSamples,
   sampleMeta = exampleMeta,
   atlas = HumanCellTypeMethAtlas,
-  IDs = "CpGs", K = 100, tissueSpecCpGs = T
+  IDs = "CpGs", K = 100, tissueSpecCpGs = TRUE
 )
 data("HumanCellTypeMethAtlas")
 exampleSamples <- simulateCellMix(1,
