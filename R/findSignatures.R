@@ -43,7 +43,7 @@
 #'   samples = exampleSamples,
 #'   sampleMeta = exampleMeta,
 #'   atlas = HumanCellTypeMethAtlas,
-#'   IDs = "CpGs", K = 100, tissueSpecCpGs = T
+#'   IDs = "CpGs", K = 100, tissueSpecCpGs = TRUE
 #' )
 #' @return A dataframe extendedAtlas which contains all cell types in atlas
 #' (if given), and those in samples added by cell type, has first column "IDs",
