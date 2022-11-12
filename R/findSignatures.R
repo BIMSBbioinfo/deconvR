@@ -20,7 +20,7 @@
 #' @importFrom data.table  merge.data.table .SD setDT :=
 #' @importFrom assertthat assert_that
 #' @importFrom matrixStats rowVars rowSums2
-#' @importFrom stats na.omit
+#' @importFrom stats na.omit setNames
 #' @examples
 #' data("HumanCellTypeMethAtlas")
 #' exampleSamples <- simulateCellMix(1,
@@ -166,7 +166,7 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
 
     usedCpGs <- c()
     # EXTEND TO KEEP TRACK OF ALREADY USED IDs
-    tissueSpec <- lapply(setNames(
+    tissueSpec <- lapply(stats::setNames(
       colnames(scaledMethMat2),
       colnames(scaledMethMat2)
     ),
