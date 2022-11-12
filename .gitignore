@@ -23,7 +23,7 @@
 # knitr and R markdown default cache directories
 *_cache/
 /cache/
-
+deneme.R
 
 # Temporary files created by R markdown
 *.utf8.md

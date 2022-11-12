@@ -14,7 +14,8 @@ test_that("findSignatures", {
 
   results <- findSignatures(
     samples = exampleSamples,
-    sampleMeta = exampleMeta
+    sampleMeta = exampleMeta,
+    IDs = "IDs"
   )
 
   expect_equal(NCOL(results), 2)
@@ -38,7 +39,8 @@ test_that("findSignatures", {
   colnames(exampleSamples)[-1] <- as.character(1:25)
   results <- findSignatures(
     samples = exampleSamples,
-    sampleMeta = exampleMeta
+    sampleMeta = exampleMeta,
+    IDs = "IDs"
   )
 
   expect_equal(NCOL(results), 4)
@@ -52,7 +54,8 @@ test_that("findSignatures", {
   results_cutoff <- findSignatures(
     samples = exampleSamples,
     sampleMeta = exampleMeta,
-    variation_cutoff = 0.01
+    variation_cutoff = 0.01,
+    IDs = "IDs"
   )
   expect_gt(NROW(results), NROW(results_cutoff))
 
@@ -83,7 +86,8 @@ test_that("findSignatures", {
   results <- findSignatures(
     samples = exampleSamples,
     sampleMeta = exampleMeta,
-    atlas = HumanCellTypeMethAtlas
+    atlas = HumanCellTypeMethAtlas,
+    IDs = "IDs"
   )
 
   expect_equal(NCOL(results), 8)
@@ -97,4 +101,27 @@ test_that("findSignatures", {
   expect_equal(typeof(unlist(results[, -1])), "double")
   expect_lte(max(unlist(results[, -1])), 1)
   expect_gte(min(unlist(results[, -1])), 0)
+
+  ## construct tissue specific methylation signatures
+  data("HumanCellTypeMethAtlas")
+  exampleSamples <- simulateCellMix(1,
+    reference = HumanCellTypeMethAtlas
+  )$simulated
+  exampleMeta <- data.table(
+    "Experiment_accession" = "example_sample",
+    "Biosample_term_name" = "example_cell_type"
+  )
+  colnames(exampleSamples) <- c("CpGs", "example_sample")
+  colnames(HumanCellTypeMethAtlas)[1] <- c("CpGs")
+  signatures <- findSignatures(
+    samples = exampleSamples,
+    sampleMeta = exampleMeta,
+    atlas = HumanCellTypeMethAtlas,
+    IDs = "CpGs", K = 100, tissueSpecCpGs = T
+  )
+  expect_equal(names(signatures)[1], "example_cell_type")
+  expect_lte(NROW(signatures), NCOL(HumanCellTypeMethAtlas))
+  expect_equal(typeof(unlist(signatures)), "double")
+  expect_lte(max(unlist(signatures)), 1)
+  expect_gte(min(unlist(signatures)), 0)
 })

@@ -11,10 +11,15 @@
 #' @param variation_cutoff either a number between 0 to 1, or NULL.For multiple
 #' samples from the same cell type, ignore CpGs with variation >
 #' variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)
+#' @param tissueSpecCpGs if TRUE and atlas provided, it will extract tissue or
+#' specific CpGs.
+#' @param K only valid when tissueSpecCpGs is TRUE. K is the number of top
+#' methylation signature to be extracted.
+#' @param IDs the name of the column indicates ids
 #' @importFrom magrittr %>%
 #' @importFrom data.table  merge.data.table .SD setDT :=
 #' @importFrom assertthat assert_that
-#' @importFrom matrixStats rowVars
+#' @importFrom matrixStats rowVars rowSums2
 #' @importFrom stats na.omit
 #' @examples
 #' data("HumanCellTypeMethAtlas")
@@ -25,23 +30,47 @@
 #'   "Experiment_accession" = "example_sample",
 #'   "Biosample_term_name" = "example_cell_type"
 #' )
-#' colnames(exampleSamples)[-1] <- c("example_sample")
+#' colnames(exampleSamples) <- c("CpGs", "example_sample")
+#' colnames(HumanCellTypeMethAtlas)[1] <- c("CpGs")
+#'
 #' signatures <- findSignatures(
 #'   samples = exampleSamples,
-#'   sampleMeta = exampleMeta
+#'   sampleMeta = exampleMeta,
+#'   atlas = HumanCellTypeMethAtlas,
+#'   IDs = "CpGs"
 #' )
 #' signatures <- findSignatures(
-#'   samples = exampleSamples, sampleMeta = exampleMeta,
-#'   atlas = HumanCellTypeMethAtlas
+#'   samples = exampleSamples,
+#'   sampleMeta = exampleMeta,
+#'   atlas = HumanCellTypeMethAtlas,
+#'   IDs = "CpGs", K = 100, tissueSpecCpGs = T
 #' )
 #' @return A dataframe extendedAtlas which contains all cell types in atlas
 #' (if given), and those in samples added by cell type, has first column "IDs",
 #' rest of columns are cell types, rows are have first cell with the ID
 #' (e.g. CpG ID) and then values of signature (e.g. methylation values)
+#' If tissueSpecCpGs is TRUE, it will return a list of list containing tissue
+#' specific methylation signatures.
 #' @export
 
 findSignatures <- function(samples, sampleMeta, atlas = NULL,
-                           variation_cutoff = NULL) {
+                           variation_cutoff = NULL, K = 100, IDs = NULL,
+                           tissueSpecCpGs = FALSE) {
+  assert_that(!is.null(IDs),
+    msg = "Please set an ID column name"
+  )
+  assert_that(length(IDs) == 1,
+    msg = "Please set provide a valid ID column name"
+  )
+  if (tissueSpecCpGs && !is.numeric(K)) {
+    stop("Please provide numeric K value to use tissueSpecCpGs")
+  }
+  if (tissueSpecCpGs && is.numeric(K) && length(K) != 1) {
+    stop("Please provide a valid K value to use tissueSpecCpGs")
+  }
+  if (tissueSpecCpGs && is.null(atlas)) {
+    stop("Please provide a reference atlas get tissueSpecCpGs")
+  }
   if (!(is.null(variation_cutoff))) {
     ## first just checking variation_cutoff is valid number if not null
     assert_that(is.double(variation_cutoff),
@@ -52,7 +81,7 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
       msg = "Variation cutoff should be between 0 and 1"
     )
   }
-  assert_that(colnames(samples)[1] == "IDs",
+  assert_that(colnames(samples)[1] == IDs,
     msg = "First column of samples should be IDs"
   )
   for (sample_id in colnames(samples)[-1]) {
@@ -62,12 +91,11 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
                             sampleMeta Experiment_accession"
     )
   }
-
   if (is.null(atlas)) {
     extendedAtlas <- samples
     ## if there's no atlas given then just work with samples
   } else {
-    assert_that(colnames(atlas)[1] == "IDs",
+    assert_that(colnames(atlas)[1] == IDs,
       msg = "First column of atlas should be IDs"
     )
     for (celltype in colnames(atlas)[-1]) {
@@ -78,7 +106,7 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
       }
     }
     extendedAtlas <- merge.data.table(atlas, samples,
-      by = "IDs", sort = FALSE
+      by = IDs, sort = FALSE
     )
     # merge atlas with samples
   }
@@ -127,6 +155,37 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
       # pooled column named as Biosample_term_name
       cat(tissue, "\n")
     }
+  }
+
+  if (tissueSpecCpGs) {
+    # scale the extended atlas
+    methMat2 <- as.matrix(extendedAtlas, rownames = IDs)
+    scaledMethMat2 <- methMat2 / matrixStats::rowSums2(methMat2)
+    revMethMat2 <- 1 - methMat2
+    revScaledMethMat2 <- revMethMat2 / matrixStats::rowSums2(revMethMat2)
+
+    usedCpGs <- c()
+    # EXTEND TO KEEP TRACK OF ALREADY USED IDs
+    tissueSpec <- lapply(setNames(
+      colnames(scaledMethMat2),
+      colnames(scaledMethMat2)
+    ),
+    function(tissue, K) {
+      message("Unique used IDs: ", length(usedCpGs))
+      message(tissue, "\n")
+      availableCpGS <- setdiff(row.names(scaledMethMat2), usedCpGs)
+      topKHyperCpGs <- sort(scaledMethMat2[availableCpGS, tissue],
+        decreasing = TRUE
+      )[1:K]
+      topKHypoCpGs <- sort(revScaledMethMat2[availableCpGS, tissue],
+        decreasing = TRUE
+      )[1:K]
+      usedCpGs <<- c(usedCpGs, names(c(topKHypoCpGs, topKHyperCpGs)))
+      return(list("hyper" = topKHyperCpGs, "hypo" = topKHypoCpGs))
+    },
+    K = K
+    )
+    return(tissueSpec)
   }
   return(as.data.frame(extendedAtlas))
 }
