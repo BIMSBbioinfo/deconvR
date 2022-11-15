@@ -63,13 +63,13 @@ data("HumanCellTypeMethAtlas")
 bulk_data <- simulateCellMix(10, reference = HumanCellTypeMethAtlas)[[1]]
 # non-least negative square regression
 results_nnls <- deconvolute(
-    bulk = bulk_data,
-    reference = HumanCellTypeMethAtlas
+  bulk = bulk_data,
+  reference = HumanCellTypeMethAtlas
 )
 # Quadric programming
 results_qp <- deconvolute(
-    reference = HumanCellTypeMethAtlas,
-    bulk = bulk_data, model = "qp"
+  reference = HumanCellTypeMethAtlas,
+  bulk = bulk_data, model = "qp"
 )
 }
 \references{

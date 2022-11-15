@@ -23,8 +23,8 @@
 #' bulk_mix50 <- simulateCellMix(50, reference = HumanCellTypeMethAtlas)
 #'
 #' bulk_mixVec <- simulateCellMix(1, mixingVector = c(
-#'     0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-#'     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+#'   0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+#'   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 #' ), reference = HumanCellTypeMethAtlas)
 #' @return A list containing two data frames. simulated: A dataframe which
 #' contains mixed cell-type origin simulated samples. The first column contains
@@ -41,106 +41,106 @@
 #' @export
 
 simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
-    reference) {
-    simulatedMixtureTable <- data.frame(matrix(
-        ncol = numberOfSamples + 1,
-        nrow = nrow(reference)
-    ))
-    ## setting up simulatedMixtureTable will hold simulation methylation values
-    simulatedMixtureTable[, ] <- 0
-    simulatedMixtureTable[, 1] <- reference[, 1]
-    # copy IDs from reference atlas
-    colnames(simulatedMixtureTable)[1] <- "IDs"
+                            reference) {
+  simulatedMixtureTable <- data.frame(matrix(
+    ncol = numberOfSamples + 1,
+    nrow = nrow(reference)
+  ))
+  ## setting up simulatedMixtureTable will hold simulation methylation values
+  simulatedMixtureTable[, ] <- 0
+  simulatedMixtureTable[, 1] <- reference[, 1]
+  # copy IDs from reference atlas
+  colnames(simulatedMixtureTable)[1] <- "IDs"
 
-    proportionsTable <- data.frame(matrix(
-        ncol = ncol(reference) - 1,
-        nrow = numberOfSamples
-    ))
-    ## setting up proportionsTable will hold simulation origin cell proportions
-    proportionsTable[, ] <- 0
-    colnames(proportionsTable) <- colnames(reference[, -1])
+  proportionsTable <- data.frame(matrix(
+    ncol = ncol(reference) - 1,
+    nrow = numberOfSamples
+  ))
+  ## setting up proportionsTable will hold simulation origin cell proportions
+  proportionsTable[, ] <- 0
+  colnames(proportionsTable) <- colnames(reference[, -1])
 
-    if (is.null(mixingVector)) {
-        for (i in seq_len(numberOfSamples)) {
-            n <- sample(seq(ncol(reference[-1])), 1)
-            ## n is the randomly chosen number of cell origins
-            picks <- sample(seq(ncol(reference[-1])), n, replace = FALSE)
-            amts <- runif(n)
-            ## amts is the randomly chosen proportions
-            amts <- amts / sum(amts)
-            ## normalize so the proportions add to 1
+  if (is.null(mixingVector)) {
+    for (i in seq_len(numberOfSamples)) {
+      n <- sample(seq(ncol(reference[-1])), 1)
+      ## n is the randomly chosen number of cell origins
+      picks <- sample(seq(ncol(reference[-1])), n, replace = FALSE)
+      amts <- runif(n)
+      ## amts is the randomly chosen proportions
+      amts <- amts / sum(amts)
+      ## normalize so the proportions add to 1
 
-            for (c in seq_len(n)) {
-                simulatedMixtureTable[, i + 1] <-
-                    (simulatedMixtureTable[, i + 1] +
-                        (amts[c] * reference[, picks[c] + 1]))
-                # add the influence to the values
-                proportionsTable[i, picks[c]] <- amts[c]
-            }
-            rownames(proportionsTable)[i] <- paste("Sample", i)
-            colnames(simulatedMixtureTable)[i + 1] <- paste("Sample", i)
-        }
-    } else {
-        if (is(mixingVector, "data.frame")) {
-            if (ncol(mixingVector) != numberOfSamples) {
-                stop("numberOfSamples must have the same number of rows with the
+      for (c in seq_len(n)) {
+        simulatedMixtureTable[, i + 1] <-
+          (simulatedMixtureTable[, i + 1] +
+            (amts[c] * reference[, picks[c] + 1]))
+        # add the influence to the values
+        proportionsTable[i, picks[c]] <- amts[c]
+      }
+      rownames(proportionsTable)[i] <- paste("Sample", i)
+      colnames(simulatedMixtureTable)[i + 1] <- paste("Sample", i)
+    }
+  } else {
+    if (is(mixingVector, "data.frame")) {
+      if (ncol(mixingVector) != numberOfSamples) {
+        stop("numberOfSamples must have the same number of rows with the
                 mixingVector")
-            }
-            if (nrow(mixingVector) != (ncol(reference) - 1)) {
-                stop("Number of cell types in mixingVector and reference must
+      }
+      if (nrow(mixingVector) != (ncol(reference) - 1)) {
+        stop("Number of cell types in mixingVector and reference must
                 be equal (use zeros for unused cell types)")
+      }
+      if (typeof(unlist(mixingVector)) != "double") {
+        stop("mixingVector should only contain numbers")
+      } else {
+        for (s in seq_len(ncol(mixingVector))) {
+          # each row is a sample
+          for (t in seq_len(nrow(mixingVector))) {
+            # each column is a cell type
+            if (mixingVector[t, s] > 0) {
+              simulatedMixtureTable[, s + 1] <-
+                (simulatedMixtureTable[, s + 1]
+                + (mixingVector[t, s] * reference[, t + 1]))
+              # add the influence to the values
+              proportionsTable[s, t] <- mixingVector[t, s]
             }
-            if (typeof(unlist(mixingVector)) != "double") {
-                stop("mixingVector should only contain numbers")
-            } else {
-                for (s in seq_len(ncol(mixingVector))) {
-                    # each row is a sample
-                    for (t in seq_len(nrow(mixingVector))) {
-                        # each column is a cell type
-                        if (mixingVector[t, s] > 0) {
-                            simulatedMixtureTable[, s + 1] <-
-                                (simulatedMixtureTable[, s + 1]
-                                + (mixingVector[t, s] * reference[, t + 1]))
-                            # add the influence to the values
-                            proportionsTable[s, t] <- mixingVector[t, s]
-                        }
-                    }
-                    rownames(proportionsTable)[s] <- paste("Sample", s)
-                    colnames(simulatedMixtureTable)[s + 1] <- paste("Sample", s)
-                }
-            }
-        } else if (is(mixingVector, "numeric")) {
-            if (1 != numberOfSamples) {
-                stop("Only use a vector for mixingVector if numberOfSamples = 1,
+          }
+          rownames(proportionsTable)[s] <- paste("Sample", s)
+          colnames(simulatedMixtureTable)[s + 1] <- paste("Sample", s)
+        }
+      }
+    } else if (is(mixingVector, "numeric")) {
+      if (1 != numberOfSamples) {
+        stop("Only use a vector for mixingVector if numberOfSamples = 1,
             otherwise use dataframe with columns for samples and rows for cell
             type")
-            }
-            if (typeof(mixingVector) != "double") {
-                stop("mixingVector should only contain numbers")
-            }
-            if (length(mixingVector) != (ncol(reference) - 1)) {
-                stop("length of mixingVector must equal number of samples in
+      }
+      if (typeof(mixingVector) != "double") {
+        stop("mixingVector should only contain numbers")
+      }
+      if (length(mixingVector) != (ncol(reference) - 1)) {
+        stop("length of mixingVector must equal number of samples in
             reference (use zeros for unused cell types)")
-            } else {
-                for (t in seq_along(mixingVector)) {
-                    # mixing vector has number per cell type
-                    if (mixingVector[t] > 0) {
-                        simulatedMixtureTable[, 2] <-
-                            (simulatedMixtureTable[, 2] +
-                                (mixingVector[t] * reference[, t + 1]))
-                        # add the influence to the values
-                        proportionsTable[1, t] <- mixingVector[t]
-                    }
-                }
-                rownames(proportionsTable)[1] <- "Sample 1"
-                colnames(simulatedMixtureTable)[2] <- "Sample 1"
-            }
-        } else {
-            stop("mixingVector must be either data frame or numeric vector")
+      } else {
+        for (t in seq_along(mixingVector)) {
+          # mixing vector has number per cell type
+          if (mixingVector[t] > 0) {
+            simulatedMixtureTable[, 2] <-
+              (simulatedMixtureTable[, 2] +
+                (mixingVector[t] * reference[, t + 1]))
+            # add the influence to the values
+            proportionsTable[1, t] <- mixingVector[t]
+          }
         }
+        rownames(proportionsTable)[1] <- "Sample 1"
+        colnames(simulatedMixtureTable)[2] <- "Sample 1"
+      }
+    } else {
+      stop("mixingVector must be either data frame or numeric vector")
     }
-    return(list(
-        simulated = simulatedMixtureTable,
-        proportions = proportionsTable
-    ))
+  }
+  return(list(
+    simulated = simulatedMixtureTable,
+    proportions = proportionsTable
+  ))
 }

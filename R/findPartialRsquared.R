@@ -22,21 +22,21 @@
 #' @keywords internal
 #' @noRd
 findPartialRsquared <- function(observed, predicted, ref, vec) {
-    ## vector defaults to row means of reference
-    if (is.null(vec)) {
-        vec <- rowMeans(ref)
-    } else {
-        assert_that(length(vec) == length(predicted),
-            msg = paste(
-                "vector should be length",
-                length(predicted), "but is length",
-                length(vec)
-            )
-        )
-    }
-    # calculate partial r-squared
-    rsq_partial <- rsq::rsq.partial(
-        lm(predicted ~ observed + vec),
-        lm(predicted ~ vec)
-    )$partial.rsq
+  ## vector defaults to row means of reference
+  if (is.null(vec)) {
+    vec <- rowMeans(ref)
+  } else {
+    assert_that(length(vec) == length(predicted),
+      msg = paste(
+        "vector should be length",
+        length(predicted), "but is length",
+        length(vec)
+      )
+    )
+  }
+  # calculate partial r-squared
+  rsq_partial <- rsq::rsq.partial(
+    lm(predicted ~ observed + vec),
+    lm(predicted ~ vec)
+  )$partial.rsq
 }

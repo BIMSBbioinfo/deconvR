@@ -4,7 +4,15 @@
 \alias{findSignatures}
 \title{A function to construct a signature matrix}
 \usage{
-findSignatures(samples, sampleMeta, atlas = NULL, variation_cutoff = NULL)
+findSignatures(
+  samples,
+  sampleMeta,
+  atlas = NULL,
+  variation_cutoff = NULL,
+  K = 100,
+  IDs = NULL,
+  tissueSpecCpGs = FALSE
+)
 }
 \arguments{
 \item{samples}{dataframe, has first column IDs, rest of columns are samples
@@ -22,12 +30,22 @@ signature (e.g. CpGs)}
 \item{variation_cutoff}{either a number between 0 to 1, or NULL.For multiple
 samples from the same cell type, ignore CpGs with variation >
 variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)}
+
+\item{K}{only valid when tissueSpecCpGs is TRUE. K is the number of top
+methylation signature to be extracted.}
+
+\item{IDs}{the name of the column indicates ids}
+
+\item{tissueSpecCpGs}{if TRUE and atlas provided, it will extract tissue or
+specific CpGs.}
 }
 \value{
 A dataframe extendedAtlas which contains all cell types in atlas
 (if given), and those in samples added by cell type, has first column "IDs",
 rest of columns are cell types, rows are have first cell with the ID
 (e.g. CpG ID) and then values of signature (e.g. methylation values)
+If tissueSpecCpGs is TRUE, it will return a list of list containing tissue
+specific methylation signatures.
 }
 \description{
 A function to construct a signature matrix
@@ -35,19 +53,25 @@ A function to construct a signature matrix
 \examples{
 data("HumanCellTypeMethAtlas")
 exampleSamples <- simulateCellMix(1,
-    reference = HumanCellTypeMethAtlas
+  reference = HumanCellTypeMethAtlas
 )$simulated
 exampleMeta <- data.table(
-    "Experiment_accession" = "example_sample",
-    "Biosample_term_name" = "example_cell_type"
+  "Experiment_accession" = "example_sample",
+  "Biosample_term_name" = "example_cell_type"
 )
-colnames(exampleSamples)[-1] <- c("example_sample")
+colnames(exampleSamples) <- c("CpGs", "example_sample")
+colnames(HumanCellTypeMethAtlas)[1] <- c("CpGs")
+
 signatures <- findSignatures(
-    samples = exampleSamples,
-    sampleMeta = exampleMeta
+  samples = exampleSamples,
+  sampleMeta = exampleMeta,
+  atlas = HumanCellTypeMethAtlas,
+  IDs = "CpGs",tissueSpecCpGs =  FALSE
 )
 signatures <- findSignatures(
-    samples = exampleSamples, sampleMeta = exampleMeta,
-    atlas = HumanCellTypeMethAtlas
+  samples = exampleSamples,
+  sampleMeta = exampleMeta,
+  atlas = HumanCellTypeMethAtlas,
+  IDs = "CpGs", K = 100, tissueSpecCpGs = TRUE
 )
 }

@@ -28,13 +28,13 @@
 #' data("IlluminaMethEpicB5ProbeIDs")
 #' load(system.file("extdata", "WGBS_GRanges.rda", package = "deconvR"))
 #' meth_probres <- BSmeth2Probe(
-#'     probe_id_locations = IlluminaMethEpicB5ProbeIDs,
-#'     WGBS_data = WGBS_GRanges
+#'   probe_id_locations = IlluminaMethEpicB5ProbeIDs,
+#'   WGBS_data = WGBS_GRanges
 #' )
 #' methp_cut <- BSmeth2Probe(
-#'     probe_id_locations = IlluminaMethEpicB5ProbeIDs,
-#'     WGBS_data = WGBS_GRanges[5:1000],
-#'     cutoff = 2
+#'   probe_id_locations = IlluminaMethEpicB5ProbeIDs,
+#'   WGBS_data = WGBS_GRanges[5:1000],
+#'   cutoff = 2
 #' )
 #' @return A dataframe with first column "IDs" for CpG IDs, then 1 or more
 #' columns for methylation values of sample(s) (same number of samples as in
@@ -46,87 +46,87 @@
 #' @export
 
 BSmeth2Probe <- function(probe_id_locations, WGBS_data, cutoff = 10,
-    multipleMapping = FALSE) {
-    if (cutoff < 0) {
-        stop("cutoff must be >= 0")
-    }
-    if (NROW(probe_id_locations) == 0 || NROW(WGBS_data) == 0) {
-        stop("Probe ID locations or WGBS data must not be empty")
-    }
+                         multipleMapping = FALSE) {
+  if (cutoff < 0) {
+    stop("cutoff must be >= 0")
+  }
+  if (NROW(probe_id_locations) == 0 || NROW(WGBS_data) == 0) {
+    stop("Probe ID locations or WGBS data must not be empty")
+  }
 
-    if (!(class(probe_id_locations) %in% c(
-        "data.frame", "GRanges"
-    ))) {
-        stop("Probe IDs must be either dataframe or GRanges objects.")
-    }
+  if (!(class(probe_id_locations) %in% c(
+    "data.frame", "GRanges"
+  ))) {
+    stop("Probe IDs must be either dataframe or GRanges objects.")
+  }
 
-    if (!(class(WGBS_data) %in% c(
-        "GRanges", "methylRawList", "methylRaw", "methylRawListDB",
-        "methylBaseDB", "methylBase"
-    ))) {
-        stop("WGBS_data must be either GRanges object or, a methylKit object,
+  if (!(class(WGBS_data) %in% c(
+    "GRanges", "methylRawList", "methylRaw", "methylRawListDB",
+    "methylBaseDB", "methylBase"
+  ))) {
+    stop("WGBS_data must be either GRanges object or, a methylKit object,
         such as methylBase, methylRawList, methylBaseDB")
-    }
+  }
 
-    if (is.data.frame(probe_id_locations)) {
-        names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
-            FUN.VALUE = character(1)
-        )
-        if (any(is.null(c("seqnames", "end", "start", "strand", "id") %in%
-            names(probe_id_locations)))) {
-            stop("probe_id_locations must contain columns named ID, Seqnames,
-            Start, End, and Strand.")
-        }
-        if (anyNA(probe_id_locations)) {
-            message("Dropping row containing NA: " +
-                which(is.na(probe_id_locations)))
-            probe_id_locations <- drop_na(probe_id_locations)
-        }
-        probe_id_locations <- GRanges(
-            seqnames = probe_id_locations[, "seqnames"],
-            ## turn it into GRanges before continuing
-            ranges = IRanges(
-                start = probe_id_locations[, "start"],
-                end = probe_id_locations[, "end"]
-            ),
-            strand = probe_id_locations[, "strand"],
-            ID = probe_id_locations[, "id"]
-        )
-    }
-    if (is(probe_id_locations, "GRanges")) {
-        if (is.null(probe_id_locations$ID)) {
-            stop("probe_id_locations must have metadata column ID")
-        }
-    }
-    # Convert methylKit objects to GRanges
-    if (!is(WGBS_data, "GRanges")) {
-        WGBS_data <- convertMe(WGBS_data)
-    }
-    if (is(WGBS_data, "GRanges")) {
-        column_names <- colnames(mcols(WGBS_data))
-        elementMetadata(WGBS_data) <-
-            nafill(as.data.frame(elementMetadata(WGBS_data)),
-                fill = 0
-            )
-        colnames(mcols(WGBS_data)) <- column_names
-        if (NCOL(elementMetadata(WGBS_data)) == 0) {
-            stop("WGBS_data must have at least one metadata column.")
-        }
-        if ((any(as.data.frame(elementMetadata(WGBS_data)) < 0)) ||
-            (any(as.data.frame(elementMetadata(WGBS_data)) > 1))) {
-            stop("The metadata columns of WGBS_data must contain methylation
-            values of sample(s) between 0 and 1")
-        }
-    }
-
-    allresults <- mapByOverlaps(
-        WGBS_data, probe_id_locations, cutoff,
-        multipleMapping
+  if (is.data.frame(probe_id_locations)) {
+    names(probe_id_locations) <- vapply(names(probe_id_locations), tolower,
+      FUN.VALUE = character(1)
     )
-    if (nrow(allresults) == 0) {
-        message("BSmeth2Probe couldn't find any match between the probe IDs and
+    if (any(is.null(c("seqnames", "end", "start", "strand", "id") %in%
+      names(probe_id_locations)))) {
+      stop("probe_id_locations must contain columns named ID, Seqnames,
+            Start, End, and Strand.")
+    }
+    if (anyNA(probe_id_locations)) {
+      message("Dropping row containing NA: " +
+        which(is.na(probe_id_locations)))
+      probe_id_locations <- drop_na(probe_id_locations)
+    }
+    probe_id_locations <- GRanges(
+      seqnames = probe_id_locations[, "seqnames"],
+      ## turn it into GRanges before continuing
+      ranges = IRanges(
+        start = probe_id_locations[, "start"],
+        end = probe_id_locations[, "end"]
+      ),
+      strand = probe_id_locations[, "strand"],
+      ID = probe_id_locations[, "id"]
+    )
+  }
+  if (is(probe_id_locations, "GRanges")) {
+    if (is.null(probe_id_locations$ID)) {
+      stop("probe_id_locations must have metadata column ID")
+    }
+  }
+  # Convert methylKit objects to GRanges
+  if (!is(WGBS_data, "GRanges")) {
+    WGBS_data <- convertMe(WGBS_data)
+  }
+  if (is(WGBS_data, "GRanges")) {
+    column_names <- colnames(mcols(WGBS_data))
+    elementMetadata(WGBS_data) <-
+      nafill(as.data.frame(elementMetadata(WGBS_data)),
+        fill = 0
+      )
+    colnames(mcols(WGBS_data)) <- column_names
+    if (NCOL(elementMetadata(WGBS_data)) == 0) {
+      stop("WGBS_data must have at least one metadata column.")
+    }
+    if ((any(as.data.frame(elementMetadata(WGBS_data)) < 0)) ||
+      (any(as.data.frame(elementMetadata(WGBS_data)) > 1))) {
+      stop("The metadata columns of WGBS_data must contain methylation
+            values of sample(s) between 0 and 1")
+    }
+  }
+
+  allresults <- mapByOverlaps(
+    WGBS_data, probe_id_locations, cutoff,
+    multipleMapping
+  )
+  if (nrow(allresults) == 0) {
+    message("BSmeth2Probe couldn't find any match between the probe IDs and
         WGBS data you have provided. Please make sure that you're using an
         appropriate probe ID locations with your WGBS data.")
-    }
-    return(allresults)
+  }
+  return(allresults)
 }

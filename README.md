@@ -3,10 +3,9 @@
 
 # deconvR : Simulation and Deconvolution of Omic Profiles
 
-[![R-CMD-check-bioc](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/check-bioc.yml)
 [![R-CMD-check](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/BIMSBbioinfo/deconvR/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/BIMSBbioinfo/deconvR/branch/master/graph/badge.svg?token=F86XU6BI9S)](https://codecov.io/gh/BIMSBbioinfo/deconvR)
-[![](https://img.shields.io/badge/release%20version-0.99.7-green.svg)](https://www.bioconductor.org/packages/deconvR)
+[![](https://img.shields.io/badge/release%20version-1.4.1-green.svg)](https://www.bioconductor.org/packages/deconvR)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -23,9 +22,8 @@ or, create an expended version of their reference atlas using
 provided within the package, which contains cell-type specific
 methylation values. Another option is to simulate bulk signatures of
 bulk samples using `simulateCellMix`. And finally, we included
-`BSmeth2Probe` function along with the
-`Illumina Methylation EPIC B5 Manifest` probe IDs, to be used to map
-methylation data to respective probe IDs.
+`BSmeth2Probe` function along with the `Illumina Methylation EPIC B5 Manifest`
+probe IDs, to be used to map methylation data to respective probe IDs.
 
 ## Installation
 

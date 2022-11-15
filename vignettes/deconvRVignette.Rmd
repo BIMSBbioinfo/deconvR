@@ -43,7 +43,7 @@ Hereby, we developed `deconvR`, a collection of functions designed for analyzing
 deconvolution of the bulk sample(s) using an atlas of reference omic signature
 profiles and a user-selected model. We wanted to give users an option to extend
 their reference atlas. Users can create new reference atlases using
-`findSignatures` extend their atlas by adding more cell types. Additionally, we
+`findSignatures` or extend their atlas by adding more cell types. Additionally, we
 included `BSMeth2Probe` to make mapping whole-genome bisulfite sequencing data
 to their probe IDs easier. So users can map WGBS methylation data (as in
 **methylKit** or **GRanges** object format) to probe IDs, and the results of
@@ -153,7 +153,8 @@ Use `findSignatures` to extend the matrix.
 ``` {r, output.lines=10}
 extended_matrix <- findSignatures(samples = samples, 
                                  sampleMeta = sampleMeta, 
-                                 atlas = HumanCellTypeMethAtlas)
+                                 atlas = HumanCellTypeMethAtlas,
+                                 IDs = "IDs")
 head(extended_matrix)
 ```
 
@@ -202,6 +203,28 @@ using the previously extended signature matrix as the reference atlas.
 deconvolution <- deconvolute(reference = HumanCellTypeMethAtlas, 
                              bulk = mapped_WGBS_data)
 deconvolution$proportions
+```
+
+## Constructing tissue specific CpG signature matrix
+
+Alternatively, users can set *tissueSpecCpGs* as **TRUE** to construct tissue
+based methylation signature matrix by using the reference atlas. Here, we
+used simulated samples to construct tissue specific signature matrix since we 
+don't have tissue specific samples. 
+
+``` {r, output.lines=10}
+data("HumanCellTypeMethAtlas")
+exampleSamples <- simulateCellMix(1,reference = HumanCellTypeMethAtlas)$simulated
+exampleMeta <- data.table("Experiment_accession" = "example_sample",
+                          "Biosample_term_name" = "example_cell_type")
+colnames(exampleSamples) <- c("CpGs", "example_sample")
+colnames(HumanCellTypeMethAtlas)[1] <- c("CpGs")
+
+signatures <- findSignatures(
+  samples = exampleSamples,
+  sampleMeta = exampleMeta,
+  atlas = HumanCellTypeMethAtlas,
+  IDs = "CpGs", K = 100, tissueSpecCpGs = TRUE)
 ```
 
 # Example Workflow For RNA Sequencing Data
