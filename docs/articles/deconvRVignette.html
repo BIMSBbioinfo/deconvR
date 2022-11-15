@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,23 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">deconvR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.99.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -64,7 +60,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/BIMSBbioinfo/deconvR/">
+  <a href="https://github.com/BIMSBbioinfo/deconvR/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -79,438 +75,491 @@
 
       
 
-      </header><script src="deconvRVignette_files/header-attrs-2.11.2/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>deconvR : Simulation and Deconvolution of Omic Profiles</h1>
+      <h1 data-toc-skip>deconvR : Simulation and Deconvolution of Omic
+Profiles</h1>
             
-            <h4 class="date">2021-10-26</h4>
+            <h4 data-toc-skip class="date">2022-11-15</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/BIMSBbioinfo/deconvR/blob/master/vignettes/deconvRVignette.Rmd"><code>vignettes/deconvRVignette.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/BIMSBbioinfo/deconvR/blob/HEAD/vignettes/deconvRVignette.Rmd" class="external-link"><code>vignettes/deconvRVignette.Rmd</code></a></small>
       <div class="hidden name"><code>deconvRVignette.Rmd</code></div>
 
     </div>
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>Recent studies associated the differences of cell-type proportions may be correlated to certain phenotypes, such as cancer. Therefore, the demand for the development of computational methods to predict cell type proportions increased. Hereby, we developed <code>deconvR</code>, a collection of functions designed for analyzing deconvolution of the bulk sample(s) using an atlas of reference omic signature profiles and a user-selected model. We wanted to give users an option to extend their reference atlas. Users can create new reference atlases using <code>findSignatures</code> extend their atlas by adding more cell types. Additionally, we included <code>BSMeth2Probe</code> to make mapping whole-genome bisulfite sequencing data to their probe IDs easier. So users can map WGBS methylation data (as in <strong>methylKit</strong> or <strong>GRanges</strong> object format) to probe IDs, and the results of this mapping can be used as the bulk samples in the deconvolution. We also included a comprehensive DNA methylation atlas of 25 different cell types to use in the main function <code>deconvolute</code>. <code>deconvolute</code> allows the user to specify their desired deconvolution model (non-negative least squares regression, support vector regression, quadratic programming, or robust linear regression), and returns a dataframe which contains predicted cell-type proportions of bulk methylation profiles, as well as partial R-squared values for each sample.</p>
-<p>As an another option, users can generate a simulated table of a desired number of samples, with either user-specified or random origin proportions using <code>simulateCellMix</code>. <code>simulateCellMix</code> returns a second data frame called <code>proportions</code>, which contains the actual cell-type proportions of the simulated sample. It can be used for testing the accuracy of the deconvolution by comparing these actual proportions to the proportions predicted by <code>deconvolute</code>.</p>
-<p><code>deconvolute</code> returns partial R-squares, to check if deconvolution brings advantages on top of the basic bimodal profiles. The reference matrix usually follows a bimodal distribution in the case of methylation, and taking the average of the rows of methylation matrix might give a pretty similar profile to the bulk methylation profile you are trying to deconvolute. If the deconvolution is advantageous, partial R-squared is expect to be high.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Recent studies associated the differences of cell-type proportions
+may be correlated to certain phenotypes, such as cancer. Therefore, the
+demand for the development of computational methods to predict cell type
+proportions increased. Hereby, we developed <code>deconvR</code>, a
+collection of functions designed for analyzing deconvolution of the bulk
+sample(s) using an atlas of reference omic signature profiles and a
+user-selected model. We wanted to give users an option to extend their
+reference atlas. Users can create new reference atlases using
+<code>findSignatures</code> or extend their atlas by adding more cell
+types. Additionally, we included <code>BSMeth2Probe</code> to make
+mapping whole-genome bisulfite sequencing data to their probe IDs
+easier. So users can map WGBS methylation data (as in
+<strong>methylKit</strong> or <strong>GRanges</strong> object format) to
+probe IDs, and the results of this mapping can be used as the bulk
+samples in the deconvolution. We also included a comprehensive DNA
+methylation atlas of 25 different cell types to use in the main function
+<code>deconvolute</code>. <code>deconvolute</code> allows the user to
+specify their desired deconvolution model (non-negative least squares
+regression, support vector regression, quadratic programming, or robust
+linear regression), and returns a dataframe which contains predicted
+cell-type proportions of bulk methylation profiles, as well as partial
+R-squared values for each sample.</p>
+<p>As an another option, users can generate a simulated table of a
+desired number of samples, with either user-specified or random origin
+proportions using <code>simulateCellMix</code>.
+<code>simulateCellMix</code> returns a second data frame called
+<code>proportions</code>, which contains the actual cell-type
+proportions of the simulated sample. It can be used for testing the
+accuracy of the deconvolution by comparing these actual proportions to
+the proportions predicted by <code>deconvolute</code>.</p>
+<p><code>deconvolute</code> returns partial R-squares, to check if
+deconvolution brings advantages on top of the basic bimodal profiles.
+The reference matrix usually follows a bimodal distribution in the case
+of methylation, and taking the average of the rows of methylation matrix
+might give a pretty similar profile to the bulk methylation profile you
+are trying to deconvolute. If the deconvolution is advantageous, partial
+R-squared is expect to be high.</p>
 </div>
-<div id="installation" class="section level1">
-<h1 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h1>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>The deconvR package can be installed from Bioconductor with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
-
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"deconvR"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"deconvR"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#data" class="anchor"></a>Data</h1>
-<div id="comprehensive-human-methylome-reference-atlas" class="section level2">
-<h2 class="hasAnchor">
-<a href="#comprehensive-human-methylome-reference-atlas" class="anchor"></a>Comprehensive Human Methylome Reference Atlas</h2>
-<p>The comprehensive human methylome reference atlas created by Moss et al. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> can be used as the reference atlas parameter for several functions in this package. This atlas was modified to remove duplicate CpG loci before being included in the package as the dataframe. The dataframe is composed of 25 human cell types and roughly 6000 CpG loci, identified by their Illumina Probe ID. For each cell type and CpG locus, a methylation value between 0 and 1 is provided. This value represents the fraction of methylated bases of the CpG locus. The atlas therefore provides a unique methylation pattern for each cell type and can be directly used as <code>reference</code> in <code>deconvolute</code> and <code>simulateCellMix</code>, and <code>atlas</code> in <code>findSignatures</code>. Below is an example dataframe to illustrate the <code>atlas</code> format.</p>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+<div class="section level3">
+<h3 id="comprehensive-human-methylome-reference-atlas">Comprehensive Human Methylome Reference Atlas<a class="anchor" aria-label="anchor" href="#comprehensive-human-methylome-reference-atlas"></a>
+</h3>
+<p>The comprehensive human methylome reference atlas created by Moss et
+al. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> can
+be used as the reference atlas parameter for several functions in this
+package. This atlas was modified to remove duplicate CpG loci before
+being included in the package as the dataframe. The dataframe is
+composed of 25 human cell types and roughly 6000 CpG loci, identified by
+their Illumina Probe ID. For each cell type and CpG locus, a methylation
+value between 0 and 1 is provided. This value represents the fraction of
+methylated bases of the CpG locus. The atlas therefore provides a unique
+methylation pattern for each cell type and can be directly used as
+<code>reference</code> in <code>deconvolute</code> and
+<code>simulateCellMix</code>, and <code>atlas</code> in
+<code>findSignatures</code>. Below is an example dataframe to illustrate
+the <code>atlas</code> format.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/BIMSBbioinfo/deconvR">deconvR</a></span><span class="op">)</span> 
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"HumanCellTypeMethAtlas"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">HumanCellTypeMethAtlas</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code>##          IDs Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
-## 1 cg08169020         0.8866       0.2615          0.0149        0.0777
-## 2 cg25913761         0.8363       0.2210          0.2816        0.4705
-## 3 cg26955540         0.7658       0.0222          0.1492        0.4005
-## 4 cg25170017         0.8861       0.5116          0.1021        0.4363
-## 5 cg12827637         0.5212       0.3614          0.0227        0.2120
-## 6 cg19442545         0.2013       0.1137          0.0608        0.0410</code></pre>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/BIMSBbioinfo/deconvR" class="external-link">deconvR</a></span><span class="op">)</span> </span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"HumanCellTypeMethAtlas"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">HumanCellTypeMethAtlas</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##          IDs Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC</span></span>
+<span><span class="co">## 1 cg08169020         0.8866       0.2615          0.0149        0.0777</span></span>
+<span><span class="co">## 2 cg25913761         0.8363       0.2210          0.2816        0.4705</span></span>
+<span><span class="co">## 3 cg26955540         0.7658       0.0222          0.1492        0.4005</span></span>
+<span><span class="co">## 4 cg25170017         0.8861       0.5116          0.1021        0.4363</span></span>
+<span><span class="co">## 5 cg12827637         0.5212       0.3614          0.0227        0.2120</span></span>
+<span><span class="co">## 6 cg19442545         0.2013       0.1137          0.0608        0.0410</span></span></code></pre>
 </div>
-<div id="illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38" class="section level2">
-<h2 class="hasAnchor">
-<a href="#illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38" class="anchor"></a>Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes (hg38)</h2>
-<p>The <strong>GRanges</strong> object <code>IlluminaMethEpicB5ProbeIDs</code> contains the Illumina probe IDs of 400000 genomic loci (identified using the “seqnames”, “ranges”, and “strand” values). This object is based off of the Infinium MethylationEPIC v1.0 B5 Manifest data. Unnecessary columns were removed and rows were truncated to reduce file size before converting the file to a <strong>GRanges</strong> object. It can be used directly as <code>probe_id_locations</code> in <code>BSmeth2Probe</code>.</p>
+<div class="section level3">
+<h3 id="illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38">Illumina Infinium MethylationEPIC v1.0 B5 Manifest Probes
+(hg38)<a class="anchor" aria-label="anchor" href="#illumina-infinium-methylationepic-v1-0-b5-manifest-probes-hg38"></a>
+</h3>
+<p>The <strong>GRanges</strong> object
+<code>IlluminaMethEpicB5ProbeIDs</code> contains the Illumina probe IDs
+of 400000 genomic loci (identified using the “seqnames”, “ranges”, and
+“strand” values). This object is based off of the Infinium
+MethylationEPIC v1.0 B5 Manifest data. Unnecessary columns were removed
+and rows were truncated to reduce file size before converting the file
+to a <strong>GRanges</strong> object. It can be used directly as
+<code>probe_id_locations</code> in <code>BSmeth2Probe</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"IlluminaMethEpicB5ProbeIDs"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">IlluminaMethEpicB5ProbeIDs</span><span class="op">)</span></code></pre></div>
-<pre><code>## GRanges object with 6 ranges and 1 metadata column:
-##       seqnames              ranges strand |          ID
-##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
-##   [1]    chr19     5236005-5236006      + |  cg07881041
-##   [2]    chr20   63216298-63216299      + |  cg18478105
-##   [3]     chr1     6781065-6781066      + |  cg23229610
-##   [4]     chr2 197438742-197438743      - |  cg03513874
-##   [5]     chrX   24054523-24054524      + |  cg09835024
-##   [6]    chr14   93114794-93114795      - |  cg05451842
-##   -------
-##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"IlluminaMethEpicB5ProbeIDs"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">IlluminaMethEpicB5ProbeIDs</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## GRanges object with 6 ranges and 1 metadata column:</span></span>
+<span><span class="co">##       seqnames              ranges strand |          ID</span></span>
+<span><span class="co">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;</span></span>
+<span><span class="co">##   [1]    chr19     5236005-5236006      + |  cg07881041</span></span>
+<span><span class="co">##   [2]    chr20   63216298-63216299      + |  cg18478105</span></span>
+<span><span class="co">##   [3]     chr1     6781065-6781066      + |  cg23229610</span></span>
+<span><span class="co">##   [4]     chr2 197438742-197438743      - |  cg03513874</span></span>
+<span><span class="co">##   [5]     chrX   24054523-24054524      + |  cg09835024</span></span>
+<span><span class="co">##   [6]    chr14   93114794-93114795      - |  cg05451842</span></span>
+<span><span class="co">##   -------</span></span>
+<span><span class="co">##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</span></span></code></pre>
 </div>
 </div>
-<div id="example-workflow-for-whole-genome-bisulfate-sequencing-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#example-workflow-for-whole-genome-bisulfate-sequencing-data" class="anchor"></a>Example Workflow For Whole Genome Bisulfate Sequencing Data</h1>
-<div id="expanding-reference-atlas" class="section level2">
-<h2 class="hasAnchor">
-<a href="#expanding-reference-atlas" class="anchor"></a>Expanding Reference Atlas</h2>
-<p>As mentioned in the introduction section, users can extend their reference atlas to incorporate new data. Or may combine different reference atlases to construct a more comprehensive one. This can be done using the <code>findSignatures</code> function. In this example, since we don’t have any additional reference atlas, we will add simulated data as a new cell type to reference atlas for example purposes. First, ensure that <code>atlas</code> (the signature matrix to be extended) and <code>samples</code> (the new data to be added to the signature matrix) are compliant with the function requirements. Below illustrates the <code>samples</code> format.</p>
+<div class="section level2">
+<h2 id="example-workflow-for-whole-genome-bisulfate-sequencing-data">Example Workflow For Whole Genome Bisulfate Sequencing Data<a class="anchor" aria-label="anchor" href="#example-workflow-for-whole-genome-bisulfate-sequencing-data"></a>
+</h2>
+<div class="section level3">
+<h3 id="expanding-reference-atlas">Expanding Reference Atlas<a class="anchor" aria-label="anchor" href="#expanding-reference-atlas"></a>
+</h3>
+<p>As mentioned in the introduction section, users can extend their
+reference atlas to incorporate new data. Or may combine different
+reference atlases to construct a more comprehensive one. This can be
+done using the <code>findSignatures</code> function. In this example,
+since we don’t have any additional reference atlas, we will add
+simulated data as a new cell type to reference atlas for example
+purposes. First, ensure that <code>atlas</code> (the signature matrix to
+be extended) and <code>samples</code> (the new data to be added to the
+signature matrix) are compliant with the function requirements. Below
+illustrates the <code>samples</code> format.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">$</span><span class="va">simulated</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<pre><code>##          IDs   Sample 1   Sample 2   Sample 3
-## 1 cg08169020 0.20029491 0.17815787 0.15453698
-## 2 cg25913761 0.29000915 0.33317972 0.30283872
-## 3 cg26955540 0.17145385 0.22144261 0.20607398
-## 4 cg25170017 0.26011554 0.23346328 0.25343246
-## 5 cg12827637 0.15483928 0.15694382 0.15814164
-## 6 cg19442545 0.06360064 0.06077145 0.04968212</code></pre>
-<p><code>sampleMeta</code> should include all sample names in <code>samples</code>, and specify the origins they should be mapped to when added to <code>atlas</code>.</p>
+<code class="sourceCode R"><span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">$</span><span class="va">simulated</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##          IDs   Sample 1   Sample 2   Sample 3</span></span>
+<span><span class="co">## 1 cg08169020 0.02216686 0.09821968 0.04106325</span></span>
+<span><span class="co">## 2 cg25913761 0.20403357 0.22348401 0.20905708</span></span>
+<span><span class="co">## 3 cg26955540 0.04041286 0.08128946 0.10504713</span></span>
+<span><span class="co">## 4 cg25170017 0.03011978 0.17790149 0.06979462</span></span>
+<span><span class="co">## 5 cg12827637 0.02451935 0.16949804 0.07851450</span></span>
+<span><span class="co">## 6 cg19442545 0.02033995 0.04144058 0.01965337</span></span></code></pre>
+<p><code>sampleMeta</code> should include all sample names in
+<code>samples</code>, and specify the origins they should be mapped to
+when added to <code>atlas</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu">data.table</span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,
-                         <span class="st">"Biosample_term_name"</span> <span class="op">=</span> <span class="st">"new cell type"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">sampleMeta</span><span class="op">)</span></code></pre></div>
-<pre><code>##    Experiment_accession Biosample_term_name
-## 1:             Sample 1       new cell type
-## 2:             Sample 2       new cell type
-## 3:             Sample 3       new cell type</code></pre>
+<code class="sourceCode R"><span><span class="va">sampleMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>                         <span class="st">"Biosample_term_name"</span> <span class="op">=</span> <span class="st">"new cell type"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sampleMeta</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    Experiment_accession Biosample_term_name</span></span>
+<span><span class="co">## 1:             Sample 1       new cell type</span></span>
+<span><span class="co">## 2:             Sample 2       new cell type</span></span>
+<span><span class="co">## 3:             Sample 3       new cell type</span></span></code></pre>
 <p>Use <code>findSignatures</code> to extend the matrix.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">extended_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findSignatures.html">findSignatures</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">samples</span>, 
-                                 sampleMeta <span class="op">=</span> <span class="va">sampleMeta</span>, 
-                                 atlas <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span></code></pre></div>
-<pre><code>## CELL TYPES IN EXTENDED ATLAS: 
-## new cell type 
-## Monocytes_EPIC 
-## B.cells_EPIC 
-## CD4T.cells_EPIC 
-## NK.cells_EPIC 
-## CD8T.cells_EPIC 
-## Neutrophils_EPIC 
-## Erythrocyte_progenitors 
-## Adipocytes 
-## Cortical_neurons 
-## Hepatocytes 
-## Lung_cells 
-## Pancreatic_beta_cells 
-## Pancreatic_acinar_cells 
-## Pancreatic_duct_cells 
-## Vascular_endothelial_cells 
-## Colon_epithelial_cells 
-## Left_atrium 
-## Bladder 
-## Breast 
-## Head_and_neck_larynx 
-## Kidney 
-## Prostate 
-## Thyroid 
-## Upper_GI 
-## Uterus_cervix</code></pre>
+<code class="sourceCode R"><span><span class="va">extended_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findSignatures.html">findSignatures</a></span><span class="op">(</span>samples <span class="op">=</span> <span class="va">samples</span>, </span>
+<span>                                 sampleMeta <span class="op">=</span> <span class="va">sampleMeta</span>, </span>
+<span>                                 atlas <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span>,</span>
+<span>                                 IDs <span class="op">=</span> <span class="st">"IDs"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## CELL TYPES IN EXTENDED ATLAS: </span></span>
+<span><span class="co">## new cell type </span></span>
+<span><span class="co">## Monocytes_EPIC </span></span>
+<span><span class="co">## B.cells_EPIC </span></span>
+<span><span class="co">## CD4T.cells_EPIC </span></span>
+<span><span class="co">## NK.cells_EPIC </span></span>
+<span><span class="co">## CD8T.cells_EPIC </span></span>
+<span><span class="co">## Neutrophils_EPIC </span></span>
+<span><span class="co">## Erythrocyte_progenitors </span></span>
+<span><span class="co">## Adipocytes </span></span>
+<span><span class="co">## Cortical_neurons </span></span>
+<span><span class="co">## Hepatocytes </span></span>
+<span><span class="co">## Lung_cells </span></span>
+<span><span class="co">## Pancreatic_beta_cells </span></span>
+<span><span class="co">## Pancreatic_acinar_cells </span></span>
+<span><span class="co">## Pancreatic_duct_cells </span></span>
+<span><span class="co">## Vascular_endothelial_cells </span></span>
+<span><span class="co">## Colon_epithelial_cells </span></span>
+<span><span class="co">## Left_atrium </span></span>
+<span><span class="co">## Bladder </span></span>
+<span><span class="co">## Breast </span></span>
+<span><span class="co">## Head_and_neck_larynx </span></span>
+<span><span class="co">## Kidney </span></span>
+<span><span class="co">## Prostate </span></span>
+<span><span class="co">## Thyroid </span></span>
+<span><span class="co">## Upper_GI </span></span>
+<span><span class="co">## Uterus_cervix</span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></code></pre></div>
-<pre><code>##          IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC
-## 1 cg08169020    0.17766325         0.8866       0.2615          0.0149
-## 2 cg25913761    0.30867587         0.8363       0.2210          0.2816
-## 3 cg26955540    0.19965682         0.7658       0.0222          0.1492
-## 4 cg25170017    0.24900376         0.8861       0.5116          0.1021
-## 5 cg12827637    0.15664158         0.5212       0.3614          0.0227
-## 6 cg19442545    0.05801807         0.2013       0.1137          0.0608
-##   NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors
-## 1        0.0777          0.0164           0.8680                  0.9509
-## 2        0.4705          0.3961           0.8293                  0.2385
-## 3        0.4005          0.3474           0.7915                  0.1374
-## 4        0.4363          0.0875           0.7042                  0.9447
-## 5        0.2120          0.0225           0.5368                  0.4667
-## 6        0.0410          0.0668           0.1952                  0.1601
-##   Adipocytes Cortical_neurons Hepatocytes Lung_cells Pancreatic_beta_cells
-## 1     0.0336           0.0168      0.0340     0.0416              0.038875
-## 2     0.3578           0.3104      0.2389     0.2250              0.132000
-## 3     0.1965           0.0978      0.0338     0.0768              0.041725
-## 4     0.0842           0.2832      0.2259     0.0544              0.111750
-## 5     0.0287           0.1368      0.0307     0.1607              0.065975
-## 6     0.0364           0.0222      0.1574     0.0122              0.003825
-##   Pancreatic_acinar_cells Pancreatic_duct_cells Vascular_endothelial_cells
-## 1                  0.0209                0.0130                     0.0323
-## 2                  0.2249                0.1996                     0.3654
-## 3                  0.0314                0.0139                     0.2382
-## 4                  0.0309                0.0217                     0.0972
-## 5                  0.0370                0.0230                     0.0798
-## 6                  0.0378                0.0347                     0.0470
-##   Colon_epithelial_cells Left_atrium Bladder Breast Head_and_neck_larynx Kidney
-## 1                 0.0163      0.0386  0.0462 0.0264               0.0470 0.0269
-## 2                 0.2037      0.2446  0.2054 0.1922               0.2045 0.1596
-## 3                 0.0193      0.1134  0.1269 0.1651               0.1523 0.1034
-## 4                 0.0187      0.0674  0.0769 0.0691               0.0704 0.0604
-## 5                 0.0193      0.0432  0.0459 0.0228               0.0687 0.0234
-## 6                 0.0193      0.0287  0.0246 0.0081               0.0098 0.0309
-##   Prostate Thyroid Upper_GI Uterus_cervix
-## 1   0.0353  0.0553   0.0701        0.0344
-## 2   0.1557  0.1848   0.1680        0.2026
-## 3   0.0686  0.0943   0.1298        0.1075
-## 4   0.0369  0.0412   0.0924        0.0697
-## 5   0.0508  0.0726   0.0759        0.0196
-## 6   0.0055  0.0188   0.0090        0.0166</code></pre>
-<p>WGBS methylation data first needs to be mapped to probes using <code>BSmeth2Probe</code> before being deconvoluted. The methylation data <code>WGBS_data</code> in <code>BSmeth2Probe</code> may be either a <strong>GRanges</strong> object or a <strong>methylKit</strong> object.</p>
-<p>Format of <code>WGBS_data</code> as <strong>GRanges</strong> object:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##          IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC</span></span>
+<span><span class="co">## 1 cg08169020    0.05381660         0.8866       0.2615          0.0149</span></span>
+<span><span class="co">## 2 cg25913761    0.21219155         0.8363       0.2210          0.2816</span></span>
+<span><span class="co">## 3 cg26955540    0.07558315         0.7658       0.0222          0.1492</span></span>
+<span><span class="co">## 4 cg25170017    0.09260530         0.8861       0.5116          0.1021</span></span>
+<span><span class="co">## 5 cg12827637    0.09084396         0.5212       0.3614          0.0227</span></span>
+<span><span class="co">## 6 cg19442545    0.02714463         0.2013       0.1137          0.0608</span></span>
+<span><span class="co">##   NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors</span></span>
+<span><span class="co">## 1        0.0777          0.0164           0.8680                  0.9509</span></span>
+<span><span class="co">## 2        0.4705          0.3961           0.8293                  0.2385</span></span>
+<span><span class="co">## 3        0.4005          0.3474           0.7915                  0.1374</span></span>
+<span><span class="co">## 4        0.4363          0.0875           0.7042                  0.9447</span></span>
+<span><span class="co">## 5        0.2120          0.0225           0.5368                  0.4667</span></span>
+<span><span class="co">## 6        0.0410          0.0668           0.1952                  0.1601</span></span>
+<span><span class="co">##   Adipocytes Cortical_neurons Hepatocytes Lung_cells Pancreatic_beta_cells</span></span>
+<span><span class="co">## 1     0.0336           0.0168      0.0340     0.0416              0.038875</span></span>
+<span><span class="co">## 2     0.3578           0.3104      0.2389     0.2250              0.132000</span></span>
+<span><span class="co">## 3     0.1965           0.0978      0.0338     0.0768              0.041725</span></span>
+<span><span class="co">## 4     0.0842           0.2832      0.2259     0.0544              0.111750</span></span>
+<span><span class="co">## 5     0.0287           0.1368      0.0307     0.1607              0.065975</span></span>
+<span><span class="co">## 6     0.0364           0.0222      0.1574     0.0122              0.003825</span></span>
+<span><span class="co">##   Pancreatic_acinar_cells Pancreatic_duct_cells Vascular_endothelial_cells</span></span>
+<span><span class="co">## 1                  0.0209                0.0130                     0.0323</span></span>
+<span><span class="co">## 2                  0.2249                0.1996                     0.3654</span></span>
+<span><span class="co">## 3                  0.0314                0.0139                     0.2382</span></span>
+<span><span class="co">## 4                  0.0309                0.0217                     0.0972</span></span>
+<span><span class="co">## 5                  0.0370                0.0230                     0.0798</span></span>
+<span><span class="co">## 6                  0.0378                0.0347                     0.0470</span></span>
+<span><span class="co">##   Colon_epithelial_cells Left_atrium Bladder Breast Head_and_neck_larynx Kidney</span></span>
+<span><span class="co">## 1                 0.0163      0.0386  0.0462 0.0264               0.0470 0.0269</span></span>
+<span><span class="co">## 2                 0.2037      0.2446  0.2054 0.1922               0.2045 0.1596</span></span>
+<span><span class="co">## 3                 0.0193      0.1134  0.1269 0.1651               0.1523 0.1034</span></span>
+<span><span class="co">## 4                 0.0187      0.0674  0.0769 0.0691               0.0704 0.0604</span></span>
+<span><span class="co">## 5                 0.0193      0.0432  0.0459 0.0228               0.0687 0.0234</span></span>
+<span><span class="co">## 6                 0.0193      0.0287  0.0246 0.0081               0.0098 0.0309</span></span>
+<span><span class="co">##   Prostate Thyroid Upper_GI Uterus_cervix</span></span>
+<span><span class="co">## 1   0.0353  0.0553   0.0701        0.0344</span></span>
+<span><span class="co">## 2   0.1557  0.1848   0.1680        0.2026</span></span>
+<span><span class="co">## 3   0.0686  0.0943   0.1298        0.1075</span></span>
+<span><span class="co">## 4   0.0369  0.0412   0.0924        0.0697</span></span>
+<span><span class="co">## 5   0.0508  0.0726   0.0759        0.0196</span></span>
+<span><span class="co">## 6   0.0055  0.0188   0.0090        0.0166</span></span></code></pre>
+<p>WGBS methylation data first needs to be mapped to probes using
+<code>BSmeth2Probe</code> before being deconvoluted. The methylation
+data <code>WGBS_data</code> in <code>BSmeth2Probe</code> may be either a
+<strong>GRanges</strong> object or a <strong>methylKit</strong>
+object.</p>
+<p>Format of <code>WGBS_data</code> as <strong>GRanges</strong>
+object:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"WGBS_GRanges.rda"</span>,
-                                     package <span class="op">=</span> <span class="st">"deconvR"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">WGBS_GRanges</span><span class="op">)</span></code></pre></div>
-<pre><code>## GRanges object with 6 ranges and 1 metadata column:
-##       seqnames    ranges strand |   sample1
-##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;
-##   [1]     chr1     47176      + |  0.833333
-##   [2]     chr1     47177      - |  0.818182
-##   [3]     chr1     47205      + |  0.681818
-##   [4]     chr1     47206      - |  0.583333
-##   [5]     chr1     47362      + |  0.416667
-##   [6]     chr1     49271      + |  0.733333
-##   -------
-##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"WGBS_GRanges.rda"</span>,</span>
+<span>                                     package <span class="op">=</span> <span class="st">"deconvR"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">WGBS_GRanges</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## GRanges object with 6 ranges and 1 metadata column:</span></span>
+<span><span class="co">##       seqnames    ranges strand |   sample1</span></span>
+<span><span class="co">##          &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;</span></span>
+<span><span class="co">##   [1]     chr1     47176      + |  0.833333</span></span>
+<span><span class="co">##   [2]     chr1     47177      - |  0.818182</span></span>
+<span><span class="co">##   [3]     chr1     47205      + |  0.681818</span></span>
+<span><span class="co">##   [4]     chr1     47206      - |  0.583333</span></span>
+<span><span class="co">##   [5]     chr1     47362      + |  0.416667</span></span>
+<span><span class="co">##   [6]     chr1     49271      + |  0.733333</span></span>
+<span><span class="co">##   -------</span></span>
+<span><span class="co">##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</span></span></code></pre>
 <p>or as <strong>methylKit</strong> object:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu">methylKit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/methylKit/man/methRead-methods.html">methRead</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"test1.myCpG.txt"</span>, 
-                                     package <span class="op">=</span> <span class="st">"methylKit"</span><span class="op">)</span>, 
-                         sample.id<span class="op">=</span><span class="st">"test"</span>, assembly<span class="op">=</span><span class="st">"hg18"</span>, 
-                         treatment<span class="op">=</span><span class="fl">1</span>, context<span class="op">=</span><span class="st">"CpG"</span>, mincov <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>##     chr   start     end strand coverage numCs numTs
-## 1 chr21 9764513 9764513      -       12     0    12
-## 2 chr21 9764539 9764539      -       12     3     9
-## 3 chr21 9820622 9820622      +       13     0    13
-## 4 chr21 9837545 9837545      +       11     0    11
-## 5 chr21 9849022 9849022      +      124    90    34
-## 6 chr21 9853296 9853296      +       17    10     7</code></pre>
-<p><code>probe_id_locations</code> contains information needed to map cellular loci to probe IDs</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">methylKit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/methylKit/man/methRead-methods.html" class="external-link">methRead</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"test1.myCpG.txt"</span>, </span>
+<span>                                     package <span class="op">=</span> <span class="st">"methylKit"</span><span class="op">)</span>, </span>
+<span>                         sample.id<span class="op">=</span><span class="st">"test"</span>, assembly<span class="op">=</span><span class="st">"hg18"</span>, </span>
+<span>                         treatment<span class="op">=</span><span class="fl">1</span>, context<span class="op">=</span><span class="st">"CpG"</span>, mincov <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##     chr   start     end strand coverage numCs numTs</span></span>
+<span><span class="co">## 1 chr21 9764513 9764513      -       12     0    12</span></span>
+<span><span class="co">## 2 chr21 9764539 9764539      -       12     3     9</span></span>
+<span><span class="co">## 3 chr21 9820622 9820622      +       13     0    13</span></span>
+<span><span class="co">## 4 chr21 9837545 9837545      +       11     0    11</span></span>
+<span><span class="co">## 5 chr21 9849022 9849022      +      124    90    34</span></span>
+<span><span class="co">## 6 chr21 9853296 9853296      +       17    10     7</span></span></code></pre>
+<p><code>probe_id_locations</code> contains information needed to map
+cellular loci to probe IDs</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"IlluminaMethEpicB5ProbeIDs"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">IlluminaMethEpicB5ProbeIDs</span><span class="op">)</span></code></pre></div>
-<pre><code>## GRanges object with 6 ranges and 1 metadata column:
-##       seqnames              ranges strand |          ID
-##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;
-##   [1]    chr19     5236005-5236006      + |  cg07881041
-##   [2]    chr20   63216298-63216299      + |  cg18478105
-##   [3]     chr1     6781065-6781066      + |  cg23229610
-##   [4]     chr2 197438742-197438743      - |  cg03513874
-##   [5]     chrX   24054523-24054524      + |  cg09835024
-##   [6]    chr14   93114794-93114795      - |  cg05451842
-##   -------
-##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"IlluminaMethEpicB5ProbeIDs"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">IlluminaMethEpicB5ProbeIDs</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## GRanges object with 6 ranges and 1 metadata column:</span></span>
+<span><span class="co">##       seqnames              ranges strand |          ID</span></span>
+<span><span class="co">##          &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;</span></span>
+<span><span class="co">##   [1]    chr19     5236005-5236006      + |  cg07881041</span></span>
+<span><span class="co">##   [2]    chr20   63216298-63216299      + |  cg18478105</span></span>
+<span><span class="co">##   [3]     chr1     6781065-6781066      + |  cg23229610</span></span>
+<span><span class="co">##   [4]     chr2 197438742-197438743      - |  cg03513874</span></span>
+<span><span class="co">##   [5]     chrX   24054523-24054524      + |  cg09835024</span></span>
+<span><span class="co">##   [6]    chr14   93114794-93114795      - |  cg05451842</span></span>
+<span><span class="co">##   -------</span></span>
+<span><span class="co">##   seqinfo: 25 sequences from an unspecified genome; no seqlengths</span></span></code></pre>
 <p>Use <code>BSmeth2Probe</code> to map WGBS data to probe IDs.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mapped_WGBS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BSmeth2Probe.html">BSmeth2Probe</a></span><span class="op">(</span>probe_id_locations <span class="op">=</span> <span class="va">IlluminaMethEpicB5ProbeIDs</span>, 
-                                 WGBS_data <span class="op">=</span> <span class="va">WGBS_GRanges</span>,
-                                 multipleMapping <span class="op">=</span> <span class="cn">TRUE</span>,
-                                 cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mapped_WGBS_data</span><span class="op">)</span></code></pre></div>
-<pre><code>##          IDs   sample1
-## 1 cg00305774 1.0000000
-## 2 cg00546078 0.8181818
-## 3 cg00546307 0.5454545
-## 4 cg00546971 0.5000000
-## 5 cg00774867 0.8461538
-## 6 cg00830435 0.9166667</code></pre>
-<p>This mapped data can now be used in <code>deconvolute</code>. Here we will deconvolute it using the previously extended signature matrix as the reference atlas.</p>
+<code class="sourceCode R"><span><span class="va">mapped_WGBS_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/BSmeth2Probe.html">BSmeth2Probe</a></span><span class="op">(</span>probe_id_locations <span class="op">=</span> <span class="va">IlluminaMethEpicB5ProbeIDs</span>, </span>
+<span>                                 WGBS_data <span class="op">=</span> <span class="va">WGBS_GRanges</span>,</span>
+<span>                                 multipleMapping <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                 cutoff <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mapped_WGBS_data</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##          IDs   sample1</span></span>
+<span><span class="co">## 1 cg00305774 1.0000000</span></span>
+<span><span class="co">## 2 cg00546078 0.8181818</span></span>
+<span><span class="co">## 3 cg00546307 0.5454545</span></span>
+<span><span class="co">## 4 cg00546971 0.5000000</span></span>
+<span><span class="co">## 5 cg00774867 0.8461538</span></span>
+<span><span class="co">## 6 cg00830435 0.9166667</span></span></code></pre>
+<p>This mapped data can now be used in <code>deconvolute</code>. Here we
+will deconvolute it using the previously extended signature matrix as
+the reference atlas.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">deconvolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span>, 
-                             bulk <span class="op">=</span> <span class="va">mapped_WGBS_data</span><span class="op">)</span></code></pre></div>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.9963  0.9963  0.9963  0.9963  0.9963  0.9963</code></pre>
+<code class="sourceCode R"><span><span class="va">deconvolution</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span>, </span>
+<span>                             bulk <span class="op">=</span> <span class="va">mapped_WGBS_data</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">##  0.9963  0.9963  0.9963  0.9963  0.9963  0.9963</span></span></code></pre>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">deconvolution</span><span class="op">$</span><span class="va">proportions</span></code></pre></div>
-<pre><code>##         Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC
-## sample1              0            0               0             0
-##         CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors Adipocytes
-## sample1               0                0                       0  0.5011789
-##         Cortical_neurons Hepatocytes Lung_cells Pancreatic_beta_cells
-## sample1        0.2917357           0          0                     0
-##         Pancreatic_acinar_cells Pancreatic_duct_cells
-## sample1                       0                     0
-##         Vascular_endothelial_cells Colon_epithelial_cells Left_atrium Bladder
-## sample1                          0            0.001012524           0       0
-##         Breast Head_and_neck_larynx Kidney Prostate Thyroid Upper_GI
-## sample1      0            0.2060729      0        0       0        0
-##         Uterus_cervix
-## sample1             0</code></pre>
+<code class="sourceCode R"><span><span class="va">deconvolution</span><span class="op">$</span><span class="va">proportions</span></span></code></pre></div>
+<pre><code><span><span class="co">##         Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC NK.cells_EPIC</span></span>
+<span><span class="co">## sample1              0            0               0             0</span></span>
+<span><span class="co">##         CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors Adipocytes</span></span>
+<span><span class="co">## sample1               0                0                       0  0.5011789</span></span>
+<span><span class="co">##         Cortical_neurons Hepatocytes Lung_cells Pancreatic_beta_cells</span></span>
+<span><span class="co">## sample1        0.2917357           0          0                     0</span></span>
+<span><span class="co">##         Pancreatic_acinar_cells Pancreatic_duct_cells</span></span>
+<span><span class="co">## sample1                       0                     0</span></span>
+<span><span class="co">##         Vascular_endothelial_cells Colon_epithelial_cells Left_atrium Bladder</span></span>
+<span><span class="co">## sample1                          0            0.001012524           0       0</span></span>
+<span><span class="co">##         Breast Head_and_neck_larynx Kidney Prostate Thyroid Upper_GI</span></span>
+<span><span class="co">## sample1      0            0.2060729      0        0       0        0</span></span>
+<span><span class="co">##         Uterus_cervix</span></span>
+<span><span class="co">## sample1             0</span></span></code></pre>
 </div>
-</div>
-<div id="example-workflow-for-rna-sequencing-data" class="section level1">
-<h1 class="hasAnchor">
-<a href="#example-workflow-for-rna-sequencing-data" class="anchor"></a>Example Workflow For RNA Sequencing Data</h1>
-<p>Here, we will use RNA-seq example data from the <strong>granulator</strong> package. We will only use small sample of data. Notice that we set an IDs column. In order to run <code>deconvR</code> functions, you have to set the <code>Gene names</code> colname as <code>IDs</code>.</p>
-<ul>
-<li>Note: It is possible to use <code>simulateCellMix</code> to simulate bulk RNA-seq data and, it is also possible to use <code>findSignatures</code> to extend RNA-seq reference atlas. In this example, we won’t extend the reference atlas or use a simulated data.</li>
-</ul>
+<div class="section level3">
+<h3 id="constructing-tissue-specific-cpg-signature-matrix">Constructing tissue specific CpG signature matrix<a class="anchor" aria-label="anchor" href="#constructing-tissue-specific-cpg-signature-matrix"></a>
+</h3>
+<p>Alternatively, users can set <em>tissueSpecCpGs</em> as
+<strong>TRUE</strong> to construct tissue based methylation signature
+matrix by using the reference atlas. Here, we used simulated samples to
+construct tissue specific signature matrix since we don’t have tissue
+specific samples.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/xanibas/granulator">granulator</a></span><span class="op">)</span>
-<span class="co">#To load the data from granulator package</span>
-<span class="fu"><a href="https://rdrr.io/pkg/granulator/man/load_ABIS.html">load_ABIS</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "ABIS dataset was loaded successfully."</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"HumanCellTypeMethAtlas"</span><span class="op">)</span></span>
+<span><span class="va">exampleSamples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">1</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">$</span><span class="va">simulated</span></span>
+<span><span class="va">exampleMeta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="st">"Experiment_accession"</span> <span class="op">=</span> <span class="st">"example_sample"</span>,</span>
+<span>                          <span class="st">"Biosample_term_name"</span> <span class="op">=</span> <span class="st">"example_cell_type"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">exampleSamples</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CpGs"</span>, <span class="st">"example_sample"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CpGs"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">signatures</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findSignatures.html">findSignatures</a></span><span class="op">(</span></span>
+<span>  samples <span class="op">=</span> <span class="va">exampleSamples</span>,</span>
+<span>  sampleMeta <span class="op">=</span> <span class="va">exampleMeta</span>,</span>
+<span>  atlas <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span>,</span>
+<span>  IDs <span class="op">=</span> <span class="st">"CpGs"</span>, K <span class="op">=</span> <span class="fl">100</span>, tissueSpecCpGs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## CELL TYPES IN EXTENDED ATLAS: </span></span>
+<span><span class="co">## example_cell_type </span></span>
+<span><span class="co">## Monocytes_EPIC </span></span>
+<span><span class="co">## B.cells_EPIC </span></span>
+<span><span class="co">## CD4T.cells_EPIC </span></span>
+<span><span class="co">## NK.cells_EPIC </span></span>
+<span><span class="co">## CD8T.cells_EPIC </span></span>
+<span><span class="co">## Neutrophils_EPIC </span></span>
+<span><span class="co">## Erythrocyte_progenitors </span></span>
+<span><span class="co">## Adipocytes </span></span>
+<span><span class="co">## Cortical_neurons </span></span>
+<span><span class="co">## Hepatocytes </span></span>
+<span><span class="co">## Lung_cells </span></span>
+<span><span class="co">## Pancreatic_beta_cells </span></span>
+<span><span class="co">## Pancreatic_acinar_cells </span></span>
+<span><span class="co">## Pancreatic_duct_cells </span></span>
+<span><span class="co">## Vascular_endothelial_cells </span></span>
+<span><span class="co">## Colon_epithelial_cells </span></span>
+<span><span class="co">## Left_atrium </span></span>
+<span><span class="co">## Bladder </span></span>
+<span><span class="co">## Breast </span></span>
+<span><span class="co">## Head_and_neck_larynx </span></span>
+<span><span class="co">## Kidney </span></span>
+<span><span class="co">## Prostate </span></span>
+<span><span class="co">## Thyroid </span></span>
+<span><span class="co">## Upper_GI </span></span>
+<span><span class="co">## Uterus_cervix</span></span></code></pre>
+</div>
+</div>
+<div class="section level2">
+<h2 id="example-workflow-for-rna-sequencing-data">Example Workflow For RNA Sequencing Data<a class="anchor" aria-label="anchor" href="#example-workflow-for-rna-sequencing-data"></a>
+</h2>
+<p>It is possible to use RNA-seq data for deconvolution via
+<strong>deconvR</strong> package. Beware that you have to set
+<code>IDs</code> column that contains <code>Gene names</code> to run
+<strong>deconvR</strong> functions. Therefore you can simulate bulk
+RNA-seq data via <code>simulateCellMix</code> and, extend RNA-seq
+reference atlas via <code>findSignatures</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="sessioninfo">sessionInfo<a class="anchor" aria-label="anchor" href="#sessioninfo"></a>
+</h2>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#Read the bulk RNA-seq data</span>
-<span class="va">bulk_RNA</span> <span class="op">&lt;-</span> <span class="va">bulkRNAseq_ABIS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>,<span class="op">]</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>IDs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">bulkRNAseq_ABIS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">select</span><span class="op">(</span><span class="st">"IDs"</span>, <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">bulk_RNA</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code>##             IDs      CYFZ      FY2H       FLWA      453W
-## S1PR3     S1PR3  4.275496 11.544026 10.4491331 13.192052
-## RXFP2     RXFP2  2.038530  3.434462  5.4659900  2.877763
-## ADAMTS5 ADAMTS5  0.010506  0.000000  0.1700436  0.000000
-## CLEC6A   CLEC6A  4.786615  9.357342  6.1288175  8.606988
-## FXYD6     FXYD6 19.881627 29.860584 20.3102595 26.095918
-## NRG1       NRG1 20.896435  5.769681 21.5369025  9.638740</code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## R version 4.1.3 (2022-03-10)</span></span>
+<span><span class="co">## Platform: x86_64-conda-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Ubuntu 20.04.3 LTS</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS/LAPACK: /home/igunduz/.conda/envs/rdev/lib/libopenblasp-r0.3.21.so</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] parallel  stats     graphics  grDevices utils     datasets  methods  </span></span>
+<span><span class="co">## [8] base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] dplyr_1.0.10      doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2    </span></span>
+<span><span class="co">## [5] deconvR_1.4.1     data.table_1.14.2 knitr_1.40        BiocStyle_2.22.0 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##   [1] minqa_1.2.5                 colorspace_2.0-3           </span></span>
+<span><span class="co">##   [3] rjson_0.2.21                class_7.3-20               </span></span>
+<span><span class="co">##   [5] mclust_6.0.0                rprojroot_2.0.3            </span></span>
+<span><span class="co">##   [7] qvalue_2.26.0               XVector_0.34.0             </span></span>
+<span><span class="co">##   [9] GenomicRanges_1.46.1        fs_1.5.2                   </span></span>
+<span><span class="co">##  [11] proxy_0.4-27                Deriv_4.1.3                </span></span>
+<span><span class="co">##  [13] fansi_1.0.3                 mvtnorm_1.1-3              </span></span>
+<span><span class="co">##  [15] codetools_0.2-18            splines_4.1.3              </span></span>
+<span><span class="co">##  [17] R.methodsS3_1.8.2           cachem_1.0.6               </span></span>
+<span><span class="co">##  [19] jsonlite_1.8.0              nloptr_2.0.3               </span></span>
+<span><span class="co">##  [21] Rsamtools_2.10.0            R.oo_1.25.0                </span></span>
+<span><span class="co">##  [23] BiocManager_1.30.18         compiler_4.1.3             </span></span>
+<span><span class="co">##  [25] assertthat_0.2.1            Matrix_1.5-1               </span></span>
+<span><span class="co">##  [27] fastmap_1.1.0               limma_3.50.3               </span></span>
+<span><span class="co">##  [29] cli_3.4.0                   htmltools_0.5.3            </span></span>
+<span><span class="co">##  [31] tools_4.1.3                 coda_0.19-4                </span></span>
+<span><span class="co">##  [33] gtable_0.3.1                glue_1.6.2                 </span></span>
+<span><span class="co">##  [35] GenomeInfoDbData_1.2.7      reshape2_1.4.4             </span></span>
+<span><span class="co">##  [37] Rcpp_1.0.9                  bbmle_1.0.25               </span></span>
+<span><span class="co">##  [39] Biobase_2.54.0              jquerylib_0.1.4            </span></span>
+<span><span class="co">##  [41] pkgdown_2.0.6               vctrs_0.4.1                </span></span>
+<span><span class="co">##  [43] Biostrings_2.62.0           nlme_3.1-159               </span></span>
+<span><span class="co">##  [45] rtracklayer_1.54.0          rsq_2.5                    </span></span>
+<span><span class="co">##  [47] xfun_0.32                   stringr_1.4.1              </span></span>
+<span><span class="co">##  [49] fastseg_1.40.0              lme4_1.1-31                </span></span>
+<span><span class="co">##  [51] lifecycle_1.0.2             restfulr_0.0.15            </span></span>
+<span><span class="co">##  [53] gtools_3.9.3                XML_3.99-0.10              </span></span>
+<span><span class="co">##  [55] zlibbioc_1.40.0             MASS_7.3-58.1              </span></span>
+<span><span class="co">##  [57] scales_1.2.1                ragg_1.2.2                 </span></span>
+<span><span class="co">##  [59] MatrixGenerics_1.6.0        SummarizedExperiment_1.24.0</span></span>
+<span><span class="co">##  [61] yaml_2.3.5                  memoise_2.0.1              </span></span>
+<span><span class="co">##  [63] ggplot2_3.3.6               emdbook_1.3.12             </span></span>
+<span><span class="co">##  [65] sass_0.4.2                  bdsmatrix_1.3-6            </span></span>
+<span><span class="co">##  [67] stringi_1.7.8               S4Vectors_0.32.4           </span></span>
+<span><span class="co">##  [69] BiocIO_1.4.0                desc_1.4.1                 </span></span>
+<span><span class="co">##  [71] e1071_1.7-12                BiocGenerics_0.40.0        </span></span>
+<span><span class="co">##  [73] boot_1.3-28                 methylKit_1.20.0           </span></span>
+<span><span class="co">##  [75] BiocParallel_1.28.3         GenomeInfoDb_1.30.1        </span></span>
+<span><span class="co">##  [77] rlang_1.0.5                 pkgconfig_2.0.3            </span></span>
+<span><span class="co">##  [79] systemfonts_1.0.4           matrixStats_0.62.0         </span></span>
+<span><span class="co">##  [81] bitops_1.0-7                evaluate_0.16              </span></span>
+<span><span class="co">##  [83] lattice_0.20-45             purrr_0.3.4                </span></span>
+<span><span class="co">##  [85] GenomicAlignments_1.30.0    tidyselect_1.1.2           </span></span>
+<span><span class="co">##  [87] plyr_1.8.7                  magrittr_2.0.3             </span></span>
+<span><span class="co">##  [89] bookdown_0.30               R6_2.5.1                   </span></span>
+<span><span class="co">##  [91] IRanges_2.28.0              generics_0.1.3             </span></span>
+<span><span class="co">##  [93] nnls_1.4                    DelayedArray_0.20.0        </span></span>
+<span><span class="co">##  [95] DBI_1.1.3                   pillar_1.8.1               </span></span>
+<span><span class="co">##  [97] RCurl_1.98-1.8              tibble_3.1.8               </span></span>
+<span><span class="co">##  [99] crayon_1.5.1                utf8_1.2.2                 </span></span>
+<span><span class="co">## [101] rmarkdown_2.16              grid_4.1.3                 </span></span>
+<span><span class="co">## [103] digest_0.6.29               tidyr_1.2.1                </span></span>
+<span><span class="co">## [105] numDeriv_2016.8-1.1         R.utils_2.12.0             </span></span>
+<span><span class="co">## [107] textshaping_0.3.6           stats4_4.1.3               </span></span>
+<span><span class="co">## [109] munsell_0.5.0               bslib_0.4.0                </span></span>
+<span><span class="co">## [111] quadprog_1.5-8</span></span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#Read the reference RNAseq data</span>
-<span class="va">reference_RNA</span> <span class="op">&lt;-</span> <span class="va">sigMatrix_ABIS_S0</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">mutate</span><span class="op">(</span>IDs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">sigMatrix_ABIS_S0</span><span class="op">)</span><span class="op">)</span><span class="op">%&gt;%</span>
-  <span class="fu">select</span><span class="op">(</span><span class="st">"IDs"</span>, <span class="fu">everything</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">reference_RNA</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code>##             IDs Monocytes.C        NK T.CD8.Memory T.CD4.Naive
-## S1PR3     S1PR3   45.720735 0.2790023    0.1981103   0.3657506
-## RXFP2     RXFP2   17.877398 0.0000000    0.0000000   0.0000000
-## ADAMTS5 ADAMTS5    2.550237 0.0000000    0.0000000   0.0000000
-## CLEC6A   CLEC6A   33.695996 0.0000000    0.0000000   0.0000000
-## FXYD6     FXYD6  114.167642 0.4707691    0.1832934   0.2908456
-## NRG1       NRG1  142.457347 0.1949568    0.1527024   0.2790682</code></pre>
-<p>We will use <code>deconvolute</code> to deconvolute cell type proportions of the bulk samples to their origin proportions using a <strong>quadric programming</strong> model.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">deconv_RNA</span> <span class="op">&lt;-</span> <span class="fu">deconvR</span><span class="fu">::</span><span class="fu"><a href="../reference/deconvolute.html">deconvolute</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="va">reference_RNA</span>,
-                             bulk <span class="op">=</span> <span class="va">bulk_RNA</span>,model <span class="op">=</span> <span class="st">"qp"</span><span class="op">)</span></code></pre></div>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  0.2190  0.3287  0.5162  0.5047  0.6498  0.7602</code></pre>
-<p>Then we can access the deconvoluted proportions of bulk sample profiles.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">deconv_RNA</span><span class="op">$</span><span class="va">proportions</span><span class="op">)</span></code></pre></div>
-<pre><code>##      Monocytes.C           NK T.CD8.Memory  T.CD4.Naive  T.CD8.Naive
-## CYFZ  0.06348309 7.147599e-16 0.000000e+00 0.000000e+00 0.000000e+00
-## FY2H  0.12192004 0.000000e+00 0.000000e+00 2.242393e-15 3.335591e-15
-## FLWA  0.14104057 7.055411e-16 1.179500e-15 6.386099e-15 0.000000e+00
-## 453W  0.15737710 0.000000e+00 4.598167e-15 1.635336e-14 7.598590e-16
-## 684C  0.11535642 0.000000e+00 0.000000e+00 2.139016e-15 1.090887e-15
-## CZJE  0.12817739 0.000000e+00 6.059986e-15 2.404947e-15 0.000000e+00
-##           B.Naive T.CD4.Memory         MAIT     T.gd.Vd2 Neutrophils.LD
-## CYFZ 0.000000e+00 0.000000e+00 6.366268e-15 0.000000e+00      0.2687346
-## FY2H 2.734682e-17 0.000000e+00 0.000000e+00 0.000000e+00      0.3144954
-## FLWA 1.688036e-01 0.000000e+00 0.000000e+00 5.730223e-16      0.3559542
-## 453W 3.024458e-01 4.845950e-17 0.000000e+00 0.000000e+00      0.4653581
-## 684C 2.060142e-01 1.722048e-15 0.000000e+00 0.000000e+00      0.1898895
-## CZJE 4.075307e-02 0.000000e+00 0.000000e+00 1.984425e-15      0.2649981
-##      T.gd.non.Vd2 Basophils.LD Monocytes.NC.I    B.Memory        mDCs
-## CYFZ 5.104239e-15 2.465226e-16     0.12302750 0.00000e+00 0.012795335
-## FY2H 8.589163e-15 7.842739e-16     0.21114858 0.00000e+00 0.000000000
-## FLWA 6.538782e-15 7.249774e-16     0.05502392 0.00000e+00 0.000000000
-## 453W 0.000000e+00 0.000000e+00     0.03605163 0.00000e+00 0.000000000
-## 684C 0.000000e+00 8.896594e-16     0.12257615 7.61391e-16 0.007300725
-## CZJE 0.000000e+00 1.569145e-15     0.07846819 0.00000e+00 0.002757467
-##              pDCs Plasmablasts
-## CYFZ 4.803158e-01   0.05164364
-## FY2H 1.625745e-01   0.18986147
-## FLWA 2.401507e-17   0.27917772
-## 453W 0.000000e+00   0.03876731
-## 684C 2.078994e-01   0.15096372
-## CZJE 2.361915e-01   0.24865428</code></pre>
+<code class="sourceCode R"><span><span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="sessioninfo" class="section level1">
-<h1 class="hasAnchor">
-<a href="#sessioninfo" class="anchor"></a>sessionInfo</h1>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## R version 4.1.0 (2021-05-18)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19042)
-## 
-## Matrix products: default
-## 
-## locale:
-## [1] LC_COLLATE=Turkish_Turkey.1254  LC_CTYPE=Turkish_Turkey.1254   
-## [3] LC_MONETARY=Turkish_Turkey.1254 LC_NUMERIC=C                   
-## [5] LC_TIME=Turkish_Turkey.1254    
-## 
-## attached base packages:
-## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
-## 
-## other attached packages:
-## [1] granulator_1.1.0  dplyr_1.0.7       doParallel_1.0.16 iterators_1.0.13 
-## [5] foreach_1.5.1     deconvR_0.99.7    data.table_1.14.2 knitr_1.36       
-## [9] BiocStyle_2.21.4 
-## 
-## loaded via a namespace (and not attached):
-##   [1] minqa_1.2.4                 colorspace_2.0-2           
-##   [3] rjson_0.2.20                ellipsis_0.3.2             
-##   [5] class_7.3-19                mclust_5.4.7               
-##   [7] rprojroot_2.0.2             qvalue_2.25.0              
-##   [9] XVector_0.32.0              GenomicRanges_1.44.0       
-##  [11] fs_1.5.0                    proxy_0.4-26               
-##  [13] Deriv_4.1.3                 lubridate_1.8.0            
-##  [15] fansi_0.5.0                 mvtnorm_1.1-3              
-##  [17] codetools_0.2-18            splines_4.1.0              
-##  [19] R.methodsS3_1.8.1           cachem_1.0.6               
-##  [21] jsonlite_1.7.2              nloptr_1.2.2.2             
-##  [23] Rsamtools_2.9.1             R.oo_1.24.0                
-##  [25] pheatmap_1.0.12             BiocManager_1.30.16        
-##  [27] compiler_4.1.0              assertthat_0.2.1           
-##  [29] Matrix_1.3-4                fastmap_1.1.0              
-##  [31] limma_3.48.3                htmltools_0.5.2            
-##  [33] tools_4.1.0                 coda_0.19-4                
-##  [35] gtable_0.3.0                glue_1.4.2                 
-##  [37] GenomeInfoDbData_1.2.7      reshape2_1.4.4             
-##  [39] Rcpp_1.0.7                  limSolve_1.5.6             
-##  [41] bbmle_1.0.24                Biobase_2.52.0             
-##  [43] jquerylib_0.1.4             pkgdown_1.6.1              
-##  [45] vctrs_0.3.8                 Biostrings_2.60.2          
-##  [47] nlme_3.1-153                rtracklayer_1.53.1         
-##  [49] rsq_2.2                     xfun_0.26                  
-##  [51] stringr_1.4.0               fastseg_1.39.0             
-##  [53] lme4_1.1-27.1               lpSolve_5.6.15             
-##  [55] lifecycle_1.0.1             restfulr_0.0.13            
-##  [57] gtools_3.9.2                XML_3.99-0.8               
-##  [59] zlibbioc_1.38.0             MASS_7.3-54                
-##  [61] scales_1.1.1                ragg_1.1.3                 
-##  [63] MatrixGenerics_1.5.4        SummarizedExperiment_1.23.5
-##  [65] RColorBrewer_1.1-2          yaml_2.2.1                 
-##  [67] memoise_2.0.0               pander_0.6.4               
-##  [69] ggplot2_3.3.5               yulab.utils_0.0.4          
-##  [71] emdbook_1.3.12              sass_0.4.0                 
-##  [73] bdsmatrix_1.3-4             stringi_1.7.5              
-##  [75] S4Vectors_0.30.2            BiocIO_1.3.0               
-##  [77] desc_1.4.0                  e1071_1.7-9                
-##  [79] BiocGenerics_0.39.2         boot_1.3-28                
-##  [81] methylKit_1.19.0            BiocParallel_1.26.2        
-##  [83] epiR_2.0.38                 GenomeInfoDb_1.29.10       
-##  [85] rlang_0.4.11                pkgconfig_2.0.3            
-##  [87] systemfonts_1.0.3           matrixStats_0.61.0         
-##  [89] bitops_1.0-7                evaluate_0.14              
-##  [91] lattice_0.20-45             purrr_0.3.4                
-##  [93] GenomicAlignments_1.29.0    cowplot_1.1.1              
-##  [95] tidyselect_1.1.1            plyr_1.8.6                 
-##  [97] magrittr_2.0.1              bookdown_0.24              
-##  [99] R6_2.5.1                    IRanges_2.26.0             
-## [101] generics_0.1.0              nnls_1.4                   
-## [103] DelayedArray_0.18.0         DBI_1.1.1                  
-## [105] pillar_1.6.4                survival_3.2-13            
-## [107] RCurl_1.98-1.5              dtangle_2.0.9              
-## [109] tibble_3.1.5                crayon_1.4.1               
-## [111] utf8_1.2.2                  rmarkdown_2.11.2           
-## [113] grid_4.1.0                  digest_0.6.28              
-## [115] tidyr_1.1.4                 numDeriv_2016.8-1.1        
-## [117] gridGraphics_0.5-1          R.utils_2.11.0             
-## [119] textshaping_0.3.6           stats4_4.1.0               
-## [121] munsell_0.5.0               ggplotify_0.1.0            
-## [123] BiasedUrn_1.07              bslib_0.3.1                
-## [125] quadprog_1.5-8</code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">stopCluster</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></code></pre></div>
-</div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr>
 <ol>
-<li id="fn1"><p>Moss, J. et al. (2018). Comprehensive human cell-type methylation atlas reveals origins of circulating cell-free DNA in health and disease. Nature communications, 9(1), 1-12. <a href="https://doi.org/10.1038/s41467-018-07466-6" class="uri">https://doi.org/10.1038/s41467-018-07466-6</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>Moss, J. et al. (2018). Comprehensive human cell-type
+methylation atlas reveals origins of circulating cell-free DNA in health
+and disease. Nature communications, 9(1), 1-12. <a href="https://doi.org/10.1038/s41467-018-07466-6" class="external-link uri">https://doi.org/10.1038/s41467-018-07466-6</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
   </div>
@@ -526,11 +575,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by İrem B. Gündüz, Veronika Ebenal, Altuna Akalin.</p>
+  <p></p>
+<p>Developed by İrem B. Gündüz, Veronika Ebenal, Altuna Akalin.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -538,6 +589,8 @@
 
   
 
+
+  
 
   </body>
 </html>
