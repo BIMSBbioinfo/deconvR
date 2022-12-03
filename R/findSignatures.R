@@ -11,16 +11,20 @@
 #' @param variation_cutoff either a number between 0 to 1, or NULL.For multiple
 #' samples from the same cell type, ignore CpGs with variation >
 #' variation_cutoff with that cell type. defaults to NULL (i.e. no cutoff)
-#' @param tissueSpecCpGs if TRUE and atlas provided, it will extract tissue or
+#' @param tissueSpecCpGs if TRUE and atlas provided, it will extract tissue
 #' specific CpGs.
 #' @param K only valid when tissueSpecCpGs is TRUE. K is the number of top
 #' methylation signature to be extracted.
+#' @param tissueSpecDMPs if TRUE and atlas provided, it will extract tissue
+#' specific DMPs. Note that both tissueSpecCpGs and tissueSpecDMPs can't be
+#' TRUE at the same time.
 #' @param IDs the name of the column indicates ids
 #' @importFrom magrittr %>%
 #' @importFrom data.table  merge.data.table .SD setDT :=
 #' @importFrom assertthat assert_that
 #' @importFrom matrixStats rowVars rowSums2
 #' @importFrom stats na.omit setNames
+#' @importFrom minfi dmpFinder logit2
 #' @examples
 #' data("HumanCellTypeMethAtlas")
 #' exampleSamples <- simulateCellMix(1,
@@ -37,7 +41,7 @@
 #'   samples = exampleSamples,
 #'   sampleMeta = exampleMeta,
 #'   atlas = HumanCellTypeMethAtlas,
-#'   IDs = "CpGs",tissueSpecCpGs =  FALSE
+#'   IDs = "CpGs", tissueSpecCpGs = FALSE
 #' )
 #' signatures <- findSignatures(
 #'   samples = exampleSamples,
@@ -51,17 +55,22 @@
 #' (e.g. CpG ID) and then values of signature (e.g. methylation values)
 #' If tissueSpecCpGs is TRUE, it will return a list of list containing tissue
 #' specific methylation signatures.
+#' If tissueSpecDMPs is TRUE, it will return a list containing tissue specific
+#' DMPs.
 #' @export
 
 findSignatures <- function(samples, sampleMeta, atlas = NULL,
                            variation_cutoff = NULL, K = 100, IDs = NULL,
-                           tissueSpecCpGs = FALSE) {
+                           tissueSpecCpGs = FALSE, tissueSpecDMPs = FALSE) {
   assert_that(!is.null(IDs),
     msg = "Please set an ID column name"
   )
   assert_that(length(IDs) == 1,
     msg = "Please set provide a valid ID column name"
   )
+  if (isTRUE(tissueSpecCpGs) && isTRUE(tissueSpecDMPs)) {
+    stop("Both tissueSpecCpGs and tissueSpecDMPs can't be TRUE at the same time.")
+  }
   if (tissueSpecCpGs && !is.numeric(K)) {
     stop("Please provide numeric K value to use tissueSpecCpGs")
   }
@@ -186,6 +195,23 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
     K = K
     )
     return(tissueSpec)
+  }
+
+  if (tissueSpecDMPs) {
+    # call logit
+    M <- minfi::logit2(as.matrix(extendedAtlas, rownames = IDs))
+
+    # Extract DMPs
+    tissueDMPs <- lapply(unique(sampleMeta[[1]]), function(tissue, M) {
+      message("Extracting DMPs for ", tissue)
+      grp <- ifelse(sampleMeta[[1]] %in% tissue, tissue, "other")
+      dmp <- minfi::dmpFinder(M, pheno = grp, type = "categorical")
+      message("DMPs hyper: ", sum(dmp$qval < 0.05, na.rm = TRUE), "\n")
+      return(dmp)
+    }, M = M)
+
+    names(tissueDMPs) <- unique(sampleMeta[[1]])
+    return(tissueDMPs)
   }
   return(as.data.frame(extendedAtlas))
 }

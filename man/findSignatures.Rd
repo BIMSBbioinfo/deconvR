@@ -11,7 +11,8 @@ findSignatures(
   variation_cutoff = NULL,
   K = 100,
   IDs = NULL,
-  tissueSpecCpGs = FALSE
+  tissueSpecCpGs = FALSE,
+  tissueSpecDMPs = FALSE
 )
 }
 \arguments{
@@ -36,8 +37,12 @@ methylation signature to be extracted.}
 
 \item{IDs}{the name of the column indicates ids}
 
-\item{tissueSpecCpGs}{if TRUE and atlas provided, it will extract tissue or
+\item{tissueSpecCpGs}{if TRUE and atlas provided, it will extract tissue
 specific CpGs.}
+
+\item{tissueSpecDMPs}{if TRUE and atlas provided, it will extract tissue
+specific DMPs. Note that both tissueSpecCpGs and tissueSpecDMPs can't be
+TRUE at the same time.}
 }
 \value{
 A dataframe extendedAtlas which contains all cell types in atlas
@@ -46,6 +51,8 @@ rest of columns are cell types, rows are have first cell with the ID
 (e.g. CpG ID) and then values of signature (e.g. methylation values)
 If tissueSpecCpGs is TRUE, it will return a list of list containing tissue
 specific methylation signatures.
+If tissueSpecDMPs is TRUE, it will return a list containing tissue specific
+DMPs.
 }
 \description{
 A function to construct a signature matrix
@@ -66,7 +73,7 @@ signatures <- findSignatures(
   samples = exampleSamples,
   sampleMeta = exampleMeta,
   atlas = HumanCellTypeMethAtlas,
-  IDs = "CpGs",tissueSpecCpGs =  FALSE
+  IDs = "CpGs", tissueSpecCpGs = FALSE
 )
 signatures <- findSignatures(
   samples = exampleSamples,
