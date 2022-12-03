@@ -124,4 +124,14 @@ test_that("findSignatures", {
   expect_equal(typeof(unlist(signatures)), "double")
   expect_lte(max(unlist(signatures)), 1)
   expect_gte(min(unlist(signatures)), 0)
+
+  signatures <- findSignatures(
+    samples = exampleSamples,
+    sampleMeta = exampleMeta,
+    atlas = HumanCellTypeMethAtlas,
+    IDs = "CpGs", tissueSpecDMPs = TRUE
+  )
+  expect_equal(names(signatures)[1], "example_sample")
+  expect_lte(NROW(signatures), NCOL(HumanCellTypeMethAtlas))
+  expect_equal(typeof(unlist(signatures)), "double")
 })
