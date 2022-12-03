@@ -225,6 +225,32 @@ signatures <- findSignatures(
   sampleMeta = exampleMeta,
   atlas = HumanCellTypeMethAtlas,
   IDs = "CpGs", K = 100, tissueSpecCpGs = TRUE)
+
+print(head(signatures[[2]]))
+```
+
+## Constructing tissue specific DMPs
+
+Alternatively, users can set *tissueSpecDMPs* as **TRUE** to obtain tissue based
+DMPs by using the reference atlas. Here, we used simulated samples since we 
+don't have tissue specific samples. Note that both *tissueSpecCpGs* and *tissueSpecDMPs*
+can't be *TRUE* at the same time.
+
+``` {r, output.lines=10}
+data("HumanCellTypeMethAtlas")
+exampleSamples <- simulateCellMix(1,reference = HumanCellTypeMethAtlas)$simulated
+exampleMeta <- data.table("Experiment_accession" = "example_sample",
+                          "Biosample_term_name" = "example_cell_type")
+colnames(exampleSamples) <- c("CpGs", "example_sample")
+colnames(HumanCellTypeMethAtlas)[1] <- c("CpGs")
+
+signatures <- findSignatures(
+  samples = exampleSamples,
+  sampleMeta = exampleMeta,
+  atlas = HumanCellTypeMethAtlas,
+  IDs = "CpGs", tissueSpecDMPs = TRUE)
+
+print(head(signatures[[2]]))
 ```
 
 # Example Workflow For RNA Sequencing Data

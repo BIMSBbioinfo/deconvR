@@ -55,6 +55,8 @@
 #' (e.g. CpG ID) and then values of signature (e.g. methylation values)
 #' If tissueSpecCpGs is TRUE, it will return a list of list containing tissue
 #' specific methylation signatures.
+#' If tissueSpecDMPs is TRUE, it will return a list containing tissue specific
+#' DMPs.
 #' @export
 
 findSignatures <- function(samples, sampleMeta, atlas = NULL,
@@ -200,15 +202,15 @@ findSignatures <- function(samples, sampleMeta, atlas = NULL,
     M <- minfi::logit2(as.matrix(extendedAtlas, rownames = IDs))
 
     # Extract DMPs
-    tissueDMPs <- lapply(unique(extendedAtlas[[1]]), function(tissue, M) {
+    tissueDMPs <- lapply(unique(sampleMeta[[1]]), function(tissue, M) {
       message("Extracting DMPs for ", tissue)
-      grp <- ifelse(extendedAtlas[[1]] %in% tissue, tissue, "other")
+      grp <- ifelse(sampleMeta[[1]] %in% tissue, tissue, "other")
       dmp <- minfi::dmpFinder(M, pheno = grp, type = "categorical")
       message("DMPs hyper: ", sum(dmp$qval < 0.05, na.rm = TRUE), "\n")
       return(dmp)
     }, M = M)
 
-    names(tissueDMPs) <- unique(extendedAtlas[[1]])
+    names(tissueDMPs) <- unique(sampleMeta[[1]])
     return(tissueDMPs)
   }
   return(as.data.frame(extendedAtlas))
