@@ -51,6 +51,8 @@ rest of columns are cell types, rows are have first cell with the ID
 (e.g. CpG ID) and then values of signature (e.g. methylation values)
 If tissueSpecCpGs is TRUE, it will return a list of list containing tissue
 specific methylation signatures.
+If tissueSpecDMPs is TRUE, it will return a list containing tissue specific
+DMPs.
 }
 \description{
 A function to construct a signature matrix
