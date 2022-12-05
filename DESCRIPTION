@@ -1,10 +1,10 @@
 Package: deconvR
 Title: Simulation and Deconvolution of Omic Profiles
-Version: 1.4.3
+Version: 1.4.4
 Date: 2022-18-03
 Authors@R: 
     c(person(given = "Irem B.",
-           family = "GÃ¼ndÃ¼z",
+           family = "Gündüz",
            role = c("aut", "cre"),
            email = "irembgunduz@gmail.com",
            comment = c(ORCID = "0000-0003-2641-0916")),

@@ -1,4 +1,4 @@
-# deconvR 1.4.3
+# deconvR 1.4.4
 
 * Fixed a bug in deconvolute
 * findSignatures now can construct tissue specific methylation signatures
