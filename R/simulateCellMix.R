@@ -42,6 +42,7 @@
 
 simulateCellMix <- function(numberOfSamples, mixingVector = NULL,
                             reference) {
+  reference <- as.data.frame(reference)                            
   simulatedMixtureTable <- data.frame(matrix(
     ncol = numberOfSamples + 1,
     nrow = nrow(reference)
