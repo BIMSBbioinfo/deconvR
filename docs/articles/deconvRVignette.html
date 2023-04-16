@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">deconvR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.4.6</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
       <h1 data-toc-skip>deconvR : Simulation and Deconvolution of Omic
 Profiles</h1>
             
-            <h4 data-toc-skip class="date">2022-12-05</h4>
+            <h4 data-toc-skip class="date">2023-04-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/BIMSBbioinfo/deconvR/blob/HEAD/vignettes/deconvRVignette.Rmd" class="external-link"><code>vignettes/deconvRVignette.Rmd</code></a></small>
       <div class="hidden name"><code>deconvRVignette.Rmd</code></div>
@@ -222,12 +222,12 @@ illustrates the <code>samples</code> format.</p>
 <code class="sourceCode R"><span><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulateCellMix.html">simulateCellMix</a></span><span class="op">(</span><span class="fl">3</span>,reference <span class="op">=</span> <span class="va">HumanCellTypeMethAtlas</span><span class="op">)</span><span class="op">$</span><span class="va">simulated</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          IDs   Sample 1   Sample 2   Sample 3</span></span>
-<span><span class="co">## 1 cg08169020 0.17529579 0.18305686 0.16494031</span></span>
-<span><span class="co">## 2 cg25913761 0.30308475 0.28496525 0.29907035</span></span>
-<span><span class="co">## 3 cg26955540 0.20043204 0.17149777 0.21078054</span></span>
-<span><span class="co">## 4 cg25170017 0.21122187 0.22894394 0.23500608</span></span>
-<span><span class="co">## 5 cg12827637 0.13248314 0.13797303 0.14133260</span></span>
-<span><span class="co">## 6 cg19442545 0.06102038 0.05626473 0.05382755</span></span></code></pre>
+<span><span class="co">## 1 cg08169020 0.19769190 0.17836451 0.03430545</span></span>
+<span><span class="co">## 2 cg25913761 0.31177085 0.29437351 0.23797341</span></span>
+<span><span class="co">## 3 cg26955540 0.18877982 0.17508988 0.10900306</span></span>
+<span><span class="co">## 4 cg25170017 0.24198721 0.21262947 0.09809895</span></span>
+<span><span class="co">## 5 cg12827637 0.12732814 0.13129980 0.05125087</span></span>
+<span><span class="co">## 6 cg19442545 0.07645761 0.06602055 0.03019664</span></span></code></pre>
 <p><code>sampleMeta</code> should include all sample names in
 <code>samples</code>, and specify the origins they should be mapped to
 when added to <code>atlas</code>.</p>
@@ -275,12 +275,12 @@ when added to <code>atlas</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">extended_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          IDs new_cell_type Monocytes_EPIC B.cells_EPIC CD4T.cells_EPIC</span></span>
-<span><span class="co">## 1 cg08169020    0.17443099         0.8866       0.2615          0.0149</span></span>
-<span><span class="co">## 2 cg25913761    0.29570679         0.8363       0.2210          0.2816</span></span>
-<span><span class="co">## 3 cg26955540    0.19423678         0.7658       0.0222          0.1492</span></span>
-<span><span class="co">## 4 cg25170017    0.22505730         0.8861       0.5116          0.1021</span></span>
-<span><span class="co">## 5 cg12827637    0.13726292         0.5212       0.3614          0.0227</span></span>
-<span><span class="co">## 6 cg19442545    0.05703755         0.2013       0.1137          0.0608</span></span>
+<span><span class="co">## 1 cg08169020    0.13678729         0.8866       0.2615          0.0149</span></span>
+<span><span class="co">## 2 cg25913761    0.28137259         0.8363       0.2210          0.2816</span></span>
+<span><span class="co">## 3 cg26955540    0.15762425         0.7658       0.0222          0.1492</span></span>
+<span><span class="co">## 4 cg25170017    0.18423854         0.8861       0.5116          0.1021</span></span>
+<span><span class="co">## 5 cg12827637    0.10329294         0.5212       0.3614          0.0227</span></span>
+<span><span class="co">## 6 cg19442545    0.05755827         0.2013       0.1137          0.0608</span></span>
 <span><span class="co">##   NK.cells_EPIC CD8T.cells_EPIC Neutrophils_EPIC Erythrocyte_progenitors</span></span>
 <span><span class="co">## 1        0.0777          0.0164           0.8680                  0.9509</span></span>
 <span><span class="co">## 2        0.4705          0.3961           0.8293                  0.2385</span></span>
@@ -457,68 +457,68 @@ specific samples.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $hyper</span></span>
-<span><span class="co">## cg08169020 cg25170017 cg26955540 cg12827637 cg15838173 cg04858631 cg19442545 </span></span>
-<span><span class="co">## 0.23711510 0.16804743 0.16706298 0.16341740 0.14756377 0.14636983 0.14431474 </span></span>
-<span><span class="co">## cg10560079 cg00982136 cg26460530 cg22017733 cg13677741 cg24082121 cg09642825 </span></span>
-<span><span class="co">## 0.14131002 0.13602910 0.12922689 0.12882796 0.12651448 0.12433428 0.12393559 </span></span>
-<span><span class="co">## cg01424562 cg15376996 cg14789659 cg11895835 cg06340704 cg12474798 cg19300307 </span></span>
-<span><span class="co">## 0.12348807 0.11995284 0.11677111 0.11557836 0.11538565 0.11514650 0.11512351 </span></span>
-<span><span class="co">## cg05507654 cg14785464 cg27189395 cg18856478 cg26033520 cg05056497 cg24275356 </span></span>
-<span><span class="co">## 0.11509691 0.11470086 0.11453378 0.11412062 0.11360042 0.11245422 0.11226979 </span></span>
-<span><span class="co">## cg23220823 cg00936790 cg25913761 cg20684110 cg08474651 cg08857351 cg06167719 </span></span>
-<span><span class="co">## 0.11222956 0.11212217 0.11185164 0.11171525 0.11150135 0.11138356 0.11132746 </span></span>
-<span><span class="co">## cg27395200 cg05258935 cg10509607 cg22897141 cg23247274 cg22879098 cg14855367 </span></span>
-<span><span class="co">## 0.11125977 0.11114588 0.11070342 0.10968420 0.10965287 0.10959565 0.10919888 </span></span>
-<span><span class="co">## cg03254916 cg02962602 cg08063160 cg08832851 cg26953232 cg04913246 cg16416715 </span></span>
-<span><span class="co">## 0.10902188 0.10886200 0.10885235 0.10854991 0.10849166 0.10826308 0.10807710 </span></span>
-<span><span class="co">## cg09267773 cg10361922 cg08257293 cg27388962 cg08425810 cg03711944 cg26757820 </span></span>
-<span><span class="co">## 0.10797153 0.10788173 0.10748562 0.10747892 0.10744440 0.10727008 0.10710562 </span></span>
-<span><span class="co">## cg26047334 cg25158622 cg14057303 cg11975790 cg08367326 cg16278496 cg14845962 </span></span>
-<span><span class="co">## 0.10696897 0.10695904 0.10694399 0.10655879 0.10570196 0.10501968 0.10485859 </span></span>
-<span><span class="co">## cg05043794 cg16127573 cg09577804 cg15014975 cg27312961 cg04055490 cg18675610 </span></span>
-<span><span class="co">## 0.10433473 0.10420635 0.10399857 0.10397506 0.10384322 0.10370734 0.10330938 </span></span>
-<span><span class="co">## cg22138735 cg08846870 cg19331221 cg17847861 cg07865091 cg03063309 cg24591770 </span></span>
-<span><span class="co">## 0.10296365 0.10293987 0.10270677 0.10256418 0.10214005 0.10213549 0.10187307 </span></span>
-<span><span class="co">## cg16402452 cg06398251 cg13638257 cg07218880 cg11532431 cg01377358 cg07438103 </span></span>
-<span><span class="co">## 0.10187169 0.10185237 0.10176875 0.10163880 0.10161528 0.10125056 0.10116898 </span></span>
-<span><span class="co">## cg02297709 cg01726273 cg04462378 cg10661769 cg00769843 cg16829306 cg11025609 </span></span>
-<span><span class="co">## 0.10110097 0.10098302 0.10093560 0.10079763 0.10075990 0.10070226 0.10044612 </span></span>
-<span><span class="co">## cg21181453 cg16988611 cg06889535 cg15185986 cg20074395 cg16306706 cg15575375 </span></span>
-<span><span class="co">## 0.10042446 0.10026995 0.10026243 0.10021530 0.10009661 0.09967501 0.09956515 </span></span>
-<span><span class="co">## cg08659179 cg19692929 </span></span>
-<span><span class="co">## 0.09956422 0.09937775 </span></span>
+<span><span class="co">## cg26955540 cg25170017 cg12827637 cg15838173 cg04858631 cg19442545 cg10560079 </span></span>
+<span><span class="co">## 0.16655421 0.16183448 0.15709356 0.14408903 0.14354529 0.14019248 0.13709985 </span></span>
+<span><span class="co">## cg00982136 cg22017733 cg26460530 cg24082121 cg13677741 cg09642825 cg01424562 </span></span>
+<span><span class="co">## 0.13267227 0.12635938 0.12621518 0.12129103 0.12105270 0.12046239 0.12006971 </span></span>
+<span><span class="co">## cg15376996 cg14789659 cg19300307 cg14785464 cg11895835 cg06340704 cg12474798 </span></span>
+<span><span class="co">## 0.11635485 0.11474759 0.11328638 0.11327131 0.11308403 0.11299653 0.11277555 </span></span>
+<span><span class="co">## cg27189395 cg18856478 cg26033520 cg05507654 cg25913761 cg05056497 cg24275356 </span></span>
+<span><span class="co">## 0.11246172 0.11221260 0.11200893 0.11158285 0.11104250 0.11047828 0.11014925 </span></span>
+<span><span class="co">## cg20684110 cg08857351 cg23220823 cg00936790 cg06167719 cg05258935 cg23247274 </span></span>
+<span><span class="co">## 0.11004431 0.10989729 0.10987091 0.10972684 0.10950467 0.10940572 0.10925144 </span></span>
+<span><span class="co">## cg08474651 cg27395200 cg10509607 cg14855367 cg22897141 cg03254916 cg09267773 </span></span>
+<span><span class="co">## 0.10902068 0.10873483 0.10860666 0.10805702 0.10800118 0.10778017 0.10751286 </span></span>
+<span><span class="co">## cg22879098 cg08063160 cg26757820 cg08425810 cg04913246 cg14057303 cg16416715 </span></span>
+<span><span class="co">## 0.10742316 0.10701659 0.10659686 0.10652677 0.10628071 0.10625207 0.10622310 </span></span>
+<span><span class="co">## cg26047334 cg26953232 cg03711944 cg10361922 cg27388962 cg02962602 cg08257293 </span></span>
+<span><span class="co">## 0.10620909 0.10613800 0.10606464 0.10604939 0.10570874 0.10566985 0.10561195 </span></span>
+<span><span class="co">## cg25158622 cg08832851 cg11975790 cg05043794 cg14845962 cg16127573 cg08367326 </span></span>
+<span><span class="co">## 0.10527123 0.10524729 0.10438865 0.10343841 0.10325396 0.10293117 0.10292921 </span></span>
+<span><span class="co">## cg27312961 cg15014975 cg16278496 cg22138735 cg09577804 cg19331221 cg04055490 </span></span>
+<span><span class="co">## 0.10276320 0.10264395 0.10244759 0.10210274 0.10199246 0.10183276 0.10176574 </span></span>
+<span><span class="co">## cg18675610 cg08846870 cg17847861 cg03063309 cg07865091 cg16402452 cg10661769 </span></span>
+<span><span class="co">## 0.10166141 0.10139548 0.10115798 0.10096596 0.10068089 0.10034820 0.10018440 </span></span>
+<span><span class="co">## cg11532431 cg24591770 cg06398251 cg01726273 cg04462378 cg02297709 cg00769843 </span></span>
+<span><span class="co">## 0.10005215 0.09997644 0.09996113 0.09963153 0.09960854 0.09959661 0.09951350 </span></span>
+<span><span class="co">## cg21181453 cg06889535 cg07218880 cg11025609 cg01377358 cg15185986 cg16829306 </span></span>
+<span><span class="co">## 0.09949040 0.09944616 0.09930742 0.09915111 0.09901060 0.09876212 0.09855436 </span></span>
+<span><span class="co">## cg08659179 cg07438103 cg15575375 cg19692929 cg16306706 cg16988611 cg13638257 </span></span>
+<span><span class="co">## 0.09846868 0.09844349 0.09843642 0.09821206 0.09815538 0.09812144 0.09812133 </span></span>
+<span><span class="co">## cg16017089 cg20074395 </span></span>
+<span><span class="co">## 0.09797171 0.09775145 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $hypo</span></span>
-<span><span class="co">## cg03663120 cg20942286 cg03963853 cg03126713 cg00828556 cg24788483 cg13931640 </span></span>
-<span><span class="co">##  0.3750316  0.2984432  0.2728312  0.2722571  0.2699192  0.2695167  0.2658525 </span></span>
-<span><span class="co">## cg11186858 cg22528270 cg15871206 cg05612654 cg13500029 cg15310871 cg10480329 </span></span>
-<span><span class="co">##  0.2649158  0.2631947  0.2629806  0.2625828  0.2582106  0.2578245  0.2494196 </span></span>
-<span><span class="co">## cg11231069 cg03549146 cg12655112 cg05923857 cg12458039 cg07737292 cg20610950 </span></span>
-<span><span class="co">##  0.2468815  0.2403339  0.2391589  0.2373173  0.2360880  0.2342849  0.2330547 </span></span>
-<span><span class="co">## cg10456459 cg03313271 cg06988336 cg23952578 cg06517984 cg16636767 cg06297318 </span></span>
-<span><span class="co">##  0.2292928  0.2239580  0.2209195  0.2149117  0.2138972  0.2134217  0.2120877 </span></span>
-<span><span class="co">## cg27334271 cg14976569 cg04851465 cg11327657 cg11597902 cg15633603 cg22259797 </span></span>
-<span><span class="co">##  0.2119242  0.2105749  0.2097883  0.2096965  0.2090253  0.2078216  0.2075520 </span></span>
-<span><span class="co">## cg13403369 cg08425796 cg06373940 cg04354689 cg09322573 cg18990407 cg20107506 </span></span>
-<span><span class="co">##  0.2059912  0.2056366  0.2037298  0.2033962  0.2026265  0.2022337  0.2021727 </span></span>
-<span><span class="co">## cg22185977 cg06125903 cg07033722 cg10718056 cg26538782 cg12866960 cg01879591 </span></span>
-<span><span class="co">##  0.2018702  0.2008651  0.2006998  0.2006361  0.1991279  0.1990950  0.1985201 </span></span>
-<span><span class="co">## cg25517015 cg27366072 cg03310874 cg13093111 cg02796279 cg19502671 cg08538581 </span></span>
-<span><span class="co">##  0.1979015  0.1978145  0.1963424  0.1954368  0.1952972  0.1945160  0.1940933 </span></span>
-<span><span class="co">## cg06978145 cg20429104 cg26923863 cg10967114 cg23403750 cg26783127 cg06721411 </span></span>
-<span><span class="co">##  0.1939280  0.1936473  0.1928298  0.1926123  0.1925248  0.1922389  0.1921110 </span></span>
-<span><span class="co">## cg11153071 cg19380303 cg26305504 cg23755933 cg01024962 cg20966357 cg06585734 </span></span>
-<span><span class="co">##  0.1920780  0.1917895  0.1917448  0.1906979  0.1906406  0.1902112  0.1901046 </span></span>
-<span><span class="co">## cg11802666 cg05445326 cg07918933 cg12555086 cg04664897 cg25596405 cg04217515 </span></span>
-<span><span class="co">##  0.1899845  0.1896992  0.1896795  0.1896435  0.1895192  0.1892883  0.1890853 </span></span>
-<span><span class="co">## cg04836151 cg27340480 cg24250902 cg18835472 cg00009088 cg02244028 cg23334433 </span></span>
-<span><span class="co">##  0.1886103  0.1885386  0.1883981  0.1880701  0.1875629  0.1875230  0.1873931 </span></span>
-<span><span class="co">## cg26889953 cg26298914 cg14189391 cg22875823 cg17117981 cg13980609 cg08400494 </span></span>
-<span><span class="co">##  0.1873594  0.1871591  0.1865980  0.1864033  0.1862525  0.1861065  0.1858963 </span></span>
-<span><span class="co">## cg07417146 cg15288326 cg17086773 cg08428868 cg04586126 cg22662844 cg00235484 </span></span>
-<span><span class="co">##  0.1856974  0.1856663  0.1854674  0.1854316  0.1849504  0.1842936  0.1834122 </span></span>
-<span><span class="co">## cg22666015 cg01622606 </span></span>
-<span><span class="co">##  0.1829954  0.1814323</span></span></code></pre>
+<span><span class="co">## cg03663120 cg20942286 cg03963853 cg24788483 cg05612654 cg03126713 cg11186858 </span></span>
+<span><span class="co">##  0.3720639  0.2924883  0.2722141  0.2688298  0.2628301  0.2627057  0.2626872 </span></span>
+<span><span class="co">## cg00828556 cg15310871 cg13931640 cg13500029 cg15871206 cg22528270 cg10480329 </span></span>
+<span><span class="co">##  0.2623749  0.2581865  0.2577162  0.2565757  0.2558522  0.2557238  0.2488153 </span></span>
+<span><span class="co">## cg11231069 cg12655112 cg05923857 cg12458039 cg03549146 cg20610950 cg07737292 </span></span>
+<span><span class="co">##  0.2474729  0.2393741  0.2365766  0.2345860  0.2331730  0.2325898  0.2271558 </span></span>
+<span><span class="co">## cg10456459 cg03313271 cg06988336 cg16636767 cg23952578 cg06297318 cg06517984 </span></span>
+<span><span class="co">##  0.2240397  0.2208064  0.2197890  0.2132457  0.2128977  0.2104468  0.2104137 </span></span>
+<span><span class="co">## cg04851465 cg14976569 cg11597902 cg15633603 cg18990407 cg27334271 cg22259797 </span></span>
+<span><span class="co">##  0.2096034  0.2095659  0.2078690  0.2077015  0.2070455  0.2061632  0.2046188 </span></span>
+<span><span class="co">## cg11327657 cg13403369 cg08425796 cg06373940 cg09322573 cg22185977 cg26538782 </span></span>
+<span><span class="co">##  0.2043846  0.2038830  0.2019479  0.1995587  0.1992959  0.1984989  0.1982519 </span></span>
+<span><span class="co">## cg25517015 cg06125903 cg27366072 cg20107506 cg10718056 cg07033722 cg04354689 </span></span>
+<span><span class="co">##  0.1981325  0.1978063  0.1971409  0.1969801  0.1967283  0.1963127  0.1959535 </span></span>
+<span><span class="co">## cg12866960 cg01879591 cg13093111 cg19502671 cg03310874 cg10967114 cg08538581 </span></span>
+<span><span class="co">##  0.1949195  0.1946580  0.1930480  0.1928620  0.1927890  0.1924114  0.1924106 </span></span>
+<span><span class="co">## cg02796279 cg19380303 cg06978145 cg01024962 cg06721411 cg05445326 cg20429104 </span></span>
+<span><span class="co">##  0.1923328  0.1918899  0.1909039  0.1901397  0.1898578  0.1893993  0.1891976 </span></span>
+<span><span class="co">## cg06585734 cg23403750 cg12555086 cg20966357 cg26783127 cg04664897 cg23755933 </span></span>
+<span><span class="co">##  0.1891113  0.1890361  0.1889771  0.1888425  0.1887068  0.1884580  0.1882531 </span></span>
+<span><span class="co">## cg07918933 cg11802666 cg26923863 cg26305504 cg02244028 cg18835472 cg04217515 </span></span>
+<span><span class="co">##  0.1881513  0.1877234  0.1874843  0.1872921  0.1871531  0.1868595  0.1863731 </span></span>
+<span><span class="co">## cg25596405 cg27340480 cg11153071 cg08428868 cg17117981 cg24250902 cg23334433 </span></span>
+<span><span class="co">##  0.1852197  0.1847921  0.1846442  0.1844232  0.1844178  0.1844111  0.1843671 </span></span>
+<span><span class="co">## cg26889953 cg00009088 cg26298914 cg13980609 cg04586126 cg15288326 cg17086773 </span></span>
+<span><span class="co">##  0.1839625  0.1839417  0.1837528  0.1826175  0.1825348  0.1825214  0.1822424 </span></span>
+<span><span class="co">## cg08400494 cg14189391 cg04836151 cg16429499 cg01622606 cg22875823 cg00235484 </span></span>
+<span><span class="co">##  0.1820506  0.1818887  0.1814227  0.1806093  0.1803725  0.1801966  0.1796777 </span></span>
+<span><span class="co">## cg22666015 cg22662844 </span></span>
+<span><span class="co">##  0.1794914  0.1791811</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="constructing-tissue-specific-dmps">Constructing tissue specific DMPs<a class="anchor" aria-label="anchor" href="#constructing-tissue-specific-dmps"></a>
@@ -571,12 +571,12 @@ specific samples. Note that both <em>tissueSpecCpGs</em> and
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">signatures</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            intercept        f         pval         qval</span></span>
-<span><span class="co">## cg10480329 -3.287511 212.1121 2.059834e-13 1.241668e-09</span></span>
-<span><span class="co">## cg06297318 -3.496336 175.2838 1.591426e-12 4.796558e-09</span></span>
-<span><span class="co">## cg18835472 -3.350244 155.5288 5.608606e-12 1.126956e-08</span></span>
-<span><span class="co">## cg05923857 -3.515739 149.1711 8.667363e-12 1.306172e-08</span></span>
-<span><span class="co">## cg27366072 -2.858145 143.1169 1.332008e-11 1.380701e-08</span></span>
-<span><span class="co">## cg15633603 -1.496293 142.6850 1.374287e-11 1.380701e-08</span></span></code></pre>
+<span><span class="co">## cg10480329 -3.287511 203.4898 3.225257e-13 1.944185e-09</span></span>
+<span><span class="co">## cg06297318 -3.496336 179.0070 1.272980e-12 3.836762e-09</span></span>
+<span><span class="co">## cg18835472 -3.350244 153.2083 6.562342e-12 1.318593e-08</span></span>
+<span><span class="co">## cg05923857 -3.515739 146.2456 1.064710e-11 1.604518e-08</span></span>
+<span><span class="co">## cg15633603 -1.496293 141.6580 1.480798e-11 1.622171e-08</span></span>
+<span><span class="co">## cg27366072 -2.858145 140.4754 1.614636e-11 1.622171e-08</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -596,10 +596,10 @@ reference atlas via <code>findSignatures</code>.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.1.3 (2022-03-10)</span></span>
 <span><span class="co">## Platform: x86_64-conda-linux-gnu (64-bit)</span></span>
-<span><span class="co">## Running under: Ubuntu 20.04.3 LTS</span></span>
+<span><span class="co">## Running under: Debian GNU/Linux 11 (bullseye)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Matrix products: default</span></span>
-<span><span class="co">## BLAS/LAPACK: /home/igunduz/.conda/envs/rdev/lib/libopenblasp-r0.3.21.so</span></span>
+<span><span class="co">## BLAS/LAPACK: /icbb/projects/igunduz/DARPA/atac/lib/libopenblasp-r0.3.21.so</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## locale:</span></span>
 <span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
@@ -614,87 +614,87 @@ reference atlas via <code>findSignatures</code>.</p>
 <span><span class="co">## [8] base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] dplyr_1.0.10      doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2    </span></span>
-<span><span class="co">## [5] deconvR_1.4.4     data.table_1.14.2 knitr_1.40        BiocStyle_2.22.0 </span></span>
+<span><span class="co">## [1] dplyr_1.1.0       doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2    </span></span>
+<span><span class="co">## [5] deconvR_1.4.6     data.table_1.14.6 knitr_1.42        BiocStyle_2.22.0 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##   [1] rsq_2.5                     BiocFileCache_2.2.1        </span></span>
-<span><span class="co">##   [3] systemfonts_1.0.4           plyr_1.8.7                 </span></span>
+<span><span class="co">##   [3] systemfonts_1.0.4           plyr_1.8.8                 </span></span>
 <span><span class="co">##   [5] methylKit_1.20.0            splines_4.1.3              </span></span>
 <span><span class="co">##   [7] BiocParallel_1.28.3         GenomeInfoDb_1.30.1        </span></span>
-<span><span class="co">##   [9] ggplot2_3.3.6               digest_0.6.29              </span></span>
-<span><span class="co">##  [11] htmltools_0.5.3             fansi_1.0.3                </span></span>
+<span><span class="co">##   [9] ggplot2_3.4.0               digest_0.6.31              </span></span>
+<span><span class="co">##  [11] htmltools_0.5.4             fansi_1.0.4                </span></span>
 <span><span class="co">##  [13] magrittr_2.0.3              memoise_2.0.1              </span></span>
 <span><span class="co">##  [15] tzdb_0.3.0                  limma_3.50.3               </span></span>
-<span><span class="co">##  [17] readr_2.1.2                 Biostrings_2.62.0          </span></span>
-<span><span class="co">##  [19] annotate_1.72.0             matrixStats_0.62.0         </span></span>
-<span><span class="co">##  [21] R.utils_2.12.0              askpass_1.1                </span></span>
-<span><span class="co">##  [23] bdsmatrix_1.3-6             pkgdown_2.0.6              </span></span>
+<span><span class="co">##  [17] readr_2.1.3                 Biostrings_2.62.0          </span></span>
+<span><span class="co">##  [19] annotate_1.72.0             matrixStats_0.63.0         </span></span>
+<span><span class="co">##  [21] R.utils_2.12.2              askpass_1.1                </span></span>
+<span><span class="co">##  [23] bdsmatrix_1.3-6             pkgdown_2.0.7              </span></span>
 <span><span class="co">##  [25] siggenes_1.68.0             prettyunits_1.1.1          </span></span>
-<span><span class="co">##  [27] colorspace_2.0-3            rappdirs_0.3.3             </span></span>
+<span><span class="co">##  [27] colorspace_2.1-0            rappdirs_0.3.3             </span></span>
 <span><span class="co">##  [29] blob_1.2.3                  textshaping_0.3.6          </span></span>
-<span><span class="co">##  [31] xfun_0.32                   crayon_1.5.1               </span></span>
-<span><span class="co">##  [33] RCurl_1.98-1.8              jsonlite_1.8.0             </span></span>
-<span><span class="co">##  [35] lme4_1.1-31                 genefilter_1.76.0          </span></span>
-<span><span class="co">##  [37] GEOquery_2.62.2             survival_3.4-0             </span></span>
+<span><span class="co">##  [31] xfun_0.37                   crayon_1.5.2               </span></span>
+<span><span class="co">##  [33] RCurl_1.98-1.10             jsonlite_1.8.4             </span></span>
+<span><span class="co">##  [35] lme4_1.1-32                 genefilter_1.76.0          </span></span>
+<span><span class="co">##  [37] GEOquery_2.62.2             survival_3.5-0             </span></span>
 <span><span class="co">##  [39] glue_1.6.2                  gtable_0.3.1               </span></span>
 <span><span class="co">##  [41] nnls_1.4                    zlibbioc_1.40.0            </span></span>
 <span><span class="co">##  [43] XVector_0.34.0              DelayedArray_0.20.0        </span></span>
 <span><span class="co">##  [45] Rhdf5lib_1.16.0             BiocGenerics_0.40.0        </span></span>
 <span><span class="co">##  [47] HDF5Array_1.22.1            scales_1.2.1               </span></span>
 <span><span class="co">##  [49] mvtnorm_1.1-3               rngtools_1.5.2             </span></span>
-<span><span class="co">##  [51] DBI_1.1.3                   Rcpp_1.0.9                 </span></span>
+<span><span class="co">##  [51] DBI_1.1.3                   Rcpp_1.0.10                </span></span>
 <span><span class="co">##  [53] progress_1.2.2              xtable_1.8-4               </span></span>
 <span><span class="co">##  [55] emdbook_1.3.12              bumphunter_1.36.0          </span></span>
-<span><span class="co">##  [57] bit_4.0.4                   proxy_0.4-27               </span></span>
+<span><span class="co">##  [57] bit_4.0.5                   proxy_0.4-27               </span></span>
 <span><span class="co">##  [59] mclust_6.0.0                preprocessCore_1.56.0      </span></span>
 <span><span class="co">##  [61] stats4_4.1.3                httr_1.4.4                 </span></span>
 <span><span class="co">##  [63] RColorBrewer_1.1-3          ellipsis_0.3.2             </span></span>
 <span><span class="co">##  [65] pkgconfig_2.0.3             reshape_0.8.9              </span></span>
-<span><span class="co">##  [67] XML_3.99-0.10               R.methodsS3_1.8.2          </span></span>
-<span><span class="co">##  [69] dbplyr_2.2.1                sass_0.4.2                 </span></span>
-<span><span class="co">##  [71] locfit_1.5-9.6              utf8_1.2.2                 </span></span>
-<span><span class="co">##  [73] tidyselect_1.1.2            rlang_1.0.5                </span></span>
+<span><span class="co">##  [67] XML_3.99-0.13               R.methodsS3_1.8.2          </span></span>
+<span><span class="co">##  [69] dbplyr_2.3.0                sass_0.4.5                 </span></span>
+<span><span class="co">##  [71] locfit_1.5-9.7              utf8_1.2.3                 </span></span>
+<span><span class="co">##  [73] tidyselect_1.2.0            rlang_1.0.6                </span></span>
 <span><span class="co">##  [75] reshape2_1.4.4              AnnotationDbi_1.56.2       </span></span>
 <span><span class="co">##  [77] munsell_0.5.0               tools_4.1.3                </span></span>
-<span><span class="co">##  [79] cachem_1.0.6                cli_3.4.0                  </span></span>
-<span><span class="co">##  [81] generics_0.1.3              RSQLite_2.2.16             </span></span>
-<span><span class="co">##  [83] fastseg_1.40.0              evaluate_0.16              </span></span>
-<span><span class="co">##  [85] stringr_1.4.1               fastmap_1.1.0              </span></span>
-<span><span class="co">##  [87] yaml_2.3.5                  ragg_1.2.2                 </span></span>
-<span><span class="co">##  [89] bit64_4.0.5                 fs_1.5.2                   </span></span>
+<span><span class="co">##  [79] cachem_1.0.6                cli_3.6.0                  </span></span>
+<span><span class="co">##  [81] generics_0.1.3              RSQLite_2.2.20             </span></span>
+<span><span class="co">##  [83] fastseg_1.40.0              evaluate_0.20              </span></span>
+<span><span class="co">##  [85] stringr_1.5.0               fastmap_1.1.0              </span></span>
+<span><span class="co">##  [87] yaml_2.3.7                  ragg_1.2.4                 </span></span>
+<span><span class="co">##  [89] bit64_4.0.5                 fs_1.6.0                   </span></span>
 <span><span class="co">##  [91] beanplot_1.3.1              scrime_1.3.5               </span></span>
-<span><span class="co">##  [93] purrr_0.3.4                 KEGGREST_1.34.0            </span></span>
-<span><span class="co">##  [95] nlme_3.1-159                doRNG_1.8.2                </span></span>
+<span><span class="co">##  [93] purrr_1.0.1                 KEGGREST_1.34.0            </span></span>
+<span><span class="co">##  [95] nlme_3.1-162                doRNG_1.8.6                </span></span>
 <span><span class="co">##  [97] sparseMatrixStats_1.6.0     nor1mix_1.3-0              </span></span>
 <span><span class="co">##  [99] R.oo_1.25.0                 xml2_1.3.3                 </span></span>
 <span><span class="co">## [101] biomaRt_2.50.3              compiler_4.1.3             </span></span>
-<span><span class="co">## [103] filelock_1.0.2              curl_4.3.2                 </span></span>
-<span><span class="co">## [105] png_0.1-7                   e1071_1.7-12               </span></span>
-<span><span class="co">## [107] tibble_3.1.8                bslib_0.4.0                </span></span>
-<span><span class="co">## [109] stringi_1.7.8               GenomicFeatures_1.46.5     </span></span>
-<span><span class="co">## [111] desc_1.4.1                  minfi_1.40.0               </span></span>
-<span><span class="co">## [113] lattice_0.20-45             Matrix_1.5-1               </span></span>
+<span><span class="co">## [103] filelock_1.0.2              curl_5.0.0                 </span></span>
+<span><span class="co">## [105] png_0.1-8                   e1071_1.7-13               </span></span>
+<span><span class="co">## [107] tibble_3.1.8                bslib_0.4.2                </span></span>
+<span><span class="co">## [109] stringi_1.7.12              GenomicFeatures_1.46.5     </span></span>
+<span><span class="co">## [111] desc_1.4.2                  minfi_1.40.0               </span></span>
+<span><span class="co">## [113] lattice_0.21-8              Matrix_1.5-4               </span></span>
 <span><span class="co">## [115] nloptr_2.0.3                multtest_2.50.0            </span></span>
-<span><span class="co">## [117] vctrs_0.4.1                 pillar_1.8.1               </span></span>
-<span><span class="co">## [119] lifecycle_1.0.2             rhdf5filters_1.6.0         </span></span>
-<span><span class="co">## [121] BiocManager_1.30.18         jquerylib_0.1.4            </span></span>
+<span><span class="co">## [117] vctrs_0.5.2                 pillar_1.8.1               </span></span>
+<span><span class="co">## [119] lifecycle_1.0.3             rhdf5filters_1.6.0         </span></span>
+<span><span class="co">## [121] BiocManager_1.30.19         jquerylib_0.1.4            </span></span>
 <span><span class="co">## [123] bitops_1.0-7                rtracklayer_1.54.0         </span></span>
 <span><span class="co">## [125] GenomicRanges_1.46.1        qvalue_2.26.0              </span></span>
 <span><span class="co">## [127] R6_2.5.1                    BiocIO_1.4.0               </span></span>
-<span><span class="co">## [129] bookdown_0.30               IRanges_2.28.0             </span></span>
-<span><span class="co">## [131] codetools_0.2-18            boot_1.3-28                </span></span>
-<span><span class="co">## [133] MASS_7.3-58.1               gtools_3.9.3               </span></span>
+<span><span class="co">## [129] bookdown_0.33               IRanges_2.28.0             </span></span>
+<span><span class="co">## [131] codetools_0.2-19            boot_1.3-28.1              </span></span>
+<span><span class="co">## [133] MASS_7.3-58.3               gtools_3.9.4               </span></span>
 <span><span class="co">## [135] assertthat_0.2.1            rhdf5_2.38.1               </span></span>
-<span><span class="co">## [137] SummarizedExperiment_1.24.0 openssl_2.0.2              </span></span>
+<span><span class="co">## [137] SummarizedExperiment_1.24.0 openssl_2.0.5              </span></span>
 <span><span class="co">## [139] rprojroot_2.0.3             rjson_0.2.21               </span></span>
 <span><span class="co">## [141] Deriv_4.1.3                 GenomicAlignments_1.30.0   </span></span>
 <span><span class="co">## [143] Rsamtools_2.10.0            S4Vectors_0.32.4           </span></span>
 <span><span class="co">## [145] GenomeInfoDbData_1.2.7      hms_1.1.2                  </span></span>
 <span><span class="co">## [147] quadprog_1.5-8              grid_4.1.3                 </span></span>
-<span><span class="co">## [149] minqa_1.2.5                 tidyr_1.2.1                </span></span>
+<span><span class="co">## [149] minqa_1.2.5                 tidyr_1.3.0                </span></span>
 <span><span class="co">## [151] coda_0.19-4                 base64_2.0.1               </span></span>
-<span><span class="co">## [153] class_7.3-20                rmarkdown_2.16             </span></span>
+<span><span class="co">## [153] class_7.3-21                rmarkdown_2.20             </span></span>
 <span><span class="co">## [155] DelayedMatrixStats_1.16.0   illuminaio_0.36.0          </span></span>
 <span><span class="co">## [157] MatrixGenerics_1.6.0        bbmle_1.0.25               </span></span>
 <span><span class="co">## [159] numDeriv_2016.8-1.1         Biobase_2.54.0             </span></span>
@@ -724,12 +724,12 @@ and disease. Nature communications, 9(1), 1-12. <a href="https://doi.org/10.1038
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by .</p>
+<p>Developed by Irem B. Gunduz, Veronika Ebenal, Altuna Akalin.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
