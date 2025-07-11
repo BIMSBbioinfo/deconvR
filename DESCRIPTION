@@ -36,9 +36,9 @@ LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Depends: 
-    R (>= 4.1),
-    data.table (>= 1.14.0)
+    R (>= 4.1)
 Imports:
+    data.table (>= 1.14.0),
     S4Vectors (>= 0.30.0),
     methylKit (>= 1.18.0),
     IRanges (>= 2.26.0),
