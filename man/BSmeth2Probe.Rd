@@ -46,6 +46,7 @@ is taken.
 A function to map WGBS methylation data to Illumina Probe IDs
 }
 \examples{
+library(data.table)
 data("IlluminaMethEpicB5ProbeIDs")
 load(system.file("extdata", "WGBS_GRanges.rda", package = "deconvR"))
 meth_probres <- BSmeth2Probe(
