@@ -1,48 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/deconvRManual.html</loc>
-  </url>
-  <url>
-    <loc>/articles/deconvRVignette.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/BSmeth2Probe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/HumanCellTypeMethAtlas.html</loc>
-  </url>
-  <url>
-    <loc>/reference/IlluminaMethEpicB5ProbeIDs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/deconvolute.html</loc>
-  </url>
-  <url>
-    <loc>/reference/findSignatures.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/probe_ids.html</loc>
-  </url>
-  <url>
-    <loc>/reference/simulateCellMix.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/deconvRManual.html</loc></url>
+<url><loc>/articles/deconvRVignette.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/BSmeth2Probe.html</loc></url>
+<url><loc>/reference/HumanCellTypeMethAtlas.html</loc></url>
+<url><loc>/reference/IlluminaMethEpicB5ProbeIDs.html</loc></url>
+<url><loc>/reference/deconvolute.html</loc></url>
+<url><loc>/reference/findSignatures.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/probe_ids.html</loc></url>
+<url><loc>/reference/simulateCellMix.html</loc></url>
 </urlset>
+

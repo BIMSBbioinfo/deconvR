@@ -29,6 +29,7 @@ library(knitr)
 library(deconvR)
 library(doParallel)
 library(dplyr)
+library(data.table)
 
 cl <- parallel::makeCluster(2)
 doParallel::registerDoParallel(cl)
