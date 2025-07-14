@@ -20,7 +20,7 @@
 #' TRUE at the same time.
 #' @param IDs the name of the column indicates ids
 #' @importFrom magrittr %>%
-#' @import data.table
+#' @importFrom data.table  merge.data.table .SD setDT :=
 #' @importFrom assertthat assert_that
 #' @importFrom matrixStats rowVars rowSums2
 #' @importFrom stats na.omit setNames
@@ -30,7 +30,7 @@
 #' exampleSamples <- simulateCellMix(1,
 #'   reference = HumanCellTypeMethAtlas
 #' )$simulated
-#' exampleMeta <- data.table(
+#' exampleMeta <- data.table::data.table(
 #'   "Experiment_accession" = "example_sample",
 #'   "Biosample_term_name" = "example_cell_type"
 #' )
