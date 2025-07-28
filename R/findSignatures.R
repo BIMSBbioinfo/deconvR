@@ -20,7 +20,7 @@
 #' TRUE at the same time.
 #' @param IDs the name of the column indicates ids
 #' @importFrom magrittr %>%
-#' @importFrom data.table  merge.data.table .SD setDT :=
+#' @importFrom data.table merge.data.table .SD setDT :=
 #' @importFrom assertthat assert_that
 #' @importFrom matrixStats rowVars rowSums2
 #' @importFrom stats na.omit setNames
