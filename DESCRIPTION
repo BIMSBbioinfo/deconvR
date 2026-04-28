@@ -1,6 +1,6 @@
 Package: deconvR
 Title: Simulation and Deconvolution of Omic Profiles
-Version: 1.18.0
+Version: 1.19.0
 Date: 2025-07-28
 Authors@R: 
     c(person(given = "Irem B.",
