@@ -30,7 +30,7 @@
 #' exampleSamples <- simulateCellMix(1,
 #'   reference = HumanCellTypeMethAtlas
 #' )$simulated
-#' exampleMeta <- data.table(
+#' exampleMeta <- data.table::data.table(
 #'   "Experiment_accession" = "example_sample",
 #'   "Biosample_term_name" = "example_cell_type"
 #' )

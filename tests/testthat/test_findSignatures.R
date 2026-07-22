@@ -1,4 +1,5 @@
 library(deconvR)
+library(data.table)
 
 test_that("findSignatures", {
   data("HumanCellTypeMethAtlas")
